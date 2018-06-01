@@ -1,0 +1,14 @@
+# Single line comment -- Can be inline
+
+#(
+    Block comment
+
+    #(
+        Can be nested!
+    #)
+#)
+
+variable = 123
+mutableVar mut = 32
+
+expression = 123 + (32 / 2) * 2

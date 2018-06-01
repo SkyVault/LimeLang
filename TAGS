@@ -1,0 +1,87 @@
+
+lime_utils.cc,168
+void LimeAssert(bool expression, int line_number, LimeErrorLevel lvl, const std::string& msg) {LimeAssert3,25
+bool isNumber(const std::string& word) {isNumber7,150
+
+lime_utils.h,136
+enum LimeErrorLevel{ LimeErrorLevel7,71
+    LimeError,LimeError8,93
+    LimeWarning,LimeWarning9,108
+    LimeNoteLimeNote10,125
+
+main.cc,60
+#define RUN_TESTSRUN_TESTS12,153
+int main() {main14,172
+
+lexer.cc,474
+ostream& operator<<(ostream& os, const Token& token) {operator <<5,62
+std::string Token::ToString() const {ToString11,175
+const std::string LoadFileToString(const std::string& path){LoadFileToString21,440
+vector<string> SplitTokensToWordsAndSymbols(const string& code){SplitTokensToWordsAndSymbols35,679
+vector<Token> WordsToTokens(const vector<string>& words) {WordsToTokens105,2216
+vector<Token> TokenizeString(const std::string& code) {TokenizeString150,3890
+
+lime_tests.h,215
+std::tuple<bool, std::string> isNumberTests() {isNumberTests9,122
+bool runTest(std::function<std::tuple<bool, std::string>()> fn, const std::string& name){runTest21,553
+bool limeRunTests() {limeRunTests27,825
+
+ast.cc,814
+Node::Node(Token& token) {Node3,18
+Node::Node(){}Node13,248
+std::string Node::ToString(std::string indent = "") const {ToString16,265
+ostream& operator<<(ostream& os, const Node& node) {operator <<47,1260
+Ast::Ast() {Ast53,1385
+std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::vector<Token>::iterator end) {GetExpressionTokens57,1440
+Node* HandleFunctionCall(std::vector<Token>::iterator begin) {HandleFunctionCall110,2945
+Node* TokenToNode(Token& token) {TokenToNode114,3012
+Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterator end) {PackExpression132,3389
+void code_block_to_ast(Ast* ast, std::vector<Token>& tokens) {code_block_to_ast186,5002
+Ast create_ast_from_tokens(std::vector<Token>& tokens) {create_ast_from_tokens286,7633
+
+lexer.h,1024
+enum LimeTokenTypes {LimeTokenTypes11,148
+	LIME_IDENTIFIER,LIME_IDENTIFIER12,170
+	LIME_NUMBER,LIME_NUMBER13,188
+	LIME_NEWLINE,LIME_NEWLINE14,202
+	LIME_TABULAR,LIME_TABULAR15,217
+	LIME_WHITESPACE,LIME_WHITESPACE16,232
+	LIME_OPERATOR,LIME_OPERATOR17,250
+    LIME_PROC,LIME_PROC19,267
+    LIME_OPEN_PAREN,LIME_OPEN_PAREN21,283
+    LIME_CLOSE_PAREN,LIME_CLOSE_PAREN22,304
+    LIME_MUTABLE,LIME_MUTABLE24,327
+	LIME_NUM_TOKENSLIME_NUM_TOKENS26,346
+enum LimeOperators {LimeOperators29,367
+	LIME_ASSIGNMENT_OPERATOR,LIME_ASSIGNMENT_OPERATOR30,388
+	LIME_PLUS_OPERATOR,LIME_PLUS_OPERATOR31,415
+	LIME_MINUS_OPERATOR,LIME_MINUS_OPERATOR32,436
+	LIME_MULTIPLICATION_OPERATOR,LIME_MULTIPLICATION_OPERATOR33,458
+	LIME_DIVISION_OPERATOR,LIME_DIVISION_OPERATOR34,489
+	LIME_NONE_OPERATORLIME_NONE_OPERATOR35,514
+static const std::map<LimeTokenTypes, const std::string> LimeTokenTypesNames = {LimeTokenTypesNames38,538
+struct Token {Token56,1045
+typedef std::vector<Token> TokenList;TokenList71,1361
+
+Makefile,264
+CC=g++CC1,0
+CCFLAGS=-std=c++17 -Wall -g -Wno-unused-function -Wno-unused-variable -Wno-unused-parameterCCFLAGS2,7
+LDFLAGS=-lrt -lpthread -lmLDFLAGS3,99
+SOURCES=$(wildcard *.cc)SOURCES4,126
+OBJECTS=$(SOURCES:.cc=.o)OBJECTS5,151
+	TARGET=a.outTARGET6,177
+
+ast.h,642
+enum NodeType {NodeType8,90
+    LIME_NODE_NONE,LIME_NODE_NONE9,106
+    LIME_NODE_VARIABlE_ASSIGNMENT,LIME_NODE_VARIABlE_ASSIGNMENT10,126
+    LIME_NODE_EXPRESSION,LIME_NODE_EXPRESSION11,161
+    LIME_NODE_NUMBER_LITERAL,LIME_NODE_NUMBER_LITERAL12,187
+    LIME_NODE_OPERATOR,LIME_NODE_OPERATOR13,217
+    LIME_NODE_CODE_BLOCK,LIME_NODE_CODE_BLOCK14,241
+static const std::map<NodeType, const std::string> LimeNodeTypesNames = {LimeNodeTypesNames17,271
+struct Node {Node26,665
+    Token token;token30,716
+    std::vector<Node*> children;children34,793
+struct Ast : public Node {Ast51,1123
+struct CodeLens {CodeLens61,1346

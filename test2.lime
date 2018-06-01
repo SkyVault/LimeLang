@@ -1,0 +1,10 @@
+fact proc n [
+	if n eq 0 [
+		ret 1
+	]
+
+	ret n * fact(n - 1)
+]
+
+print("Hello World")
+print(fact(5))
