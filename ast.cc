@@ -14,33 +14,25 @@ Node::Node(){}
 
 std::string Node::ToString(std::string indent = "") const {
     std::string result{""};
-    const auto INDENT = "  ";
 
-    result += indent + "Node (line: " + std::to_string(line_number) + "){\n";
-    result += indent + INDENT + "type: " + LimeNodeTypesNames.find(type)->second + "\n";
-    result += indent + INDENT + "token: " + token.ToString() + "\n";
-    if (type == LIME_NODE_VARIABlE_ASSIGNMENT) {
-        result += indent + INDENT +  "mutable: " + (canMutate ? "true" : "false") + "\n";
-    }
-    if (identifier != nullptr){
-        result += indent + INDENT + "identifier: " + identifier->word + "\n";
-    }
-    result += indent + INDENT + "children {";
-    if (children.size() > 0) { 
-        result += "\n";
+    result += indent + "(" + LimeNodeTypesNames.find(type)->second;
+    result += " $line:" + std::to_string(line_number);
+    if (token.word.size() > 0)
+        result += " $word: [" + token.word + "]";
 
-        for (const auto& child: children) {
-            if (child->token.isWhiteSpace) continue;
-            result += child->ToString(indent + INDENT);
-            result += ",\n";
+    if (children.size() > 0) {
+        result += " (\n";
+        size_t i = 0;
+        for(auto c : children) {
+            result += c->ToString(indent + "  ");
+            if (i != children.size() - 1)
+                result += "\n";
+            i += 1;
         }
-        result += indent + INDENT + " }\n";
-    } else { result += "}\n"; }
+        result += ")";
+    } 
 
-
-    result += indent + INDENT + "}";
-
-    return result;
+    return result + ")";
 }
 
 ostream& operator<<(ostream& os, const Node& node) {
