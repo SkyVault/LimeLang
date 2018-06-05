@@ -12,34 +12,33 @@ Node::Node(Token& token) {
 
 Node::Node(){}
 
-
 std::string Node::ToString(std::string indent = "") const {
     std::string result{""};
+    const auto INDENT = "  ";
 
-    result += indent + "Node {\n";
-    result += indent + " .type: " + LimeNodeTypesNames.find(type)->second + "\n";
-    result += indent + " .line: " + std::to_string(line_number) + "\n";
-    result += indent + " .token: " + token.ToString() + "\n";
+    result += indent + "Node (line: " + std::to_string(line_number) + "){\n";
+    result += indent + INDENT + "type: " + LimeNodeTypesNames.find(type)->second + "\n";
+    result += indent + INDENT + "token: " + token.ToString() + "\n";
     if (type == LIME_NODE_VARIABlE_ASSIGNMENT) {
-        result += indent + " .mutable: " + (canMutate ? "true" : "false") + "\n";
+        result += indent + INDENT +  "mutable: " + (canMutate ? "true" : "false") + "\n";
     }
     if (identifier != nullptr){
-        result += indent + " .identifier: " + identifier->word + "\n";
+        result += indent + INDENT + "identifier: " + identifier->word + "\n";
     }
-    result += indent + " .children {";
+    result += indent + INDENT + "children {";
     if (children.size() > 0) { 
         result += "\n";
 
         for (const auto& child: children) {
             if (child->token.isWhiteSpace) continue;
-            result += indent + child->ToString(indent + " ");
+            result += child->ToString(indent + INDENT);
             result += ",\n";
         }
-        result += indent + " }\n";
+        result += indent + INDENT + " }\n";
     } else { result += "}\n"; }
 
 
-    result += indent + "}";
+    result += indent + INDENT + "}";
 
     return result;
 }
@@ -64,12 +63,12 @@ std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::ve
     };
 
     auto begin = it;
-    auto t = it->type;
+    auto t = (*it).type;
 
     bool running{true};
     while (running) {
         if (it == end) break;
-        switch(it->type) {
+        switch((*it).type) {
             case LIME_WHITESPACE:
             case LIME_NUMBER:
             case LIME_OPEN_PAREN:
@@ -108,7 +107,7 @@ std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::ve
 };
 
 Node* HandleFunctionCall(std::vector<Token>::iterator begin) {
-
+    return nullptr;
 }
 
 Node* TokenToNode(Token& token) {
@@ -118,8 +117,12 @@ Node* TokenToNode(Token& token) {
         case LIME_NUMBER:
             result->type = LIME_NODE_NUMBER_LITERAL;
             break;
+        case LIME_IDENTIFIER:
+            result->type = LIME_NODE_IDENTIFIER;
+            break;
         case LIME_OPERATOR:
             result->type = LIME_NODE_OPERATOR;
+            result->precedence = OrderOfPrecedenceTable.find(token.word)->second;
             break;
         default:
             assert(0);
@@ -129,10 +132,69 @@ Node* TokenToNode(Token& token) {
     return result;
 }
 
+void SortExpression(Node* node){
+    // Strip whitespace
+    auto it = node->children.begin();
+    while(it != node->children.end())
+    {
+        if ((*it)->token.isWhiteSpace)
+            node->children.erase(it--);
+        it++;
+    }
+
+    auto getHighestPrecedence = [](Node* expression){
+        auto high{0}, result{0};
+
+        auto i{0};
+        for (const auto& node : expression->children) {
+            if (node->precedence > high && node->children.size() == 0) {
+                result = i;
+                high = node->precedence;
+            }
+            i++;
+        }
+
+        return result;
+    };
+
+    if (node->type == LIME_NODE_EXPRESSION)
+        if (node->children.size() == 1)
+            if (node->children[0]->type == LIME_NODE_EXPRESSION){
+                SortExpression(node->children[0]);
+                return;
+            }
+
+    while (node->children.size() > 1) {
+        const auto index = getHighestPrecedence(node); 
+        auto op = node->children[index];
+
+        if (index == 0) {
+            std::cout << "Unary operation not supported?" << std::endl;
+            return;
+        }
+
+        if (index == (int)(node->children.size() - 1)){
+            std::cout << "Operator missing right operand" << std::endl;
+            return;
+        }
+
+        auto left = node->children[index - 1];
+        auto right = node->children[index + 1];
+
+        if (left->type == LIME_NODE_EXPRESSION) SortExpression(left);
+        if (right->type == LIME_NODE_EXPRESSION) SortExpression(right);
+        
+        op->children.push_back(left);
+        op->children.push_back(right);
+
+        node->children.erase(node->children.begin() + (index - 1), node->children.begin() + (index + 2));
+        node->children.insert(node->children.begin() + (index - 1), op);
+    }
+}
+
 Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterator end) {
     auto node = new Node();
     node->type = LIME_NODE_EXPRESSION;
-    node->token.word = "banana";
 
     auto i = it;
 
@@ -140,8 +202,9 @@ Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterat
         //std::cout << "><>" << *i << std::endl;
 
         // TODO: Handle all types
-        switch (i->type) {
+        switch ((*i).type) {
             case LIME_NUMBER: 
+            case LIME_IDENTIFIER:
             case LIME_OPERATOR:
                 node->children.push_back(TokenToNode(*i)); 
                 break;
@@ -153,9 +216,9 @@ Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterat
                 auto expr_end = (i + 1);
                 auto scope = 0;
                 while(expr_end != end){
-                    if (expr_end->type == LIME_OPEN_PAREN)
+                    if ((*expr_end).type == LIME_OPEN_PAREN)
                         scope++;
-                    else if (expr_end->type == LIME_CLOSE_PAREN) {
+                    else if ((*expr_end).type == LIME_CLOSE_PAREN) {
                         if (scope == 0)
                             break;
                         scope--;
@@ -180,6 +243,9 @@ Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterat
         ++i;
     }
 
+    // Sort the nodes into presidence
+    SortExpression(node);
+
     return node;
 }
 
@@ -197,27 +263,27 @@ void code_block_to_ast(Ast* ast, std::vector<Token>& tokens) {
         return std::make_tuple(prev--, true);
     };
 
-    auto Next = [&]() -> auto {
-        ++it;
-        while((*it).isWhiteSpace)
-            ++it;
-        return *it;
-    };
+    //auto Next = [&]() -> auto {
+    //    ++it;
+    //    while((*it)->isWhiteSpace)
+    //        ++it;
+    //    return *it;
+    //};
 
-    auto Peek = [&]() -> auto {
-        auto begin = it;
-        begin++;
-        while((*begin).isWhiteSpace)
-            ++begin;
-        return *begin;
-    };
+    //auto Peek = [&]() -> auto {
+    //    auto begin = it;
+    //    begin++;
+    //    while((*begin)->isWhiteSpace)
+    //        ++begin;
+    //    return *begin;
+    //};
 
-    auto NextI = [](std::vector<Token>::iterator& i) {
-        ++i;
-        while((*i).isWhiteSpace)
-            ++i;
-        return *i;
-    };
+    //auto NextI = [](std::vector<Token>::iterator& i) {
+    //    ++i;
+    //    while((*i)->isWhiteSpace)
+    //        ++i;
+    //    return *i;
+    //};
 
     while (it != tokens.end()) {
 
@@ -245,11 +311,19 @@ void code_block_to_ast(Ast* ast, std::vector<Token>& tokens) {
 
                         auto node = new Node();
 
-                        if (prev->type == LIME_MUTABLE) {
-                            node->canMutate = true;
+                        if ((*prev).type == LIME_TYPE_IDENTIFIER) {
+                            node->variable_type = new Token(*prev);
                             prev--;
-                            while(prev->isWhiteSpace)
+                            while((*prev).isWhiteSpace)
                                 prev--;
+
+                            if ((*prev).type == LIME_MUTABLE) {
+                                node->canMutate = true;
+            
+                                prev--;
+                                while((*prev).isWhiteSpace)
+                                    prev--;
+                            }
                         } 
 
                         assert((*prev).type == LIME_IDENTIFIER);
@@ -260,7 +334,7 @@ void code_block_to_ast(Ast* ast, std::vector<Token>& tokens) {
 
                         node->type = LIME_NODE_VARIABlE_ASSIGNMENT;
                         node->children.push_back(expression_node);
-                        node->identifier = &(*prev); // This might cause issues if the tokens go out of scope...
+                        node->identifier = new Token(*prev); // This might cause issues if the tokens go out of scope...
 
                         ast->children.push_back(node);
 
@@ -285,10 +359,14 @@ void code_block_to_ast(Ast* ast, std::vector<Token>& tokens) {
     }
 }
 
+//LimeNodeTypes GetTypeOfExpression() {}
+
 Ast create_ast_from_tokens(std::vector<Token>& tokens) {
     auto ast = Ast{};
 
     code_block_to_ast(&ast, tokens);
+
+    
 
     std::cout << (ast) << std::endl;
 

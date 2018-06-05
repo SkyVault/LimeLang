@@ -6,6 +6,8 @@
 #include <map>
 #include <functional>
 
+#include "lime_types.h"
+
 using namespace std;
 
 enum LimeTokenTypes {
@@ -22,6 +24,8 @@ enum LimeTokenTypes {
     LIME_CLOSE_PAREN,
 
     LIME_MUTABLE,
+
+    LIME_TYPE_IDENTIFIER,
 
 	LIME_NUM_TOKENS
 };
@@ -49,11 +53,17 @@ static const std::map<LimeTokenTypes, const std::string> LimeTokenTypesNames = {
 	{LIME_CLOSE_PAREN, "LIME_CLOSE_PAREN"},
 
 	{LIME_MUTABLE, "LIME_MUTABLE"},
+
+	{LIME_TYPE_IDENTIFIER, "LIME_TYPE_IDENTIFIER"},
 };
 
 //static_assert(LimeTokenTypesNames.size() == LIME_NUM_TOKENS);
 
 struct Token {
+    Token();
+    Token(std::string word, LimeTokenTypes type, bool isWhiteSpace);
+    Token(const Token& token);
+
 	std::string word{""};
 	
 	LimeTokenTypes type{LIME_IDENTIFIER};

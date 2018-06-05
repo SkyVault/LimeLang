@@ -1,30 +1,39 @@
-Token {  .word = \n  .type = LIME_NEWLINE}
-Token {  .word = myVar  .type = LIME_IDENTIFIER}
-Token {  .word =    .type = LIME_WHITESPACE}
-Token {  .word = mut  .type = LIME_MUTABLE}
-Token {  .word =    .type = LIME_WHITESPACE}
-Token {  .word = =  .type = LIME_OPERATOR}
-Token {  .word =    .type = LIME_WHITESPACE}
-Token {  .word = 1  .type = LIME_NUMBER}
-Token {  .word =    .type = LIME_WHITESPACE}
-Token {  .word = +  .type = LIME_OPERATOR}
-Token {  .word =    .type = LIME_WHITESPACE}
-Token {  .word = (  .type = LIME_OPEN_PAREN}
-Token {  .word = 1234  .type = LIME_NUMBER}
-Token {  .word =    .type = LIME_WHITESPACE}
-Token {  .word = /  .type = LIME_OPERATOR}
-Token {  .word =    .type = LIME_WHITESPACE}
-Token {  .word = 2  .type = LIME_NUMBER}
-Token {  .word = )  .type = LIME_CLOSE_PAREN}
-Token {  .word =    .type = LIME_WHITESPACE}
-Token {  .word = +  .type = LIME_OPERATOR}
-Token {  .word =    .type = LIME_WHITESPACE}
-Token {  .word = 2  .type = LIME_NUMBER}
-Token {  .word =    .type = LIME_WHITESPACE}
-Token {  .word = \n  .type = LIME_NEWLINE}
-Token {  .word = myVar2  .type = LIME_IDENTIFIER}
-Token {  .word =    .type = LIME_WHITESPACE}
-Token {  .word = =  .type = LIME_OPERATOR}
-Token {  .word =    .type = LIME_WHITESPACE}
-Token {  .word = 32  .type = LIME_NUMBER}
-Token {  .word = \n  .type = LIME_NEWLINE}
+Token {  word: \n  type: LIME_NEWLINE}
+Token {  word: \n  type: LIME_NEWLINE}
+Token {  word: myVar  type: LIME_IDENTIFIER}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: mut  type: LIME_MUTABLE}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: int  type: LIME_TYPE_IDENTIFIER}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: =  type: LIME_OPERATOR}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: 100  type: LIME_NUMBER}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: /  type: LIME_OPERATOR}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: (  type: LIME_OPEN_PAREN}
+Token {  word: 4  type: LIME_NUMBER}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: *  type: LIME_OPERATOR}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: 2  type: LIME_NUMBER}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: +  type: LIME_OPERATOR}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: 3  type: LIME_NUMBER}
+Token {  word: )  type: LIME_CLOSE_PAREN}
+Token {  word: \n  type: LIME_NEWLINE}
+Token {  word: other  type: LIME_IDENTIFIER}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: int  type: LIME_TYPE_IDENTIFIER}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: =  type: LIME_OPERATOR}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: myVar  type: LIME_IDENTIFIER}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: +  type: LIME_OPERATOR}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: 2  type: LIME_NUMBER}
+Token {  word: \n  type: LIME_NEWLINE}
+Token {  word: \n  type: LIME_NEWLINE}

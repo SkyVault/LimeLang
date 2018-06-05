@@ -2,6 +2,26 @@
 #include "lime_utils.h"
 #include <cctype>
 
+Token::Token()
+{
+    
+}
+
+Token::Token(std::string word, LimeTokenTypes type, bool isWhiteSpace = false):
+    word(word), 
+    type(type), 
+    isWhiteSpace(isWhiteSpace)
+{
+    
+}
+
+Token::Token(const Token& token) {
+    type = token.type;
+    word = token.word;
+    op = token.op;
+    isWhiteSpace = token.isWhiteSpace;
+}
+
 ostream& operator<<(ostream& os, const Token& token) {
 	auto str = token.ToString();
     os<<str;
@@ -12,8 +32,8 @@ std::string Token::ToString() const {
 	auto t = type;
     std::string result{""};
     result += "Token {";
-	result += "  .word = " + (word == "\n" ? "\\n" : word);
-    result += "  .type = " + LimeTokenTypesNames.find(t)->second;
+    result += "  word: " + (word == "\n" ? "\\n" : word);
+    result += "  type: " + LimeTokenTypesNames.find(t)->second;
 	result += "}";
 	return result;
 }
@@ -140,30 +160,26 @@ vector<Token> WordsToTokens(const vector<string>& words) {
 	};
 
 	for (const auto& word : words){
-		if (word == "\n") result.push_back(Token{ .word = word, .type = LIME_NEWLINE, .isWhiteSpace = true });
-		else if (word == "\t") result.push_back(Token{ .word = word, .type = LIME_TABULAR, .isWhiteSpace = true });
-		else if (word == " ") result.push_back(Token{ .word = word, .type = LIME_WHITESPACE, .isWhiteSpace = true });
-		else if (word == "(") result.push_back(Token{ .word = word, .type = LIME_OPEN_PAREN });
-		else if (word == ")") result.push_back(Token{ .word = word, .type = LIME_CLOSE_PAREN });
-		else if (word == "proc") result.push_back(Token{ .word = word, .type = LIME_PROC });
-		else if (word == "mut") result.push_back(Token{ .word = word, .type = LIME_MUTABLE });
-		else if (operators.find(word) != std::string::npos)
-			result.push_back(Token{
-					.word=word, 
-					.type=LIME_OPERATOR,
-					.op = GetOperator(word),
-			});
+		if (word == "\n") result.push_back(Token( word, LIME_NEWLINE, true));
+		else if (word == "\t") result.push_back(Token( word, LIME_TABULAR, true));
+		else if (word == " ") result.push_back(Token( word, LIME_WHITESPACE, true));
+		else if (word == "(") result.push_back(Token( word, LIME_OPEN_PAREN ));
+		else if (word == ")") result.push_back(Token( word, LIME_CLOSE_PAREN ));
+		else if (word == "proc") result.push_back(Token( word, LIME_PROC ));
+		else if (word == "mut") result.push_back(Token( word, LIME_MUTABLE ));
+		else if (operators.find(word) != std::string::npos){
+            auto token = Token(word, LIME_OPERATOR);
+            token.op = GetOperator(word);
+			result.push_back(token);
+        }
         else if (isNumber(word)) {
-            result.push_back(Token{ 
-                    .word = word, 
-                    .type = LIME_NUMBER
-            });
+            result.push_back(Token(word, LIME_NUMBER));
+        }
+        else if (isType(word)) {
+            result.push_back(Token(word, LIME_TYPE_IDENTIFIER));
         }
 		else 
-			result.push_back(Token{
-				.word = word,
-				.type = LIME_IDENTIFIER
-			});
+			result.push_back(Token(word, LIME_IDENTIFIER));
 	}
 	
 	return result;

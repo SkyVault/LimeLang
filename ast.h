@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include "lime_types.h"
 
 #include <vector>
 #include <tuple>
@@ -12,6 +13,8 @@ enum NodeType {
     LIME_NODE_NUMBER_LITERAL,
     LIME_NODE_OPERATOR,
     LIME_NODE_CODE_BLOCK,
+    LIME_NODE_IDENTIFIER,
+    LIME_NODE_FUNCTION_CALL,
 };
 
 static const std::map<NodeType, const std::string> LimeNodeTypesNames = {
@@ -21,6 +24,50 @@ static const std::map<NodeType, const std::string> LimeNodeTypesNames = {
     {LIME_NODE_NUMBER_LITERAL,"LIME_NODE_NUMBER_LITERAL"},
     {LIME_NODE_OPERATOR,"LIME_NODE_OPERATOR"},
     {LIME_NODE_CODE_BLOCK,"LIME_NODE_CODE_BLOCK"},
+    {LIME_NODE_IDENTIFIER,"LIME_NODE_IDENTIFIER"},
+    {LIME_NODE_FUNCTION_CALL,"LIME_NODE_FUNCTION_CALL"},
+};
+
+enum OrderOfPrecedence {
+    Comma,
+    PlusEqual,
+    MinusEqual,
+    TimesEqual,
+    DivideEqual,
+    ModEqual,
+    Equals,
+    GreaterThan,
+    GreaterThanOrEqual,
+    LessThan,
+    LessThanOrEqual,
+    NotEqual,
+    Sub,
+    Add,
+    Mod,
+    Div,
+    Mult,
+    UnaryMinus,
+    UnaryPlus
+};
+
+static const std::map<std::string, OrderOfPrecedence> OrderOfPrecedenceTable = {
+    {",",      Comma },
+    {"+=",     PlusEqual },
+    {"-=",     MinusEqual },
+    {"*=",     TimesEqual },
+    {"/=",     DivideEqual },
+    {"%=",     ModEqual },
+    {"eq",     Equals },
+    {"gr",     GreaterThan },
+    {"gre",    GreaterThanOrEqual },
+    {"les",    LessThan },
+    {"lee",    LessThanOrEqual },
+    {"neq",    NotEqual },
+    {"-",      Sub },
+    {"+",      Add },
+    {"%",      Mod },
+    {"/",      Div },
+    {"*",      Mult }
 };
 
 struct Node {
@@ -28,7 +75,9 @@ struct Node {
     Node();
 
     Token token;
-    int line_number{1};
+    int line_number {1};
+    int precedence  {0};
+
     NodeType type{LIME_NODE_NONE};
 
     std::vector<Node*> children;
@@ -36,6 +85,7 @@ struct Node {
     union {
         struct { 
             Token* identifier{nullptr}; 
+            Token* variable_type{nullptr};
             bool canMutate{false};
         };
 
