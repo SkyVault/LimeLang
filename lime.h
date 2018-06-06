@@ -1,0 +1,6 @@
+#pragma once
+#define MAJOR_VERSION "0"
+#define MINOR_VERSION "0"
+#define REVISION_VERISON "0"
+
+#define LIME_VERSION MAJOR_VERSION "." MINOR_VERSION "." REVISION_VERISON 

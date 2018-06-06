@@ -7,6 +7,7 @@
 
 #include "ast.h"
 #include "lexer.h"
+#include "lime_c_gen.h"
 
 #include "lime_tests.h"
 
@@ -23,7 +24,7 @@ ProcTest4 proc {
 
 ProcTest5 proc() none {}
 
-AddEm proc(a, b) {
+AddEm proc(a int, b int) {
     ret a + b
 }
 
@@ -38,6 +39,7 @@ myVar = myVar + 2
 )LEAF"};
 
 #define RUN_TESTS
+#define LOG_TO_FILES
 
 int main() {
 #ifdef RUN_TESTS
@@ -50,20 +52,23 @@ int main() {
 	//const auto content = LoadFileToString("test.lime");
 	auto tokens = TokenizeString(code);
 
+#ifdef LOG_TO_FILES
     auto tfile = std::ofstream("tokens_out.txt");
     for (auto t : tokens) {
         tfile << t << std::endl;
     }
     tfile.close();
-
-	auto out = ofstream("tokenizer_output.txt");
-
-	for (const auto& tok : tokens){
-		out << tok << endl;
-	}
+#endif
 
     // Ast
-    const auto ast = create_ast_from_tokens(tokens);
+    auto ast = create_ast_from_tokens(tokens);
 
-	out.close();
+    LimeCGen cgen;
+    cgen.compile_ast_to_c(&ast, "out.c");
+
+#ifdef LOG_TO_FILES
+    auto afile = std::ofstream("ast_out.txt");
+    afile << ast << std::endl;
+    afile.close();
+#endif
 }

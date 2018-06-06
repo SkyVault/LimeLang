@@ -336,6 +336,9 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 } else if (it->type == LIME_OPEN_PAREN) {
                     // There might be arguments
                      
+                    // Get the arguments
+                    // TODO: Extract this into its own function so that it 
+                    // can be used for things like macros and stuff
                     auto end = it + 1;
                     while (true) {
                         if (end->type == LIME_CLOSE_PAREN){
@@ -344,6 +347,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
 
                         if (end->type != LIME_IDENTIFIER &&
                             end->type != LIME_CAMMA &&
+                            end->type != LIME_TYPE_IDENTIFIER &&
                             end->isWhiteSpace == false) {
                             std::cout << end->ToString() << std::endl;
                             assert(0);
@@ -355,6 +359,8 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                     }
 
                     auto arguments = std::vector((it + 1), end);
+                    //TODO: Handle arguments
+
                     it = end;
                     Next();
 
@@ -456,7 +462,7 @@ Node create_ast_from_tokens(std::vector<Token>& tokens) {
 
     
 
-    std::cout << (ast) << std::endl;
+//    std::cout << (ast) << std::endl;
 
     return ast;
 }

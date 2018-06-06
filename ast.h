@@ -1,3 +1,5 @@
+#pragma once
+
 #include "lexer.h"
 #include "lime_types.h"
 
