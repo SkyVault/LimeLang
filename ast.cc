@@ -1,4 +1,7 @@
 #include "ast.h"
+#include "lime.h"
+
+Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>::iterator last); 
 
 Node::Node(Token& token) {
     this->token = token;
@@ -16,17 +19,22 @@ std::string Node::ToString(std::string indent = "") const {
     std::string result{""};
 
     result += indent + "(" + LimeNodeTypesNames.find(type)->second;
-    result += " line: " + std::to_string(token.line_number);
+    result += " line: " + std::to_string(token.line_number) + ",";
     if (token.word.size() > 0)
         result += " word: \"" + token.word + "\"";
 
-    if (type == LIME_NODE_PROCEDURE_DEFINITION || type == LIME_NODE_PROCEDURE_DECLARATION) {
+    if (type == LIME_NODE_PROC_DEFINITION || type == LIME_NODE_PROC_DECLARATION) {
         auto type_name = variable_type == nullptr ?  "none" : variable_type->word;
         result += " return_type: " + type_name;
     }
 
-    if (type == LIME_NODE_VARIABlE_ASSIGNMENT) {
-        result += " variable: " + identifier->word;
+    if (type == LIME_NODE_VARIABlE_ASSIGNMENT || type == LIME_NODE_VARIABLE_DECLARATION) {
+        result += " var: " + identifier->word + ",";
+        result += " type: " + variable_type->word + ",";
+    }
+
+    if (type == LIME_NODE_PROC_CALL) {
+        result += " proc: " + identifier->word + ",";
     }
 
     if (children.size() > 0) {
@@ -70,21 +78,23 @@ std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::ve
             case LIME_NUMBER:
             case LIME_OPEN_PAREN:
             case LIME_CLOSE_PAREN:
+            case LIME_COMMA:
             case LIME_OPERATOR:
                 ++it;
                 break;
             
             case LIME_IDENTIFIER:
 
-                // make sure the identifier isnt for a structure or procedure
+                // make sure the identifier isn't for a structure or procedure
                 if ((it + 1) != end) {
-                    ++it; auto next = Peek(); --it;
+                    auto next = Peek();
                     
                     //TODO: Handle structures and other things that come after an identifier
                     switch(next.type) {
                         case LIME_PROC:                 running = false; break;
                         case LIME_ASSIGNMENT_OPERATOR:  running = false; break;
-
+                        case LIME_TYPE_IDENTIFIER:      running = false; break;
+                        case LIME_MUTABLE:              running = false; break;
                         default:
                            break; 
                     }
@@ -166,12 +176,12 @@ void SortExpression(Node* node){
         auto op = node->children[index];
 
         if (index == 0) {
-            std::cout << "Unary operation not supported?" << std::endl;
+            Error("Unary operator is not yet supported", op->token.line_number);
             return;
         }
 
         if (index == (int)(node->children.size() - 1)){
-            std::cout << "Operator missing right operand" << std::endl;
+            Error("Operator missing right operand", op->token.line_number);
             return;
         }
 
@@ -195,13 +205,24 @@ Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterat
 
     auto i = it;
 
-    while (i != end) {
-        //std::cout << "><>" << *i << std::endl;
+    auto Peek = [&]() -> auto {
+        auto begin = i;
+        begin++;
+        while(begin->isWhiteSpace)
+            ++begin;
+        return begin;
+    };
 
+    while (i != end) {
         // TODO: Handle all types
         switch ((*i).type) {
-            case LIME_NUMBER: 
             case LIME_IDENTIFIER:
+                if (Peek()->type == LIME_OPEN_PAREN) {
+                    // This is probably a function call
+                    node->children.push_back(handle_function_call(i, end)); 
+                }
+                break;
+            case LIME_NUMBER: 
             case LIME_OPERATOR:
                 node->children.push_back(TokenToNode(*i)); 
                 break;
@@ -260,6 +281,110 @@ void get_all_within_tokens(std::vector<Token>::iterator& it, std::vector<Token>:
     }
 }
 
+Node* parameters_to_node(std::vector<Token>& tokens) {
+    auto result = new Node();
+    auto it = tokens.begin();
+
+    result->type = LIME_NODE_PARAMETER_LIST;
+
+    bool next_not_comma{true};
+    while (it != tokens.end()) {
+
+        switch(it->type) {
+
+            case LIME_TYPE_IDENTIFIER:{ 
+                auto p = it - 1;
+                while (p->isWhiteSpace) p--;
+
+                if (p->type != LIME_IDENTIFIER) {
+                    Error("Identifier expected but got: " + LimeTokenTypesNames.find(p->type)->second, p->line_number);
+                }
+
+                auto node = new Node();
+                node->type = LIME_NODE_VARIABLE_DECLARATION;
+                node->identifier = new Token(*p);
+                node->variable_type = new Token(*it);
+                result->children.push_back(node);
+
+                // Make sure the next token is either a paren or comma
+                auto n = it + 1;
+                while (n->isWhiteSpace) n++;
+
+                if (n != tokens.end() && n->type != LIME_COMMA && n->type != LIME_CLOSE_PAREN)
+                    Error("Expected a comma or a closing paren but got: " + n->word, n->line_number);
+
+                next_not_comma = false;
+                break;
+            }
+
+            case LIME_COMMA:        /* Do nothing */ { 
+                if (next_not_comma)
+                    Error("Unexpected comma", it->line_number);
+                next_not_comma = true;
+                break; 
+            }
+            case LIME_IDENTIFIER:   /* Do nothing */ { next_not_comma = false; break; }
+
+            default:
+                if (it->isWhiteSpace == false)
+                    Error("Miss placed token: " + it->word, it->line_number);
+                break;
+        }
+
+        ++it;
+    }
+
+    return result;
+}
+
+Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>::iterator last) {
+    auto ident = it;
+    it += 2;
+    auto end = it;
+
+    get_all_within_tokens(end, last, "(", ")");
+
+    auto arguments = std::vector<Token>(it, end - 1);
+    auto argument_node = new Node();
+    argument_node->type = LIME_NODE_ARGUMENT_LIST;
+
+    it = end - 1;
+
+    // TODO: Handle each expression in the argument list
+    // TODO: Make this handle nested function calls
+    // This doesnt take in accound commas that are in a nested function call
+    end = arguments.begin(); 
+    auto start = end;  
+    auto scope{0};
+    while(end != arguments.end()){
+        if (end->type == LIME_OPEN_PAREN)
+            scope++;
+        else if (end->type == LIME_CLOSE_PAREN)
+            scope--;
+        else if (end->type == LIME_COMMA && scope == 0) {
+            auto expression = std::vector<Token>(start, end);
+            auto expression_node = PackExpression(expression.begin(), expression.end());
+            argument_node->children.push_back(expression_node);
+            start = end + 1;
+        }
+
+        ++end;
+
+        if (end == arguments.end()){
+            auto expression = std::vector<Token>(start, end);
+            auto expression_node = PackExpression(expression.begin(), expression.end());
+            argument_node->children.push_back(expression_node);
+            start = end;
+        }
+    }
+
+    auto proc_call_node = new Node();
+    proc_call_node->identifier = new Token(*ident);
+    proc_call_node->type = LIME_NODE_PROC_CALL;
+    proc_call_node->children.push_back(argument_node);
+    return proc_call_node;
+}
+
 void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
     auto it = tokens.begin();
     auto back = tokens.end();
@@ -283,13 +408,13 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
         return it;
     };
 
-    //auto Peek = [&]() -> auto {
-    //    auto begin = it;
-    //    begin++;
-    //    while((*begin)->isWhiteSpace)
-    //        ++begin;
-    //    return *begin;
-    //};
+    auto Peek = [&]() -> auto {
+        auto begin = it;
+        begin++;
+        while(begin->isWhiteSpace)
+            ++begin;
+        return begin;
+    };
 
     //auto NextI = [](std::vector<Token>::iterator& i) {
     //    ++i;
@@ -311,6 +436,17 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 break;
             }
 
+            // Handle function calls
+            case LIME_IDENTIFIER: {
+
+                if (Peek()->type == LIME_OPEN_PAREN) {
+                    // This is probably a function call
+                    ast->children.push_back(handle_function_call(it, tokens.end())); 
+                }
+
+                break;
+            }
+
             // Handle procedures
             case LIME_PROC: {
                 
@@ -324,6 +460,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 bool is_decl{true};
 
                 auto node = new Node();
+                node->identifier = new Token(*prev);
 
                 if (it->type == LIME_TYPE_IDENTIFIER) {
                     node->variable_type = new Token(*it);  
@@ -331,12 +468,12 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 }
 
                 if (it->type == LIME_OPEN_CURLY_BRACKET) {
-                    // We know that there are no arguments
+                    // We know that there are no parameters
                     is_decl = false; 
                 } else if (it->type == LIME_OPEN_PAREN) {
-                    // There might be arguments
+                    // There might be parameters
                      
-                    // Get the arguments
+                    // Get the parameters
                     // TODO: Extract this into its own function so that it 
                     // can be used for things like macros and stuff
                     auto end = it + 1;
@@ -345,11 +482,12 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                             break;
                         }
 
+                        //TODO: Move this?
                         if (end->type != LIME_IDENTIFIER &&
-                            end->type != LIME_CAMMA &&
+                            end->type != LIME_COMMA &&
                             end->type != LIME_TYPE_IDENTIFIER &&
                             end->isWhiteSpace == false) {
-                            std::cout << end->ToString() << std::endl;
+                            std::cout << "FREAKOUT:: "<< end->ToString() << std::endl;
                             assert(0);
                         }
 
@@ -358,8 +496,11 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                         end++;
                     }
 
-                    auto arguments = std::vector((it + 1), end);
-                    //TODO: Handle arguments
+                    auto parameters = std::vector((it + 1), end);
+                    //TODO: Handle parameters
+                   
+                    auto parameters_node = parameters_to_node(parameters);
+                    node->children.push_back(parameters_node);
 
                     it = end;
                     Next();
@@ -388,7 +529,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                     it = end-1;
                 }
 
-                node->type = is_decl ? LIME_NODE_PROCEDURE_DECLARATION : LIME_NODE_PROCEDURE_DEFINITION;
+                node->type = is_decl ? LIME_NODE_PROC_DECLARATION : LIME_NODE_PROC_DEFINITION;
                 ast->children.push_back(node);
 
                 break;
@@ -454,15 +595,143 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
 
 //LimeNodeTypes GetTypeOfExpression() {}
 
+CodeLens* GetCodeLens() { return Lens; }
+
+bool CodeLens::varExists(const std::string& name) {
+    for (int i = variable_scope.size() - 1; i >= 0; i--) {
+        if (variable_scope[i].find(name) != variable_scope[i].end())
+            return true;
+    }
+    return false;
+}
+
+void CodeLens::addVar(Node* node) {
+    std::string copy = std::string{node->identifier->word};
+    assert(variable_scope.size() != 0);
+    variable_scope[variable_scope.size() - 1].insert(std::make_pair(copy, node));
+}
+
+bool CodeLens::procExists(const std::string& name) {
+    if (functions.find(name) != functions.end()) 
+        return true;
+    return false;
+}
+
+void CodeLens::addProc(Node* node) {
+    std::string copy = std::string{node->identifier->word};
+    assert(variable_scope.size() != 0);
+    functions.insert(std::make_pair(copy, node));
+}
+
+void CodeLens::push() {
+    variable_scope.push_back(std::map<std::string, Node*>());
+}
+
+void CodeLens::pop() {
+    assert(variable_scope.empty() == false);
+    variable_scope.pop_back();
+}
+
+bool AstPass(Node* ast) {
+    bool result{false};
+    //assert(ast->type == 0);
+
+    Lens->push();
+    for (const auto& node : ast->children) {
+        switch(node->type) {
+            case LIME_NODE_OPERATOR: {
+                // Check operands
+                AstPass(node);
+                break;
+            }
+
+            case LIME_NODE_IDENTIFIER: {
+                if (ast->type == LIME_NODE_EXPRESSION || ast->type == LIME_NODE_OPERATOR) {
+                    // Treat the identifier as a variable value
+                    if (!Lens->varExists(node->token.word)) {
+                        Error("Undefined identifier: " + node->token.word + ".", node->token.line_number);
+                    }
+                }
+
+                break;
+            }
+
+            case LIME_NODE_VARIABlE_ASSIGNMENT: {
+
+
+                if (node->variable_type != nullptr) {
+                    // It is a declaration
+
+                    if (Lens->varExists(node->identifier->word)) {
+                        Error("Redefinition of identifier: " + node->identifier->word + ".", node->token.line_number);
+                    }
+
+                    Lens->addVar(node);
+                } else {
+                    if (!Lens->varExists(node->identifier->word)) {
+                        Error("Undefined identifier: " + node->identifier->word + ".", node->token.line_number);
+                    }
+                }
+
+                // Check the expression
+                if (node->children.size() > 0 && node->children[0]->type == LIME_NODE_EXPRESSION) {
+                    AstPass(node->children[0]);
+                }
+
+                break;
+            }
+
+            case LIME_NODE_PROC_DECLARATION: {
+                // Make sure the function is unique
+                if (Lens->procExists(node->identifier->word)) {
+                    Error("Redefinition of procedure: " + node->identifier->word, node->token.line_number);
+                }
+
+                Lens->addProc(node);
+
+                break;
+            }
+
+            // TODO: Make sure the prototypes match
+            case LIME_NODE_PROC_DEFINITION: {
+                // Make sure the function is unique
+                auto prev = Lens->functions.find(node->identifier->word);
+                if (prev != Lens->functions.end() && prev->second->type == LIME_NODE_PROC_DEFINITION){
+                    Error("Redefinition of procedure: " + node->identifier->word, node->token.line_number);
+                }
+
+                Lens->addProc(node);
+                break;
+            }
+
+            case LIME_NODE_PROC_CALL: {
+                assert(node->identifier); 
+                
+                //TODO: Test that the arguments match the functions prototype
+                if (!Lens->procExists(node->identifier->word)){
+                    Error("Undefined procedure: " + node->identifier->word, node->identifier->line_number);
+                }
+
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+    Lens->pop();
+
+    return result;
+}
+
 Node create_ast_from_tokens(std::vector<Token>& tokens) {
+    Lens = new CodeLens();
 
     auto ast = Ast{};
 
     code_block_to_ast(&ast, tokens);
 
-    
-
-//    std::cout << (ast) << std::endl;
+    AstPass(&ast);
 
     return ast;
 }

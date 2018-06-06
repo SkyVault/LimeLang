@@ -17,7 +17,7 @@ enum LimeTokenTypes {
 	LIME_TABULAR,
 	LIME_WHITESPACE,
 	LIME_OPERATOR,
-    LIME_CAMMA,
+    LIME_COMMA,
 
     LIME_PROC,
 
@@ -48,6 +48,7 @@ static const std::map<LimeTokenTypes, const std::string> LimeTokenTypesNames = {
 	{LIME_NUMBER, "LIME_NUMBER"},
 	{LIME_NEWLINE, "LIME_NEWLINE"},
 	{LIME_TABULAR, "LIME_TABULAR"},
+    {LIME_COMMA,"LIME_COMMA"},
 	{LIME_WHITESPACE, "LIME_WHITESPACE"},
 	{LIME_OPERATOR, "LIME_OPERATOR"},
 

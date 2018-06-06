@@ -1,33 +1,20 @@
-(NONE line: 1 (
-  (PROCEDURE_DECLARATION line: 1 return_type: int)
-  (PROCEDURE_DECLARATION line: 1 return_type: none)
-  (PROCEDURE_DECLARATION line: 1 return_type: none)
-  (PROCEDURE_DEFINITION line: 1 return_type: none (
-    (NONE line: 1 (
-      (VARIABlE_ASSIGNMENT line: 1 variable: test (
-        (EXPRESSION line: 1 (
-          (NUMBER_LITERAL line: 9 word: "100")))))))))
-  (PROCEDURE_DEFINITION line: 1 return_type: none (
-    (NONE line: 1)))
-  (PROCEDURE_DEFINITION line: 1 return_type: none (
-    (NONE line: 1)))
-  (VARIABlE_ASSIGNMENT line: 1 variable: myVar (
-    (EXPRESSION line: 1 (
-      (OPERATOR line: 20 word: "/" (
-        (NUMBER_LITERAL line: 20 word: "100")
-        (EXPRESSION line: 1 (
-          (OPERATOR line: 20 word: "+" (
-            (OPERATOR line: 20 word: "*" (
-              (NUMBER_LITERAL line: 20 word: "4")
-              (NUMBER_LITERAL line: 20 word: "2")))
-            (NUMBER_LITERAL line: 20 word: "3")))))))))))
-  (VARIABlE_ASSIGNMENT line: 1 variable: other (
-    (EXPRESSION line: 1 (
-      (OPERATOR line: 22 word: "+" (
-        (IDENTIFIER line: 22 word: "myVar")
-        (NUMBER_LITERAL line: 22 word: "2")))))))
-  (VARIABlE_ASSIGNMENT line: 1 variable: myVar (
-    (EXPRESSION line: 1 (
-      (OPERATOR line: 24 word: "+" (
-        (IDENTIFIER line: 24 word: "myVar")
-        (NUMBER_LITERAL line: 24 word: "2")))))))))
+(NONE line: 1, (
+  (PROC_DECLARATION line: 1, return_type: none)
+  (VARIABlE_ASSIGNMENT line: 1, var: i, type: int, (
+    (EXPRESSION line: 1, (
+      (PROC_CALL line: 1, proc: AddEm, (
+        (ARGUMENT_LIST line: 1, (
+          (EXPRESSION line: 1, (
+            (PROC_CALL line: 1, proc: AddEm, (
+              (ARGUMENT_LIST line: 1, (
+                (EXPRESSION line: 1, (
+                  (NUMBER_LITERAL line: 5, word: "3")))
+                (EXPRESSION line: 1, (
+                  (PROC_CALL line: 1, proc: AddEm, (
+                    (ARGUMENT_LIST line: 1, (
+                      (EXPRESSION line: 1, (
+                        (NUMBER_LITERAL line: 5, word: "5")))
+                      (EXPRESSION line: 1, (
+                        (NUMBER_LITERAL line: 5, word: "9")))))))))))))))
+          (EXPRESSION line: 1, (
+            (NUMBER_LITERAL line: 5, word: "2")))))))))))))

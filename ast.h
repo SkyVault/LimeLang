@@ -7,33 +7,38 @@
 #include <tuple>
 #include <cassert>
 #include <map>
+#include <algorithm>
 
 enum NodeType {
     LIME_NODE_NONE,
+    LIME_NODE_VARIABLE_DECLARATION,
     LIME_NODE_VARIABlE_ASSIGNMENT,
     LIME_NODE_EXPRESSION,
     LIME_NODE_NUMBER_LITERAL,
     LIME_NODE_OPERATOR,
     LIME_NODE_CODE_BLOCK,
     LIME_NODE_IDENTIFIER,
-    LIME_NODE_FUNCTION_CALL,
-    LIME_NODE_PROCEDURE_DEFINITION,
-    LIME_NODE_PROCEDURE_DECLARATION,
+    LIME_NODE_PROC_CALL,
+    LIME_NODE_PROC_DEFINITION,
+    LIME_NODE_PROC_DECLARATION,
     LIME_NODE_ARGUMENT_LIST,
+    LIME_NODE_PARAMETER_LIST,
 };
 
 static const std::map<NodeType, const std::string> LimeNodeTypesNames = {
     {LIME_NODE_NONE,"NONE"},
     {LIME_NODE_VARIABlE_ASSIGNMENT,"VARIABlE_ASSIGNMENT"},
+    {LIME_NODE_VARIABLE_DECLARATION, "VARIABLE_DECLARATION"},
     {LIME_NODE_EXPRESSION,"EXPRESSION"},
     {LIME_NODE_NUMBER_LITERAL,"NUMBER_LITERAL"},
     {LIME_NODE_OPERATOR,"OPERATOR"},
     {LIME_NODE_CODE_BLOCK,"CODE_BLOCK"},
     {LIME_NODE_IDENTIFIER,"IDENTIFIER"},
-    {LIME_NODE_FUNCTION_CALL,"FUNCTION_CALL"},
-    {LIME_NODE_PROCEDURE_DECLARATION,"PROCEDURE_DECLARATION"},
-    {LIME_NODE_PROCEDURE_DEFINITION, "PROCEDURE_DEFINITION"},
-    {LIME_NODE_ARGUMENT_LIST,"ARGUMENT_LIST"}
+    {LIME_NODE_PROC_CALL,"PROC_CALL"},
+    {LIME_NODE_PROC_DECLARATION,"PROC_DECLARATION"},
+    {LIME_NODE_PROC_DEFINITION, "PROC_DEFINITION"},
+    {LIME_NODE_ARGUMENT_LIST,"ARGUMENT_LIST"},
+    {LIME_NODE_PARAMETER_LIST, "PARAMETER_LIST"},
 };
 
 enum OrderOfPrecedence {
@@ -95,6 +100,7 @@ struct Node {
             Token* identifier{nullptr}; 
             Token* variable_type{nullptr};
             bool canMutate{false};
+            bool external{false};
         };
     };
 
@@ -104,7 +110,6 @@ struct Node {
 
     friend Node create_ast_from_tokens(const std::vector<Token>& tokens);
     friend void code_block_to_ast(Node* ast, std::vector<Token>& tokens);
-
 };
 
 ostream& operator<<(ostream& os, const Node& node);
@@ -112,8 +117,21 @@ ostream& operator<<(ostream& os, const Node& node);
 typedef Node Ast;
 
 struct CodeLens {
+    std::vector<std::map<std::string, Node*>> variable_scope;
+    std::map<std::string, Node*> functions;
 
+    bool varExists(const std::string& name);
+    void addVar(Node* node);
+
+    bool procExists(const std::string& name);
+    void addProc(Node* node);
+
+    void push();
+    void pop();
 };
+
+static CodeLens* Lens;
+CodeLens* GetCodeLens();
 
 void code_block_to_ast(Ast* ast, std::vector<Token>& tokens);
 Ast create_ast_from_tokens(std::vector<Token>& tokens);

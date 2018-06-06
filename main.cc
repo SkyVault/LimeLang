@@ -13,29 +13,9 @@
 
 const auto code = std::string{R"LEAF(
 #[ Procedure Tests ] 
-
-ProcTest1 proc int
-ProcTest2 proc() none
-ProcTest3 proc(a) none
-
-ProcTest4 proc { 
-    test mut int = 100
-}
-
-ProcTest5 proc() none {}
-
-AddEm proc(a int, b int) {
-    ret a + b
-}
-
-#[ Expression Tests ] 
-
-myVar mut int = 100 / (4 * 2 + 3)
-# myVar mut int = / 100 (* 4 (+ 2 3))
-other int = myVar + 2
-
-myVar = myVar + 2
-
+#!/bin/lime # This is bogus
+AddEm proc
+i int = AddEm(AddEm(3,AddEm(5, 9)),2)
 )LEAF"};
 
 #define RUN_TESTS

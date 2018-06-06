@@ -181,7 +181,7 @@ vector<Token> WordsToTokens(const vector<string>& words) {
 		else if (word == "}") NToken( word, LIME_CLOSE_CURLY_BRACKET);
 		else if (word == "proc") NToken( word, LIME_PROC );
 		else if (word == "mut") NToken( word, LIME_MUTABLE );
-        else if (word == ",") NToken(word, LIME_CAMMA);
+        else if (word == ",") NToken(word, LIME_COMMA);
 		else if (operators.find(word) != std::string::npos){
             auto token = Token(word, LIME_OPERATOR);
             token.op = GetOperator(word);
