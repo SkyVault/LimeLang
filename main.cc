@@ -12,10 +12,13 @@
 #include "lime_tests.h"
 
 const auto code = std::string{R"LEAF(
-#[ Procedure Tests ] 
-#!/bin/lime # This is bogus
-AddEm proc
-i int = AddEm(AddEm(3,AddEm(5, 9)),2)
+#[ While Test ] 
+
+val int = 0
+if val == 0 {
+    print("Yeah")
+}
+
 )LEAF"};
 
 #define RUN_TESTS
@@ -43,8 +46,8 @@ int main() {
     // Ast
     auto ast = create_ast_from_tokens(tokens);
 
-    LimeCGen cgen;
-    cgen.compile_ast_to_c(&ast, "out.c");
+    //LimeCGen cgen;
+    //cgen.compile_ast_to_c(&ast, "out.c");
 
 #ifdef LOG_TO_FILES
     auto afile = std::ofstream("ast_out.txt");

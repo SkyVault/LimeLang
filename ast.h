@@ -23,6 +23,8 @@ enum NodeType {
     LIME_NODE_PROC_DECLARATION,
     LIME_NODE_ARGUMENT_LIST,
     LIME_NODE_PARAMETER_LIST,
+    LIME_NODE_WHILE_LOOP,
+    LIME_NODE_IF_STATEMENT,
 };
 
 static const std::map<NodeType, const std::string> LimeNodeTypesNames = {
@@ -39,6 +41,8 @@ static const std::map<NodeType, const std::string> LimeNodeTypesNames = {
     {LIME_NODE_PROC_DEFINITION, "PROC_DEFINITION"},
     {LIME_NODE_ARGUMENT_LIST,"ARGUMENT_LIST"},
     {LIME_NODE_PARAMETER_LIST, "PARAMETER_LIST"},
+    {LIME_NODE_WHILE_LOOP, "LIME_NODE_WHILE_LOOP"},
+    {LIME_NODE_IF_STATEMENT, "LIME_NODE_IF_STATEMENT"},
 };
 
 enum OrderOfPrecedence {
@@ -70,12 +74,12 @@ static const std::map<std::string, OrderOfPrecedence> OrderOfPrecedenceTable = {
     {"*=",     TimesEqual },
     {"/=",     DivideEqual },
     {"%=",     ModEqual },
-    {"eq",     Equals },
-    {"gr",     GreaterThan },
-    {"gre",    GreaterThanOrEqual },
-    {"les",    LessThan },
-    {"lee",    LessThanOrEqual },
-    {"neq",    NotEqual },
+    {"==",     Equals },
+    {">",     GreaterThan },
+    {">=",    GreaterThanOrEqual },
+    {"<",    LessThan },
+    {"<=",    LessThanOrEqual },
+    {"!=",    NotEqual },
     {"-",      Sub },
     {"+",      Add },
     {"%",      Mod },

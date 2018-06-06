@@ -5,6 +5,8 @@ void LimeAssert(bool expression, int line_number, LimeErrorLevel lvl, const std:
 }
 
 bool isNumber(const std::string& word) {
+    if (word.size() == 0) return false;
+
     auto it = word.begin();
     bool isDecimal{false};
 

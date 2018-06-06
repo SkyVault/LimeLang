@@ -1,6 +1,7 @@
 #include "lexer.h"
 #include "lime_utils.h"
 #include <cctype>
+#include <cassert>
 
 Token::Token()
 {
@@ -128,6 +129,34 @@ vector<string> SplitTokensToWordsAndSymbols(const string& code){
 			continue;
 		}
 
+        // Handle multi character operators
+        switch(*it) {
+            case '+': 
+            case '-':
+            case '*':
+            case '/':
+            case '=':
+            case '!':
+            case '>':
+            case '<': {
+
+                if (*(it + 1) == '=') {
+                    if (word.size() > 0){
+                        result.push_back(word);
+                        word.clear();
+                    }
+
+                    auto r = *it + std::string{*(it + 1)};
+                    result.push_back(r);
+                    it += 2;
+                }
+
+                break;
+            }
+            default: 
+                break;
+        }
+
 		if (delimiters.find(*it) != std::string::npos) {
 			if (word.length() > 0)
 				result.push_back(word);
@@ -158,8 +187,34 @@ vector<Token> WordsToTokens(const vector<string>& words) {
 		if (word == "-") return LIME_MINUS_OPERATOR;
 		if (word == "*") return LIME_MULTIPLICATION_OPERATOR;
 		if (word == "/") return LIME_DIVISION_OPERATOR;
+
+		if (word == "==") return LIME_COMPAIRISON_OPERATOR;
+		if (word == "!=") return LIME_NOT_EQUAL_OPERATOR;
+		if (word == ">=") return LIME_GREATER_EQUAL_OPERATOR;
+        if (word == "<=") return LIME_LESS_EQUAL_OPERATOR;
+        
+		if (word == ">") return LIME_GREATER;
+        if (word == "<") return LIME_LESS;
+
 		cout << "Unhandled operator: " << word << endl;
 		return LIME_NONE_OPERATOR;
+	};
+
+	const auto IsOperator = [](std::string word){
+		if (word == "=") return true;
+		if (word == "+") return true;
+		if (word == "-") return true;
+		if (word == "*") return true;
+		if (word == "/") return true;
+
+		if (word == "==") return true;
+		if (word == "!=") return true;
+		if (word == ">=") return true;
+        if (word == "<=") return true;
+        
+		if (word == ">") return true;
+        if (word == "<") return true;
+		return false;
 	};
 
     auto NToken = [&](std::string word, LimeTokenTypes type, bool isWhiteSpace = false) {
@@ -182,7 +237,10 @@ vector<Token> WordsToTokens(const vector<string>& words) {
 		else if (word == "proc") NToken( word, LIME_PROC );
 		else if (word == "mut") NToken( word, LIME_MUTABLE );
         else if (word == ",") NToken(word, LIME_COMMA);
-		else if (operators.find(word) != std::string::npos){
+        else if (word == "while") NToken(word, LIME_WHILE);
+        else if (word == "for") NToken(word, LIME_FOR);
+        else if (word == "if") NToken(word, LIME_IF);
+		else if (IsOperator(word)){
             auto token = Token(word, LIME_OPERATOR);
             token.op = GetOperator(word);
             token.line_number = line_number;

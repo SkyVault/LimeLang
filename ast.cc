@@ -30,7 +30,7 @@ std::string Node::ToString(std::string indent = "") const {
 
     if (type == LIME_NODE_VARIABlE_ASSIGNMENT || type == LIME_NODE_VARIABLE_DECLARATION) {
         result += " var: " + identifier->word + ",";
-        result += " type: " + variable_type->word + ",";
+        //result += " type: " + cp + ",";
     }
 
     if (type == LIME_NODE_PROC_CALL) {
@@ -176,7 +176,7 @@ void SortExpression(Node* node){
         auto op = node->children[index];
 
         if (index == 0) {
-            Error("Unary operator is not yet supported", op->token.line_number);
+            Error("Unary operator is not yet supported: " + op->token.ToString(), op->token.line_number);
             return;
         }
 
@@ -220,6 +220,8 @@ Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterat
                 if (Peek()->type == LIME_OPEN_PAREN) {
                     // This is probably a function call
                     node->children.push_back(handle_function_call(i, end)); 
+                } else {
+                    node->children.push_back(TokenToNode(*i)); 
                 }
                 break;
             case LIME_NUMBER: 
@@ -345,14 +347,12 @@ Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>:
     get_all_within_tokens(end, last, "(", ")");
 
     auto arguments = std::vector<Token>(it, end - 1);
+
     auto argument_node = new Node();
     argument_node->type = LIME_NODE_ARGUMENT_LIST;
 
     it = end - 1;
 
-    // TODO: Handle each expression in the argument list
-    // TODO: Make this handle nested function calls
-    // This doesnt take in accound commas that are in a nested function call
     end = arguments.begin(); 
     auto start = end;  
     auto scope{0};
@@ -433,6 +433,68 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
         // Handle operators
         switch((*it).type) {
             case LIME_NEWLINE: {
+                break;
+            }
+
+            // Handle while loops
+            case LIME_WHILE: {
+
+                ++it;
+                auto beg = it;
+                while (it != tokens.end() && it->type != LIME_OPEN_CURLY_BRACKET)
+                    ++it;
+
+                auto expression = std::vector<Token>(beg, it);
+                auto expression_node = PackExpression(expression.begin(), expression.end());
+
+                auto while_node = new Node();
+                while_node->type = LIME_NODE_WHILE_LOOP;
+                while_node->children.push_back(expression_node);
+
+                auto end = it + 1;
+                get_all_within_tokens(end, tokens.end());
+                auto block = std::vector<Token>(it + 1, end - 1);
+               
+                // HERE
+                auto block_node = new Node();
+
+                code_block_to_ast(block_node, block);
+                while_node->children.push_back(block_node);
+                it = end-1;
+
+                ast->children.push_back(while_node);
+
+                break;
+            }
+            
+            // Handle if statements
+            case LIME_IF: {
+
+                ++it;
+                auto beg = it;
+                while (it != tokens.end() && it->type != LIME_OPEN_CURLY_BRACKET)
+                    ++it;
+
+                auto expression = std::vector<Token>(beg, it);
+                auto expression_node = PackExpression(expression.begin(), expression.end());
+
+                auto while_node = new Node();
+                while_node->type = LIME_NODE_IF_STATEMENT;
+                while_node->children.push_back(expression_node);
+
+                auto end = it + 1;
+                get_all_within_tokens(end, tokens.end());
+                auto block = std::vector<Token>(it + 1, end - 1);
+               
+                // HERE
+                auto block_node = new Node();
+
+                code_block_to_ast(block_node, block);
+                while_node->children.push_back(block_node);
+                it = end-1;
+
+                ast->children.push_back(while_node);
+
                 break;
             }
 
@@ -656,8 +718,17 @@ bool AstPass(Node* ast) {
                 break;
             }
 
-            case LIME_NODE_VARIABlE_ASSIGNMENT: {
+            case LIME_NODE_IF_STATEMENT:
+            case LIME_NODE_WHILE_LOOP: {
+                assert(node->children.size() > 1);
 
+                AstPass(node->children[0]);
+                AstPass(node->children[1]);
+
+                break;
+            }
+
+            case LIME_NODE_VARIABlE_ASSIGNMENT: {
 
                 if (node->variable_type != nullptr) {
                     // It is a declaration
@@ -730,6 +801,10 @@ Node create_ast_from_tokens(std::vector<Token>& tokens) {
     auto ast = Ast{};
 
     code_block_to_ast(&ast, tokens);
+
+    //TODO: Remove this hack, this is just a hack so that it wont give us an
+    // error when we call the print function
+    Lens->functions.insert(std::make_pair("print", new Node()));
 
     AstPass(&ast);
 
