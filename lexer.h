@@ -17,11 +17,15 @@ enum LimeTokenTypes {
 	LIME_TABULAR,
 	LIME_WHITESPACE,
 	LIME_OPERATOR,
+    LIME_CAMMA,
 
     LIME_PROC,
 
     LIME_OPEN_PAREN,
     LIME_CLOSE_PAREN,
+
+    LIME_OPEN_CURLY_BRACKET,
+    LIME_CLOSE_CURLY_BRACKET,
 
     LIME_MUTABLE,
 
@@ -70,6 +74,7 @@ struct Token {
 	LimeOperators op{LIME_ASSIGNMENT_OPERATOR};
     
     bool isWhiteSpace{false};
+    int line_number{1};
 
     std::string ToString() const;
 

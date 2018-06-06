@@ -20,6 +20,7 @@ Token::Token(const Token& token) {
     word = token.word;
     op = token.op;
     isWhiteSpace = token.isWhiteSpace;
+    line_number = token.line_number;
 }
 
 ostream& operator<<(ostream& os, const Token& token) {
@@ -147,6 +148,8 @@ vector<string> SplitTokensToWordsAndSymbols(const string& code){
 vector<Token> WordsToTokens(const vector<string>& words) {
 	vector<Token> result;
 
+    int line_number = 1;
+
 	const std::string operators = "=+-*/<>^";
 
 	const auto GetOperator = [](std::string word){
@@ -159,27 +162,40 @@ vector<Token> WordsToTokens(const vector<string>& words) {
 		return LIME_NONE_OPERATOR;
 	};
 
+    auto NToken = [&](std::string word, LimeTokenTypes type, bool isWhiteSpace = false) {
+        auto t = Token(word, type, isWhiteSpace);
+        t.line_number = line_number;
+        result.push_back(t);
+    };
+
 	for (const auto& word : words){
-		if (word == "\n") result.push_back(Token( word, LIME_NEWLINE, true));
-		else if (word == "\t") result.push_back(Token( word, LIME_TABULAR, true));
-		else if (word == " ") result.push_back(Token( word, LIME_WHITESPACE, true));
-		else if (word == "(") result.push_back(Token( word, LIME_OPEN_PAREN ));
-		else if (word == ")") result.push_back(Token( word, LIME_CLOSE_PAREN ));
-		else if (word == "proc") result.push_back(Token( word, LIME_PROC ));
-		else if (word == "mut") result.push_back(Token( word, LIME_MUTABLE ));
+		if (word == "\n") {
+            NToken( word, LIME_NEWLINE, true);
+            line_number++;
+        }
+		else if (word == "\t") NToken( word, LIME_TABULAR, true);
+		else if (word == " ") NToken( word, LIME_WHITESPACE, true);
+		else if (word == "(") NToken( word, LIME_OPEN_PAREN );
+		else if (word == ")") NToken( word, LIME_CLOSE_PAREN );
+		else if (word == "{") NToken( word, LIME_OPEN_CURLY_BRACKET);
+		else if (word == "}") NToken( word, LIME_CLOSE_CURLY_BRACKET);
+		else if (word == "proc") NToken( word, LIME_PROC );
+		else if (word == "mut") NToken( word, LIME_MUTABLE );
+        else if (word == ",") NToken(word, LIME_CAMMA);
 		else if (operators.find(word) != std::string::npos){
             auto token = Token(word, LIME_OPERATOR);
             token.op = GetOperator(word);
+            token.line_number = line_number;
 			result.push_back(token);
         }
         else if (isNumber(word)) {
-            result.push_back(Token(word, LIME_NUMBER));
+            NToken(word, LIME_NUMBER);
         }
         else if (isType(word)) {
-            result.push_back(Token(word, LIME_TYPE_IDENTIFIER));
+            NToken(word, LIME_TYPE_IDENTIFIER);
         }
 		else 
-			result.push_back(Token(word, LIME_IDENTIFIER));
+			NToken(word, LIME_IDENTIFIER);
 	}
 	
 	return result;

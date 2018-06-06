@@ -6,6 +6,8 @@
 enum LimeTypes {
     Unknown,
 
+    None,
+
     Uint8,
     Uint16,
     Uint32,
@@ -26,6 +28,7 @@ enum LimeTypes {
 };
 
 static std::map<std::string, LimeTypes> LimeTypeStringMap = {
+    {"none", None},
     {"u8",  Uint8},
     {"u16", Uint16},
     {"u32", Uint32},
