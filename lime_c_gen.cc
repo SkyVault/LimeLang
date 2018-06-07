@@ -62,9 +62,7 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
     for (const auto n : node->children) {
         switch(n->type) {
             case LIME_NODE_EMIT: {
-
                 ss << indent << n->token.word;
-
                 break;
             }
 
