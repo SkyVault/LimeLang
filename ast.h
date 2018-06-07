@@ -25,6 +25,8 @@ enum NodeType {
     LIME_NODE_PARAMETER_LIST,
     LIME_NODE_WHILE_LOOP,
     LIME_NODE_IF_STATEMENT,
+    LIME_NODE_RETURN,
+    LIME_NODE_EMIT,
 };
 
 static const std::map<NodeType, const std::string> LimeNodeTypesNames = {
@@ -43,6 +45,8 @@ static const std::map<NodeType, const std::string> LimeNodeTypesNames = {
     {LIME_NODE_PARAMETER_LIST, "PARAMETER_LIST"},
     {LIME_NODE_WHILE_LOOP, "LIME_NODE_WHILE_LOOP"},
     {LIME_NODE_IF_STATEMENT, "LIME_NODE_IF_STATEMENT"},
+    {LIME_NODE_RETURN,"RETURN"},
+    {LIME_NODE_EMIT, "LIME_NODE_EMIT"},
 };
 
 enum OrderOfPrecedence {
@@ -108,6 +112,8 @@ struct Node {
         };
     };
 
+    Node* add(Node* node);
+
 	friend ostream& operator<<(ostream& os, const Node& node);
 
     std::string ToString(std::string indent) const;
@@ -138,4 +144,4 @@ static CodeLens* Lens;
 CodeLens* GetCodeLens();
 
 void code_block_to_ast(Ast* ast, std::vector<Token>& tokens);
-Ast create_ast_from_tokens(std::vector<Token>& tokens);
+Node* create_ast_from_tokens(std::vector<Token>& tokens);

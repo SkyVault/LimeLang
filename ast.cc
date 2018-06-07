@@ -1,5 +1,6 @@
 #include "ast.h"
 #include "lime.h"
+#include <sstream>
 
 Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>::iterator last); 
 
@@ -14,6 +15,11 @@ Node::Node(Token& token) {
 }
 
 Node::Node(){}
+
+Node* Node::add(Node* node) {
+    children.push_back(node);
+    return node;
+}
 
 std::string Node::ToString(std::string indent = "") const {
     std::string result{""};
@@ -436,6 +442,59 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 break;
             }
 
+            // HERE FOR NEW TOKEN
+            
+            case LIME_METATAG: {
+                auto next = Next();
+                if (next->type == LIME_IDENTIFIER) {
+
+                    if (next->word == "emit") {
+                        next = Next();                        
+
+                        if (next->type != LIME_OPEN_CURLY_BRACKET) {
+                            Error("The metatag emit requires a code block", next->line_number);
+                        }
+
+                        auto end = it + 1;
+                        get_all_within_tokens(end, tokens.end());
+                        auto items = std::vector<Token>(it + 1, end - 1);
+
+                        std::stringstream ss;
+                        for (auto v : items) {
+                            ss << v.word;
+                        }
+
+                        auto node = new Node();
+                        node->type = LIME_NODE_EMIT;
+                        node->token.word = ss.str();
+                        ast->children.push_back(node);
+
+                        it = end-1;
+
+                    } else {
+                        Error("Unknown metatag: " + next->word, next->line_number);
+                    }
+
+                } else {
+                    Error("Metatag $ requires an identifier", next->line_number);
+                }
+
+                break;
+            }
+
+            case LIME_RETURN: {
+                ++it;
+                auto expression = GetExpressionTokens(it, tokens.end());
+                auto expression_node = PackExpression(expression.begin(), expression.end());
+
+                auto node = new Node();
+                node->type = LIME_NODE_RETURN;
+                node->children.push_back(expression_node);
+                ast->children.push_back(node);
+
+                break;
+            }
+
             // Handle while loops
             case LIME_WHILE: {
 
@@ -455,7 +514,6 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 get_all_within_tokens(end, tokens.end());
                 auto block = std::vector<Token>(it + 1, end - 1);
                
-                // HERE
                 auto block_node = new Node();
 
                 code_block_to_ast(block_node, block);
@@ -728,6 +786,12 @@ bool AstPass(Node* ast) {
                 break;
             }
 
+            case LIME_NODE_RETURN: {
+                if (node->children.size() > 0)
+                    AstPass(node->children[0]);
+                break;
+            }
+
             case LIME_NODE_VARIABlE_ASSIGNMENT: {
 
                 if (node->variable_type != nullptr) {
@@ -795,18 +859,18 @@ bool AstPass(Node* ast) {
     return result;
 }
 
-Node create_ast_from_tokens(std::vector<Token>& tokens) {
+Node* create_ast_from_tokens(std::vector<Token>& tokens) {
     Lens = new CodeLens();
 
-    auto ast = Ast{};
+    auto ast = new Node(); 
 
-    code_block_to_ast(&ast, tokens);
+    code_block_to_ast(ast, tokens);
 
     //TODO: Remove this hack, this is just a hack so that it wont give us an
     // error when we call the print function
     Lens->functions.insert(std::make_pair("print", new Node()));
 
-    AstPass(&ast);
+    AstPass(ast);
 
     return ast;
 }

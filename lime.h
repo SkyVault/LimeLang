@@ -10,6 +10,9 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <algorithm>
+#include <vector>
+#include <map>
 
 enum class ansi_color_code: int{
     black = 30,
@@ -36,3 +39,10 @@ static void print_as_color(printable const& value, ansi_color_code color){
 }
 
 void Error(std::string message, int line_number);
+
+const std::string char_set = 
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz"
+    "0123456789";
+
+std::string gen_uuid(int num = 6);

@@ -31,15 +31,14 @@ enum LimeErrorLevel{ LimeErrorLevel7,71
     LimeWarning,LimeWarning9,108
     LimeNoteLimeNote10,125
 
-main.cc,151
-const auto code = std::string{R"LEAF(code14,196
-#define RUN_TESTSRUN_TESTS29,337
-#define LOG_TO_FILESLOG_TO_FILES30,355
-int main() {main32,377
+main.cc,116
+const auto code = std::string{R"LEAF(code15,214
+#define LOG_TO_FILESLOG_TO_FILES23,317
+int main() {main25,339
 
-lime_c_gen.cc,169
-void LimeCGen::compile_code_block(Node* node) {compile_code_block4,43
-void LimeCGen::compile_ast_to_c(Node* node, const std::string& out_file) {compile_ast_to_c8,99
+lime_c_gen.cc,197
+void LimeCGen::compile_code_block(Node* node, const std::string indent) {compile_code_block5,67
+void LimeCGen::compile_ast_to_c(Node* node, const std::string& out_file) {compile_ast_to_c37,895
 
 out.c,0
 
@@ -51,39 +50,40 @@ ostream& operator<<(ostream& os, const Token& token) {operator <<27,440
 std::string Token::ToString() const {ToString33,553
 const std::string LoadFileToString(const std::string& path){LoadFileToString43,817
 vector<string> SplitTokensToWordsAndSymbols(const string& code){SplitTokensToWordsAndSymbols57,1056
-vector<Token> WordsToTokens(const vector<string>& words) {WordsToTokens175,3831
-vector<Token> TokenizeString(const std::string& code) {TokenizeString261,6693
+vector<Token> WordsToTokens(const vector<string>& words) {WordsToTokens177,3903
+vector<Token> TokenizeString(const std::string& code) {TokenizeString263,6763
 
 lime_tests.h,215
 std::tuple<bool, std::string> isNumberTests() {isNumberTests9,122
 bool runTest(std::function<std::tuple<bool, std::string>()> fn, const std::string& name){runTest21,553
 bool limeRunTests() {limeRunTests27,825
 
-ast.cc,1678
+ast.cc,1719
 Node::Node(Token& token) {Node6,135
 Node::Node(){}Node16,365
-std::string Node::ToString(std::string indent = "") const {ToString18,381
-ostream& operator<<(ostream& os, const Node& node) {operator <<55,1527
-std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::vector<Token>::iterator end) {GetExpressionTokens61,1652
-Node* HandleFunctionCall(std::vector<Token>::iterator begin) {HandleFunctionCall116,3338
-Node* TokenToNode(Token& token) {TokenToNode120,3424
-void SortExpression(Node* node){SortExpression142,3981
-Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterator end) {PackExpression202,5815
-void get_all_within_tokens(std::vector<Token>::iterator& it, std::vector<Token>::iterator end, std::string tstart = "{", std::string tend = "}") {get_all_within_tokens273,7981
-Node* parameters_to_node(std::vector<Token>& tokens) {parameters_to_node287,8367
-Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>::iterator last) {handle_function_call343,10158
-void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {code_block_to_ast389,11608
-CodeLens* GetCodeLens() { return Lens; }GetCodeLens661,20237
-bool CodeLens::varExists(const std::string& name) {varExists663,20279
-void CodeLens::addVar(Node* node) {addVar671,20511
-bool CodeLens::procExists(const std::string& name) {procExists677,20732
-void CodeLens::addProc(Node* node) {addProc683,20877
-void CodeLens::push() {push689,21067
-void CodeLens::pop() {pop693,21156
-bool AstPass(Node* ast) {AstPass698,21258
-Node create_ast_from_tokens(std::vector<Token>& tokens) {create_ast_from_tokens790,24311
+Node* Node::add(Node* node) {add18,381
+std::string Node::ToString(std::string indent = "") const {ToString23,461
+ostream& operator<<(ostream& os, const Node& node) {operator <<60,1607
+std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::vector<Token>::iterator end) {GetExpressionTokens66,1732
+Node* HandleFunctionCall(std::vector<Token>::iterator begin) {HandleFunctionCall121,3418
+Node* TokenToNode(Token& token) {TokenToNode125,3504
+void SortExpression(Node* node){SortExpression147,4061
+Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterator end) {PackExpression207,5895
+void get_all_within_tokens(std::vector<Token>::iterator& it, std::vector<Token>::iterator end, std::string tstart = "{", std::string tend = "}") {get_all_within_tokens277,8007
+Node* parameters_to_node(std::vector<Token>& tokens) {parameters_to_node291,8393
+Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>::iterator last) {handle_function_call347,10184
+void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {code_block_to_ast393,11634
+CodeLens* GetCodeLens() { return Lens; }GetCodeLens678,20726
+bool CodeLens::varExists(const std::string& name) {varExists680,20768
+void CodeLens::addVar(Node* node) {addVar688,21000
+bool CodeLens::procExists(const std::string& name) {procExists694,21221
+void CodeLens::addProc(Node* node) {addProc700,21366
+void CodeLens::push() {push706,21556
+void CodeLens::pop() {pop710,21645
+bool AstPass(Node* ast) {AstPass715,21747
+Node create_ast_from_tokens(std::vector<Token>& tokens) {create_ast_from_tokens822,25230
 
-lexer.h,1652
+lexer.h,1688
 enum LimeTokenTypes {LimeTokenTypes13,173
 	LIME_IDENTIFIER,LIME_IDENTIFIER14,195
 	LIME_NUMBER,LIME_NUMBER15,213
@@ -93,35 +93,42 @@ enum LimeTokenTypes {LimeTokenTypes13,173
 	LIME_OPERATOR,LIME_OPERATOR19,275
     LIME_COMMA,LIME_COMMA20,291
     LIME_PROC,LIME_PROC22,308
-    LIME_OPEN_PAREN,LIME_OPEN_PAREN24,324
-    LIME_CLOSE_PAREN,LIME_CLOSE_PAREN25,345
-    LIME_OPEN_CURLY_BRACKET,LIME_OPEN_CURLY_BRACKET27,368
-    LIME_CLOSE_CURLY_BRACKET,LIME_CLOSE_CURLY_BRACKET28,397
-    LIME_MUTABLE,LIME_MUTABLE30,428
-    LIME_TYPE_IDENTIFIER,LIME_TYPE_IDENTIFIER32,447
-    LIME_WHILE, LIME_WHILE34,474
-    LIME_FOR,LIME_FOR35,491
-    LIME_IF,LIME_IF37,506
-	LIME_NUM_TOKENSLIME_NUM_TOKENS39,520
-enum LimeOperators {LimeOperators42,541
-	LIME_ASSIGNMENT_OPERATOR,LIME_ASSIGNMENT_OPERATOR43,562
-	LIME_PLUS_OPERATOR,LIME_PLUS_OPERATOR44,589
-	LIME_MINUS_OPERATOR,LIME_MINUS_OPERATOR45,610
-	LIME_MULTIPLICATION_OPERATOR,LIME_MULTIPLICATION_OPERATOR46,632
-	LIME_DIVISION_OPERATOR,LIME_DIVISION_OPERATOR47,663
-    LIME_COMPAIRISON_OPERATOR,LIME_COMPAIRISON_OPERATOR49,689
-    LIME_GREATER_EQUAL_OPERATOR,LIME_GREATER_EQUAL_OPERATOR50,720
-    LIME_LESS_EQUAL_OPERATOR,LIME_LESS_EQUAL_OPERATOR51,753
-    LIME_GREATER,LIME_GREATER52,783
-    LIME_LESS,LIME_LESS53,801
-    LIME_NOT_EQUAL_OPERATOR,LIME_NOT_EQUAL_OPERATOR54,816
-	LIME_NONE_OPERATORLIME_NONE_OPERATOR56,846
-static const std::map<LimeTokenTypes, const std::string> LimeTokenTypesNames = {LimeTokenTypesNames59,870
-struct Token {Token83,1519
-typedef std::vector<Token> TokenList;TokenList103,1973
+    LIME_RETURN,LIME_RETURN23,323
+    LIME_OPEN_PAREN,LIME_OPEN_PAREN25,341
+    LIME_CLOSE_PAREN,LIME_CLOSE_PAREN26,362
+    LIME_OPEN_CURLY_BRACKET,LIME_OPEN_CURLY_BRACKET28,385
+    LIME_CLOSE_CURLY_BRACKET,LIME_CLOSE_CURLY_BRACKET29,414
+    LIME_MUTABLE,LIME_MUTABLE31,445
+    LIME_TYPE_IDENTIFIER,LIME_TYPE_IDENTIFIER33,464
+    LIME_WHILE, LIME_WHILE35,491
+    LIME_FOR,LIME_FOR36,508
+    LIME_IF,LIME_IF38,523
+	LIME_NUM_TOKENSLIME_NUM_TOKENS40,537
+enum LimeOperators {LimeOperators43,558
+	LIME_ASSIGNMENT_OPERATOR,LIME_ASSIGNMENT_OPERATOR44,579
+	LIME_PLUS_OPERATOR,LIME_PLUS_OPERATOR45,606
+	LIME_MINUS_OPERATOR,LIME_MINUS_OPERATOR46,627
+	LIME_MULTIPLICATION_OPERATOR,LIME_MULTIPLICATION_OPERATOR47,649
+	LIME_DIVISION_OPERATOR,LIME_DIVISION_OPERATOR48,680
+    LIME_COMPAIRISON_OPERATOR,LIME_COMPAIRISON_OPERATOR50,706
+    LIME_GREATER_EQUAL_OPERATOR,LIME_GREATER_EQUAL_OPERATOR51,737
+    LIME_LESS_EQUAL_OPERATOR,LIME_LESS_EQUAL_OPERATOR52,770
+    LIME_GREATER,LIME_GREATER53,800
+    LIME_LESS,LIME_LESS54,818
+    LIME_NOT_EQUAL_OPERATOR,LIME_NOT_EQUAL_OPERATOR55,833
+	LIME_NONE_OPERATORLIME_NONE_OPERATOR57,863
+static const std::map<LimeTokenTypes, const std::string> LimeTokenTypesNames = {LimeTokenTypesNames60,887
+struct Token {Token85,1566
+typedef std::vector<Token> TokenList;TokenList105,2020
 
-lime_c_gen.h,32
-struct LimeCGen {LimeCGen7,69
+lime_c_gen.h,435
+const std::string TypeDefs = R"TYPEDEFS(TypeDefs10,108
+struct LimeCGen {LimeCGen29,559
+    std::stringstream code, gfdef, gfprot, gvd, header;code34,727
+    std::stringstream code, gfdef, gfprot, gvd, header;gfdef34,727
+    std::stringstream code, gfdef, gfprot, gvd, header;gfprot34,727
+    std::stringstream code, gfdef, gfprot, gvd, header;gvd34,727
+    std::stringstream code, gfdef, gfprot, gvd, header;header34,727
 
 Makefile,264
 CC=g++CC1,0
@@ -131,32 +138,33 @@ SOURCES=$(wildcard *.cc)SOURCES4,126
 OBJECTS=$(SOURCES:.cc=.o)OBJECTS5,151
 	TARGET=a.outTARGET6,177
 
-lime.h,913
+lime.h,959
 #define MAJOR_VERSION MAJOR_VERSION2,13
 #define MINOR_VERSION MINOR_VERSION3,39
 #define REVISION_VERISON REVISION_VERISON4,65
 #define LIME_VERSION LIME_VERSION6,95
 #define COLORED_OUTPUTCOLORED_OUTPUT8,171
-enum class ansi_color_code: int{ansi_color_code14,253
-    black = 30,black15,286
-    red=31,red16,302
-    green=32,green17,314
-    yellow=33,yellow18,328
-    blue=34,blue19,343
-    magenta=35,magenta20,356
-    cyan=36,cyan21,372
-    white=37,white22,385
-    bright_black = 90,bright_black23,399
-    bright_red=91,bright_red24,422
-    bright_green=92,bright_green25,441
-    bright_yellow=93,bright_yellow26,462
-    bright_blue=94,bright_blue27,484
-    bright_magenta=95,bright_magenta28,504
-    bright_cyan=96,bright_cyan29,527
-    bright_white=97,bright_white30,547
-static void print_as_color(printable const& value, ansi_color_code color){print_as_color34,601
+enum class ansi_color_code: int{ansi_color_code17,307
+    black = 30,black18,340
+    red=31,red19,356
+    green=32,green20,368
+    yellow=33,yellow21,382
+    blue=34,blue22,397
+    magenta=35,magenta23,410
+    cyan=36,cyan24,426
+    white=37,white25,439
+    bright_black = 90,bright_black26,453
+    bright_red=91,bright_red27,476
+    bright_green=92,bright_green28,495
+    bright_yellow=93,bright_yellow29,516
+    bright_blue=94,bright_blue30,538
+    bright_magenta=95,bright_magenta31,558
+    bright_cyan=96,bright_cyan32,581
+    bright_white=97,bright_white33,601
+static void print_as_color(printable const& value, ansi_color_code color){print_as_color37,655
+const std::string char_set = char_set43,883
 
-ast.h,2127
+ast.h,2173
 enum NodeType {NodeType12,149
     LIME_NODE_NONE,LIME_NODE_NONE13,165
     LIME_NODE_VARIABLE_DECLARATION,LIME_NODE_VARIABLE_DECLARATION14,185
@@ -173,36 +181,38 @@ enum NodeType {NodeType12,149
     LIME_NODE_PARAMETER_LIST,LIME_NODE_PARAMETER_LIST25,505
     LIME_NODE_WHILE_LOOP,LIME_NODE_WHILE_LOOP26,535
     LIME_NODE_IF_STATEMENT,LIME_NODE_IF_STATEMENT27,561
-static const std::map<NodeType, const std::string> LimeNodeTypesNames = {LimeNodeTypesNames30,593
-enum OrderOfPrecedence {OrderOfPrecedence48,1379
-    Comma,Comma49,1404
-    PlusEqual,PlusEqual50,1415
-    MinusEqual,MinusEqual51,1430
-    TimesEqual,TimesEqual52,1446
-    DivideEqual,DivideEqual53,1462
-    ModEqual,ModEqual54,1479
-    Equals,Equals55,1493
-    GreaterThan,GreaterThan56,1505
-    GreaterThanOrEqual,GreaterThanOrEqual57,1522
-    LessThan,LessThan58,1546
-    LessThanOrEqual,LessThanOrEqual59,1560
-    NotEqual,NotEqual60,1581
-    Sub,Sub61,1595
-    Add,Add62,1604
-    Mod,Mod63,1613
-    Div,Div64,1622
-    Mult,Mult65,1631
-    UnaryMinus,UnaryMinus66,1641
-    UnaryPlusUnaryPlus67,1657
-static const std::map<std::string, OrderOfPrecedence> OrderOfPrecedenceTable = {OrderOfPrecedenceTable70,1675
-struct Node {Node90,2211
-    Token token;token94,2262
-    std::vector<Node*> children;children100,2368
-typedef Node Ast;Ast121,2923
-struct CodeLens {CodeLens123,2942
-    std::vector<std::map<std::string, Node*>> variable_scope;variable_scope124,2960
-    std::map<std::string, Node*> functions;functions125,3022
-static CodeLens* Lens;Lens137,3256
+    LIME_NODE_RETURN,LIME_NODE_RETURN28,589
+static const std::map<NodeType, const std::string> LimeNodeTypesNames = {LimeNodeTypesNames31,615
+enum OrderOfPrecedence {OrderOfPrecedence50,1434
+    Comma,Comma51,1459
+    PlusEqual,PlusEqual52,1470
+    MinusEqual,MinusEqual53,1485
+    TimesEqual,TimesEqual54,1501
+    DivideEqual,DivideEqual55,1517
+    ModEqual,ModEqual56,1534
+    Equals,Equals57,1548
+    GreaterThan,GreaterThan58,1560
+    GreaterThanOrEqual,GreaterThanOrEqual59,1577
+    LessThan,LessThan60,1601
+    LessThanOrEqual,LessThanOrEqual61,1615
+    NotEqual,NotEqual62,1636
+    Sub,Sub63,1650
+    Add,Add64,1659
+    Mod,Mod65,1668
+    Div,Div66,1677
+    Mult,Mult67,1686
+    UnaryMinus,UnaryMinus68,1696
+    UnaryPlusUnaryPlus69,1712
+static const std::map<std::string, OrderOfPrecedence> OrderOfPrecedenceTable = {OrderOfPrecedenceTable72,1730
+struct Node {Node92,2266
+    Token token;token96,2317
+    std::vector<Node*> children;children102,2423
+typedef Node Ast;Ast125,3006
+struct CodeLens {CodeLens127,3025
+    std::vector<std::map<std::string, Node*>> variable_scope;variable_scope128,3043
+    std::map<std::string, Node*> functions;functions129,3105
+static CodeLens* Lens;Lens141,3339
 
-lime.cc,66
-void Error(std::string message, int line_number = 1) {Error3,19
+lime.cc,114
+void Error(std::string message, int line_number = 1) {Error4,38
+std::string gen_uuid(int num) {gen_uuid21,463

@@ -8,20 +8,25 @@
 #include "ast.h"
 #include "lexer.h"
 #include "lime_c_gen.h"
+#include "lime.h"
 
 #include "lime_tests.h"
 
 const auto code = std::string{R"LEAF(
 #[ While Test ] 
 
-val int = 0
-if val == 0 {
-    print("Yeah")
+# TODO: Make return values work
+Add proc(a int, b int) {
+    ret a + b
 }
+
+myVar int = 3 * (100 / 5.0) + 2
+
+$emit{printf("%d", myVar);}
 
 )LEAF"};
 
-#define RUN_TESTS
+//#define RUN_TESTS
 #define LOG_TO_FILES
 
 int main() {
@@ -46,12 +51,16 @@ int main() {
     // Ast
     auto ast = create_ast_from_tokens(tokens);
 
-    //LimeCGen cgen;
-    //cgen.compile_ast_to_c(&ast, "out.c");
+    LimeCGen cgen;
+    cgen.compile_ast_to_c(ast, "out.c");
 
 #ifdef LOG_TO_FILES
     auto afile = std::ofstream("ast_out.txt");
-    afile << ast << std::endl;
+    afile << *ast << std::endl;
     afile.close();
 #endif
+
+    std::cout << " ==== out ==== " << std::endl;
+    system("gcc out.c -o out.out && ./out.out");
+
 }

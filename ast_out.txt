@@ -1,14 +1,22 @@
 (NONE line: 1, (
-  (VARIABlE_ASSIGNMENT line: 1, var: val, (
-    (EXPRESSION line: 1, (
-      (NUMBER_LITERAL line: 4, word: "0")))))
-  (LIME_NODE_IF_STATEMENT line: 1, (
-    (EXPRESSION line: 1, (
-      (OPERATOR line: 5, word: "==" (
-        (IDENTIFIER line: 5, word: "val")
-        (NUMBER_LITERAL line: 5, word: "0")))))
+  (PROC_DEFINITION line: 1, return_type: none (
+    (PARAMETER_LIST line: 1, (
+      (VARIABLE_DECLARATION line: 1, var: a,)
+      (VARIABLE_DECLARATION line: 1, var: b,)))
     (NONE line: 1, (
-      (PROC_CALL line: 1, proc: print, (
-        (ARGUMENT_LIST line: 1, (
+      (RETURN line: 1, (
+        (EXPRESSION line: 1, (
+          (OPERATOR line: 5, word: "+" (
+            (IDENTIFIER line: 5, word: "a")
+            (IDENTIFIER line: 5, word: "b")))))))))))
+  (VARIABlE_ASSIGNMENT line: 1, var: myVar, (
+    (EXPRESSION line: 1, (
+      (OPERATOR line: 8, word: "+" (
+        (OPERATOR line: 8, word: "*" (
+          (NUMBER_LITERAL line: 8, word: "3")
           (EXPRESSION line: 1, (
-            (IDENTIFIER line: 6, word: ""Yeah"")))))))))))))
+            (OPERATOR line: 8, word: "/" (
+              (NUMBER_LITERAL line: 8, word: "100")
+              (NUMBER_LITERAL line: 8, word: "5.0")))))))
+        (NUMBER_LITERAL line: 8, word: "2")))))))
+  (LIME_NODE_EMIT line: 1, word: "printf("%d", myVar);")))
