@@ -3,7 +3,6 @@
 #include "lime_types.h"
 
 std::string LimeCGen::compile_expression(Node* node) {
-
     std::stringstream ss;
 
     Node* e = node;
@@ -11,15 +10,37 @@ std::string LimeCGen::compile_expression(Node* node) {
         e = node->children[0];
 
     switch(e->type) {
-
+        case LIME_NODE_IDENTIFIER: {
+            ss << e->token.word;
+            break;
+        }
         case LIME_NODE_NUMBER_LITERAL:
             ss << e->token.word;
             break;
+
+        case LIME_NODE_PROC_CALL: {
+
+            ss << e->identifier->word << "(";
+            if (e->children.size() > 0 && e->children[0]->type == LIME_NODE_ARGUMENT_LIST) {
+                int i{0};
+                for (const auto& a : e->children[0]->children) {
+                    ss << compile_expression(a);
+                    if (i < (int)(e->children[0]->children.size() - 1))
+                        ss << ", ";
+                    ++i;
+                }
+            }
+            ss << ")";
+
+            break;
+        }
 
         case LIME_NODE_OPERATOR: {
 
             auto a = e->children[0];
             auto b = e->children[1];
+            std::cout << *a << std::endl;
+            std::cout << *b << std::endl;
 
             ss << compile_expression(a) << " " << e->token.word << " " << compile_expression(b);
 
@@ -42,14 +63,56 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
         switch(n->type) {
             case LIME_NODE_EMIT: {
 
-                ss << indent << n->token.word << std::endl;
+                ss << indent << n->token.word;
 
+                break;
+            }
+
+            case LIME_NODE_IF_STATEMENT: {
+                auto expression = n->children[0];
+                auto block = n->children[1];
+
+                ss << indent << "if (" << compile_expression(expression) << ") {\n";
+                ss << indent << compile_code_block(block, "    ") << "\n";
+                ss << indent << "}\n";
+
+                break;
+            }
+
+            case LIME_NODE_RETURN: {
+                if (n->children.size() > 0) {
+                    ss << indent << "return " << compile_expression(n->children[0]) << ";";
+                } else 
+                    ss << indent << "return;";
                 break;
             }
 
             case LIME_NODE_PROC_DEFINITION: {
 
-                
+                std::stringstream prot;
+                prot << (n->variable_type == nullptr ? "void" : n->variable_type->word);
+                prot << " " << n->identifier->word << "(";
+                std::string block = "";
+                for (auto child : n->children) {
+                    if (child->type == 0) {
+                        block = compile_code_block(child, "    ");
+                    }
+                    else if (child->type == LIME_NODE_PARAMETER_LIST) {
+                        int i = 0;
+                        for (const auto& param : child->children) {
+                            prot << param->variable_type->word << " " << param->identifier->word;
+                            if (i < (int)(child->children.size() - 1))
+                                prot << ", ";
+                            ++i;
+                        }
+                    }
+                }
+                prot << ")";
+                gfprot << prot.str() << ";\n";
+
+                gfdef << prot.str() << "{\n";
+                gfdef << block << "\n";
+                gfdef << "}\n";
 
                 break;
             }

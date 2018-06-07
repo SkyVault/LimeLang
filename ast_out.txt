@@ -1,22 +1,28 @@
 (NONE line: 1, (
-  (PROC_DEFINITION line: 1, return_type: none (
+  (PROC_DEFINITION line: 1, proc: Add,  return_type: int (
     (PARAMETER_LIST line: 1, (
       (VARIABLE_DECLARATION line: 1, var: a,)
       (VARIABLE_DECLARATION line: 1, var: b,)))
     (NONE line: 1, (
       (RETURN line: 1, (
         (EXPRESSION line: 1, (
-          (OPERATOR line: 5, word: "+" (
-            (IDENTIFIER line: 5, word: "a")
-            (IDENTIFIER line: 5, word: "b")))))))))))
+          (OPERATOR line: 6, word: "+" (
+            (IDENTIFIER line: 6, word: "a")
+            (IDENTIFIER line: 6, word: "b")))))))))))
+  (PROC_DEFINITION line: 1, proc: Test,  return_type: none (
+    (NONE line: 1,)))
   (VARIABlE_ASSIGNMENT line: 1, var: myVar, (
     (EXPRESSION line: 1, (
-      (OPERATOR line: 8, word: "+" (
-        (OPERATOR line: 8, word: "*" (
-          (NUMBER_LITERAL line: 8, word: "3")
+      (PROC_CALL line: 1, proc: Add, (
+        (ARGUMENT_LIST line: 1, (
           (EXPRESSION line: 1, (
-            (OPERATOR line: 8, word: "/" (
-              (NUMBER_LITERAL line: 8, word: "100")
-              (NUMBER_LITERAL line: 8, word: "5.0")))))))
-        (NUMBER_LITERAL line: 8, word: "2")))))))
-  (LIME_NODE_EMIT line: 1, word: "printf("%d", myVar);")))
+            (NUMBER_LITERAL line: 13, word: "10")))
+          (EXPRESSION line: 1, (
+            (NUMBER_LITERAL line: 13, word: "2")))))))))))
+  (LIME_NODE_IF_STATEMENT line: 1, (
+    (EXPRESSION line: 1, (
+      (OPERATOR line: 15, word: "==" (
+        (IDENTIFIER line: 15, word: "myVar")
+        (NUMBER_LITERAL line: 15, word: "12")))))
+    (NONE line: 1, (
+      (LIME_NODE_EMIT line: 1, word: "printf("Yass\n");")))))))

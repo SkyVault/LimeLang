@@ -16,13 +16,19 @@ const auto code = std::string{R"LEAF(
 #[ While Test ] 
 
 # TODO: Make return values work
-Add proc(a int, b int) {
+Add proc(a int, b int) int {
     ret a + b
 }
 
-myVar int = 3 * (100 / 5.0) + 2
+Test proc {
 
-$emit{printf("%d", myVar);}
+}
+
+myVar int = Add(10, 2)
+
+if myVar == 12 {
+    $emit{printf("Yes\n");}
+}
 
 )LEAF"};
 

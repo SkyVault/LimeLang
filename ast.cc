@@ -31,6 +31,7 @@ std::string Node::ToString(std::string indent = "") const {
 
     if (type == LIME_NODE_PROC_DEFINITION || type == LIME_NODE_PROC_DECLARATION) {
         auto type_name = variable_type == nullptr ?  "none" : variable_type->word;
+        result += " proc: " + identifier->word + ", ";
         result += " return_type: " + type_name;
     }
 
@@ -70,7 +71,7 @@ std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::ve
         begin++;
         while((*begin).isWhiteSpace)
             ++begin;
-        return *begin;
+        return begin;
     };
 
     auto begin = it;
@@ -96,7 +97,7 @@ std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::ve
                     auto next = Peek();
                     
                     //TODO: Handle structures and other things that come after an identifier
-                    switch(next.type) {
+                    switch(next->type) {
                         case LIME_PROC:                 running = false; break;
                         case LIME_ASSIGNMENT_OPERATOR:  running = false; break;
                         case LIME_TYPE_IDENTIFIER:      running = false; break;
@@ -759,6 +760,7 @@ bool AstPass(Node* ast) {
     Lens->push();
     for (const auto& node : ast->children) {
         switch(node->type) {
+
             case LIME_NODE_OPERATOR: {
                 // Check operands
                 AstPass(node);
@@ -778,10 +780,16 @@ bool AstPass(Node* ast) {
 
             case LIME_NODE_IF_STATEMENT:
             case LIME_NODE_WHILE_LOOP: {
-                assert(node->children.size() > 1);
+                assert(node->children.size() == 2);
 
                 AstPass(node->children[0]);
                 AstPass(node->children[1]);
+                    
+                if (node->children[0]->children.size() == 0) {
+                    Error(  std::string{(node->type == LIME_NODE_IF_STATEMENT ? "If statement" : "While looop")} + 
+                            " is missing an expression", 
+                            node->token.line_number);
+                }
 
                 break;
             }
