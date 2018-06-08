@@ -17,10 +17,14 @@ typedef double          f64;
 typedef unsigned int    uint;
 typedef float           real;
 
+int Add(int a, int b);
+int Add(int a, int b){
+    return (a + b);
+}
 int myVariable;
 int main(int num_arg_pkDHTx, char** args_pkDHTx) {
-    myVariable = (3);
-    myVariable = (32);
+    myVariable = (Add((10), (20)));
+    printf(("10 + 20 = %d\n"), (myVariable));
     return 0;
 }
 

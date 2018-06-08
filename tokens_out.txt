@@ -1,17 +1,59 @@
-Token {  word: myVariable  type: LIME_IDENTIFIER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: mut  type: LIME_MUTABLE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: int  type: LIME_TYPE_IDENTIFIER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: =  type: LIME_OPERATOR}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: 3  type: LIME_NUMBER}
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word: myVariable  type: LIME_IDENTIFIER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: =  type: LIME_OPERATOR}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: 32  type: LIME_NUMBER}
-Token {  word: \n  type: LIME_NEWLINE}
+Token {  word: 'Add'  type: LIME_IDENTIFIER}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: 'proc'  type: LIME_PROC}
+Token {  word: '('  type: LIME_OPEN_PAREN}
+Token {  word: 'a'  type: LIME_IDENTIFIER}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: 'int'  type: LIME_TYPE_IDENTIFIER}
+Token {  word: ','  type: LIME_COMMA}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: 'b'  type: LIME_IDENTIFIER}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: 'int'  type: LIME_TYPE_IDENTIFIER}
+Token {  word: ')'  type: LIME_CLOSE_PAREN}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: 'int'  type: LIME_TYPE_IDENTIFIER}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: '{'  type: }
+Token {  word: '\n'  type: LIME_NEWLINE}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: 'ret'  type: LIME_RETURN}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: 'a'  type: LIME_IDENTIFIER}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: '+'  type: LIME_OPERATOR}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: 'b'  type: LIME_IDENTIFIER}
+Token {  word: '\n'  type: LIME_NEWLINE}
+Token {  word: '}'  type: }
+Token {  word: '\n'  type: LIME_NEWLINE}
+Token {  word: '\n'  type: LIME_NEWLINE}
+Token {  word: 'myVariable'  type: LIME_IDENTIFIER}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: 'mut'  type: LIME_MUTABLE}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: 'int'  type: LIME_TYPE_IDENTIFIER}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: '='  type: LIME_OPERATOR}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: 'Add'  type: LIME_IDENTIFIER}
+Token {  word: '('  type: LIME_OPEN_PAREN}
+Token {  word: '10'  type: LIME_NUMBER}
+Token {  word: ','  type: LIME_COMMA}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: '20'  type: LIME_NUMBER}
+Token {  word: ')'  type: LIME_CLOSE_PAREN}
+Token {  word: ';'  type: LIME_WHITESPACE}
+Token {  word: '\n'  type: LIME_NEWLINE}
+Token {  word: 'printf'  type: LIME_IDENTIFIER}
+Token {  word: '('  type: LIME_OPEN_PAREN}
+Token {  word: '"10 + 20 = %d\n"'  type: LIME_STRING}
+Token {  word: ','  type: LIME_COMMA}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: 'myVariable'  type: LIME_IDENTIFIER}
+Token {  word: ')'  type: LIME_CLOSE_PAREN}
+Token {  word: ';'  type: LIME_WHITESPACE}
+Token {  word: '\n'  type: LIME_NEWLINE}

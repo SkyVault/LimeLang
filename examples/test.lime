@@ -1,3 +1,6 @@
-myVariable mut int = 3
+Add proc(a int, b int) int {
+    ret a + b
+}
 
-myVariable = 32
+myVariable mut int = Add(10, 20);
+printf("10 + 20 = %d\n", myVariable);

@@ -192,6 +192,7 @@ void SortExpression(Node* node){
         auto op = node->children[index];
 
         if (index == 0) {
+            std::cout << *node << std::endl;
             Error("Unary operator is not yet supported: " + op->token.ToString(), op->token.line_number);
             return;
         }
@@ -419,19 +420,10 @@ Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>:
 }
 
 void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
+    using namespace std;
+
     auto it = tokens.begin();
     auto back = tokens.end();
-
-    using namespace std;
-    auto getPrev = [&]() -> auto {
-        auto prev = it;
-        do {
-            if (prev == tokens.begin())
-                return std::make_tuple(prev, false);
-            --prev;
-        } while((*prev).isWhiteSpace);
-        return std::make_tuple(prev--, true);
-    };
 
     auto Next = [&]() -> auto {
         ++it;
@@ -464,6 +456,9 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
         }
 
         auto it_type = it->type;
+
+        if (it->word == ";")
+            ++it;
 
         // Handle operators
         switch((*it).type) {
@@ -609,98 +604,98 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
             }
 
             // Handle procedures
-            case LIME_PROC: {
-                
-                // Get the Identifier
-                // TODO: Handle return type declarations
-                
-                auto [prev, res] = getPrev();
-                assert(prev->type == LIME_IDENTIFIER);
-
-                Next();
-                bool is_decl{true};
-
-                auto node = new Node();
-                node->identifier = new Token(*prev);
-                
-                auto expect_proc_tokens = [](const Token& it) {
-                    if (it.type != LIME_TYPE_IDENTIFIER &&
-                        it.type != LIME_OPEN_PAREN      &&
-                        it.type != LIME_OPEN_CURLY_BRACKET) {
-
-                        Error("Missplaced identifier for proc return type: " + it.word, it.line_number);
-                    }
-                };
-
-                expect_proc_tokens(*it);
-
-                if (it->type == LIME_TYPE_IDENTIFIER) {
-                    node->variable_type = new Token(*it);  
-                    Next();
-                } 
-
-                if (it->type == LIME_OPEN_CURLY_BRACKET) {
-                    // We know that there are no parameters
-                    is_decl = false; 
-                } else if (it->type == LIME_OPEN_PAREN) {
-                    // There might be parameters
-                     
-                    // Get the parameters
-                    // TODO: Extract this into its own function so that it 
-                    // can be used for things like macros and stuff
-                    auto end = it + 1;
-                    while (true) {
-                        if (end->type == LIME_CLOSE_PAREN){
-                            break;
-                        }
-
-                        assert(end != back);
-
-                        end++;
-                    }
-
-                    auto parameters = std::vector((it + 1), end);
-                    //TODO: Handle parameters
-                   
-                    // Check the correctness of the parameters
-
-                    auto parameters_node = parameters_to_node(parameters);
-                    node->children.push_back(parameters_node);
-
-                    it = end;
-                    Next();
-
-                    expect_proc_tokens(*it);
-
-                    if (it->type == LIME_TYPE_IDENTIFIER) {
-                        node->variable_type = new Token(*it);
-                        Next();
-                    }
-
-                    if (it->type == LIME_OPEN_CURLY_BRACKET) {
-                        is_decl = false;
-                    }
-                } 
-
-                // Handle funciton code blocks
-                if (is_decl == false) {
-                    auto end = it + 1;
-                    get_all_within_tokens(end, tokens.end());
-                    auto block = std::vector<Token>(it + 1, end - 1);
-                   
-                    // HERE
-                    auto block_node = new Node();
-
-                    code_block_to_ast(block_node, block);
-                    node->children.push_back(block_node);
-                    it = end-1;
-                }
-
-                node->type = is_decl ? LIME_NODE_PROC_DECLARATION : LIME_NODE_PROC_DEFINITION;
-                ast->children.push_back(node);
-
-                break;
-            }
+//            case LIME_PROC: {
+//                
+//                // Get the Identifier
+//                // TODO: Handle return type declarations
+//                
+//                auto [prev, res] = getPrev();
+//                assert(prev->type == LIME_IDENTIFIER);
+//
+//                Next();
+//                bool is_decl{true};
+//
+//                auto node = new Node();
+//                node->identifier = new Token(*prev);
+//                
+//                auto expect_proc_tokens = [](const Token& it) {
+//                    if (it.type != LIME_TYPE_IDENTIFIER &&
+//                        it.type != LIME_OPEN_PAREN      &&
+//                        it.type != LIME_OPEN_CURLY_BRACKET) {
+//
+//                        Error("Missplaced identifier for proc return type: " + it.word, it.line_number);
+//                    }
+//                };
+//
+//                expect_proc_tokens(*it);
+//
+//                if (it->type == LIME_TYPE_IDENTIFIER) {
+//                    node->variable_type = new Token(*it);  
+//                    Next();
+//                } 
+//
+//                if (it->type == LIME_OPEN_CURLY_BRACKET) {
+//                    // We know that there are no parameters
+//                    is_decl = false; 
+//                } else if (it->type == LIME_OPEN_PAREN) {
+//                    // There might be parameters
+//                     
+//                    // Get the parameters
+//                    // TODO: Extract this into its own function so that it 
+//                    // can be used for things like macros and stuff
+//                    auto end = it + 1;
+//                    while (true) {
+//                        if (end->type == LIME_CLOSE_PAREN){
+//                            break;
+//                        }
+//
+//                        assert(end != back);
+//
+//                        end++;
+//                    }
+//
+//                    auto parameters = std::vector((it + 1), end);
+//                    //TODO: Handle parameters
+//                   
+//                    // Check the correctness of the parameters
+//
+//                    auto parameters_node = parameters_to_node(parameters);
+//                    node->children.push_back(parameters_node);
+//
+//                    it = end;
+//                    Next();
+//
+//                    expect_proc_tokens(*it);
+//
+//                    if (it->type == LIME_TYPE_IDENTIFIER) {
+//                        node->variable_type = new Token(*it);
+//                        Next();
+//                    }
+//
+//                    if (it->type == LIME_OPEN_CURLY_BRACKET) {
+//                        is_decl = false;
+//                    }
+//                } 
+//
+//                // Handle funciton code blocks
+//                if (is_decl == false) {
+//                    auto end = it + 1;
+//                    get_all_within_tokens(end, tokens.end());
+//                    auto block = std::vector<Token>(it + 1, end - 1);
+//                   
+//                    // HERE
+//                    auto block_node = new Node();
+//
+//                    code_block_to_ast(block_node, block);
+//                    node->children.push_back(block_node);
+//                    it = end-1;
+//                }
+//
+//                node->type = is_decl ? LIME_NODE_PROC_DECLARATION : LIME_NODE_PROC_DEFINITION;
+//                ast->children.push_back(node);
+//
+//                break;
+//            }
 
             case LIME_IDENTIFIER: {
 
@@ -769,50 +764,102 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                     } else {
                         Error("Identifier has a unsupported operator after it.", next->line_number);
                     }
+                } else if (next->type == LIME_PROC) {
+                    // Handling procedures
+                    
+                    auto node = new Node();
+                    node->identifier = new Token(*it);
+
+                    Next();
+                    Next();
+
+                    bool is_decl{true};
+
+                    
+                    auto expect_proc_tokens = [](const Token& it) {
+                        if (it.type != LIME_TYPE_IDENTIFIER &&
+                            it.type != LIME_OPEN_PAREN      &&
+                            it.type != LIME_OPEN_CURLY_BRACKET) {
+
+                            Error("Missplaced identifier for proc return type: " + it.word, it.line_number);
+                        }
+                    };
+
+                    expect_proc_tokens(*it);
+
+                    if (it->type == LIME_TYPE_IDENTIFIER) {
+                        node->variable_type = new Token(*it);  
+                        Next();
+                    } 
+
+                    if (it->type == LIME_OPEN_CURLY_BRACKET) {
+                        // We know that there are no parameters
+                        is_decl = false; 
+                    } else if (it->type == LIME_OPEN_PAREN) {
+                        // There might be parameters
+                         
+                        // Get the parameters
+                        // TODO: Extract this into its own function so that it 
+                        // can be used for things like macros and stuff
+                        auto end = it + 1;
+                        while (true) {
+                            if (end->type == LIME_CLOSE_PAREN){
+                                break;
+                            }
+
+                            assert(end != back);
+
+                            end++;
+                        }
+
+                        auto parameters = std::vector((it + 1), end);
+                        //TODO: Handle parameters
+                       
+                        // Check the correctness of the parameters
+
+                        auto parameters_node = parameters_to_node(parameters);
+                        node->children.push_back(parameters_node);
+
+                        it = end;
+                        Next();
+
+                        expect_proc_tokens(*it);
+
+                        if (it->type == LIME_TYPE_IDENTIFIER) {
+                            node->variable_type = new Token(*it);
+                            Next();
+                        }
+
+                        if (it->type == LIME_OPEN_CURLY_BRACKET) {
+                            is_decl = false;
+                        }
+                    } 
+
+                    // Handle funciton code blocks
+                    if (is_decl == false) {
+                        auto end = it + 1;
+                        get_all_within_tokens(end, tokens.end());
+                        auto block = std::vector<Token>(it + 1, end - 1);
+                       
+                        // HERE
+                        auto block_node = new Node();
+
+                        code_block_to_ast(block_node, block);
+                        node->children.push_back(block_node);
+                        it = end-1;
+                    }
+
+                    node->type = is_decl ? LIME_NODE_PROC_DECLARATION : LIME_NODE_PROC_DEFINITION;
+                    ast->children.push_back(node);
 
                 } else if (next->type == LIME_OPEN_PAREN) {
                     // This is probably a function call
                     ast->children.push_back(handle_function_call(it, tokens.end())); 
                 } else {
-                    Error("Random identifier", it->line_number);
+                    Error("Random identifier: " + it->word, it->line_number);
                 }
 
-                if (Peek()->type == LIME_OPEN_PAREN) {
-                }
-                    
                 break;
-                // Get the identifier
-                //auto [prev, res] = getPrev();
-                //assert(res); 
-
-                //auto node = new Node();
-
-                //if ((*prev).type == LIME_TYPE_IDENTIFIER) {
-                //    node->variable_type = new Token(*prev);
-                //    prev--;
-                //    while((*prev).isWhiteSpace)
-                //        prev--;
-
-                //    if ((*prev).type == LIME_MUTABLE) {
-                //        node->canMutate = true;
-    
-                //        prev--;
-                //        while((*prev).isWhiteSpace)
-                //            prev--;
-                //    }
-                //} 
-
-                //assert((*prev).type == LIME_IDENTIFIER);
-
-                //++it;
-                //auto expression         = GetExpressionTokens(it, tokens.end());
-                //auto expression_node    = PackExpression(expression.begin(), expression.end());
-
-                //node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
-                //node->children.push_back(expression_node);
-                //node->identifier = new Token(*prev); // This might cause issues if the tokens go out of scope...
-
-                //ast->children.push_back(node);
             }
 
             default: {

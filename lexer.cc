@@ -34,7 +34,7 @@ std::string Token::ToString() const {
 	auto t = type;
     std::string result{""};
     result += "Token {";
-    result += "  word: " + (word == "\n" ? "\\n" : word);
+    result += "  word: \'" + (word == "\n" ? "\\n" : word) + "\'";
     result += "  type: " + LimeTokenTypesNames.find(t)->second;
 	result += "}";
 	return result;
@@ -230,6 +230,7 @@ vector<Token> WordsToTokens(const vector<string>& words) {
         }
 		else if (word == "\t") NToken( word, LIME_TABULAR, true);
 		else if (word == " ") NToken( word, LIME_WHITESPACE, true);
+        else if (word == ";") NToken( word, LIME_WHITESPACE, true); // This is a hack
 		else if (word == "(") NToken( word, LIME_OPEN_PAREN );
 		else if (word == ")") NToken( word, LIME_CLOSE_PAREN );
 		else if (word == "{") NToken( word, LIME_OPEN_CURLY_BRACKET);
