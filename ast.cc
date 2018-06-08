@@ -714,12 +714,6 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
 
                     next = Next();
                     
-                    //node->
-                    //Token* identifier{nullptr}; 
-                    //Token* variable_type{nullptr};
-                    //bool canMutate{false};
-                    //bool external{false};
-                    
                     if (next->type == LIME_MUTABLE) {
                         next = Next();
                         node->canMutate = true;
@@ -740,10 +734,19 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                         // Handle expressions
                         node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
                         
+                        ++it;
+                        auto expression         = GetExpressionTokens(it, tokens.end());
+                        auto expression_node    = PackExpression(expression.begin(), expression.end());
+
+                        node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
+                        node->children.push_back(expression_node);
 
                     } else {
                         it = next - 1;
                     }
+
+                    assert(node->identifier);
+                    assert(node->variable_type);
 
                     ast->children.push_back(node);
                     

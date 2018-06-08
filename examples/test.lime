@@ -1,1 +1,1 @@
-myVariable mut int 
+myVariable mut int = 3

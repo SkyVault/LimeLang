@@ -4,4 +4,7 @@ Token {  word: mut  type: LIME_MUTABLE}
 Token {  word:    type: LIME_WHITESPACE}
 Token {  word: int  type: LIME_TYPE_IDENTIFIER}
 Token {  word:    type: LIME_WHITESPACE}
+Token {  word: =  type: LIME_OPERATOR}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: 3  type: LIME_NUMBER}
 Token {  word: \n  type: LIME_NEWLINE}
