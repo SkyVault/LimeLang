@@ -38,9 +38,9 @@ int main(const int num_args, const char** args) {main18,256
 lime_c_gen.cc,288
 std::string LimeCGen::compile_expression(Node* node) {compile_expression5,67
 std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {compile_code_block64,1645
-void LimeCGen::compile_ast_to_c(Node* node, const std::string& out_file) {compile_ast_to_c225,7669
+void LimeCGen::compile_ast_to_c(Node* node, const std::string& out_file) {compile_ast_to_c240,8171
 
-out.c,560
+out.c,628
 #define none none3,42
 typedef unsigned char   u8;u84,60
 typedef unsigned short  u16;u165,88
@@ -54,7 +54,9 @@ typedef float           f32;f3214,292
 typedef double          f64;f6415,321
 typedef unsigned int    uint;uint17,381
 typedef float           real;real18,411
-int main(int num_arg_pkDHTx, char** args_pkDHTx) {main20,442
+int Add(int a, int b){Add21,465
+int myVariable;myVariable24,510
+int main(int num_arg_pkDHTx, char** args_pkDHTx) {main25,526
 
 lexer.cc,644
 Token::Token()Token6,81
@@ -62,10 +64,10 @@ Token::Token(std::string word, LimeTokenTypes type, bool isWhiteSpace = false):
 Token::Token(const Token& token) {Token19,261
 ostream& operator<<(ostream& os, const Token& token) {operator <<27,440
 std::string Token::ToString() const {ToString33,553
-const std::string LoadFileToString(const std::string& path){LoadFileToString43,817
-vector<string> SplitTokensToWordsAndSymbols(const string& code){SplitTokensToWordsAndSymbols57,1056
-vector<Token> WordsToTokens(const vector<string>& words) {WordsToTokens177,3903
-vector<Token> TokenizeString(const std::string& code) {TokenizeString269,7073
+const std::string LoadFileToString(const std::string& path){LoadFileToString43,826
+vector<string> SplitTokensToWordsAndSymbols(const string& code){SplitTokensToWordsAndSymbols57,1065
+vector<Token> WordsToTokens(const vector<string>& words) {WordsToTokens177,3912
+vector<Token> TokenizeString(const std::string& code) {TokenizeString270,7168
 
 lime_tests.h,215
 std::tuple<bool, std::string> isNumberTests() {isNumberTests9,122
@@ -77,25 +79,25 @@ Node::Node(Token& token) {Node7,154
 Node::Node(){}Node17,384
 Node* Node::add(Node* node) {add19,400
 std::string Node::ToString(std::string indent = "") const {ToString24,480
-ostream& operator<<(ostream& os, const Node& node) {operator <<62,1681
-std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::vector<Token>::iterator end) {GetExpressionTokens68,1806
-Node* HandleFunctionCall(std::vector<Token>::iterator begin) {HandleFunctionCall123,3492
-Node* TokenToNode(Token& token) {TokenToNode127,3578
-void SortExpression(Node* node){SortExpression155,4337
-Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterator end) {PackExpression215,6171
-void get_all_within_tokens(std::vector<Token>::iterator& it, std::vector<Token>::iterator end, std::string tstart = "{", std::string tend = "}") {get_all_within_tokens290,8493
-Node* parameters_to_node(std::vector<Token>& tokens) {parameters_to_node304,8879
-Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>::iterator last) {handle_function_call372,11077
-void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {code_block_to_ast418,12527
-CodeLens* GetCodeLens() { return Lens; }GetCodeLens774,23987
-bool CodeLens::varExists(const std::string& name) {varExists776,24029
-void CodeLens::addVar(Node* node) {addVar784,24261
-bool CodeLens::procExists(const std::string& name) {procExists790,24482
-void CodeLens::addProc(Node* node) {addProc796,24627
-void CodeLens::push() {push802,24817
-void CodeLens::pop() {pop806,24906
-bool AstPass(Node* ast) {AstPass811,25008
-Node* create_ast_from_tokens(std::vector<Token>& tokens) {create_ast_from_tokens966,30356
+ostream& operator<<(ostream& os, const Node& node) {operator <<65,1798
+std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::vector<Token>::iterator end) {GetExpressionTokens71,1923
+Node* HandleFunctionCall(std::vector<Token>::iterator begin) {HandleFunctionCall126,3609
+Node* TokenToNode(Token& token) {TokenToNode130,3695
+void SortExpression(Node* node){SortExpression158,4454
+Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterator end) {PackExpression219,6333
+void get_all_within_tokens(std::vector<Token>::iterator& it, std::vector<Token>::iterator end, std::string tstart = "{", std::string tend = "}") {get_all_within_tokens294,8655
+Node* parameters_to_node(std::vector<Token>& tokens) {parameters_to_node308,9041
+Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>::iterator last) {handle_function_call376,11239
+void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {code_block_to_ast422,12689
+CodeLens* GetCodeLens() { return Lens; }GetCodeLens781,25141
+bool CodeLens::varExists(const std::string& name) {varExists783,25183
+void CodeLens::addVar(Node* node) {addVar791,25415
+bool CodeLens::procExists(const std::string& name) {procExists797,25636
+void CodeLens::addProc(Node* node) {addProc803,25781
+void CodeLens::push() {push809,25971
+void CodeLens::pop() {pop813,26060
+bool AstPass(Node* ast) {AstPass818,26162
+Node* create_ast_from_tokens(std::vector<Token>& tokens) {create_ast_from_tokens973,31510
 
 lexer.h,1874
 enum LimeTokenTypes {LimeTokenTypes13,173
@@ -183,14 +185,15 @@ enum class ansi_color_code: int{ansi_color_code17,307
 static void print_as_color(printable const& value, ansi_color_code color){print_as_color37,655
 const std::string char_set = char_set43,883
 
-limestd/strings.c,244
+limestd/strings.c,287
 typedef struct string {string4,41
     char* data;data5,65
     int len;len6,81
     long hash;hash7,94
 } string;string8,109
-string make_empty_string() {make_empty_string10,120
-string make_string(const char* cstr) {make_string20,290
+long str_hash(char* key) {str_hash10,120
+string make_empty_string() {make_empty_string21,380
+string make_string(const char* cstr) {make_string31,550
 
 limestd/teststd.c,23
 int main() {main4,41
@@ -199,7 +202,7 @@ ast.h,2586
 enum NodeType {NodeType12,149
     LIME_NODE_NONE,LIME_NODE_NONE13,165
     LIME_NODE_VARIABLE_DECLARATION,LIME_NODE_VARIABLE_DECLARATION14,185
-    LIME_NODE_VARIABlE_ASSIGNMENT,LIME_NODE_VARIABlE_ASSIGNMENT15,221
+    LIME_NODE_VARIABLE_ASSIGNMENT,LIME_NODE_VARIABLE_ASSIGNMENT15,221
     LIME_NODE_EXPRESSION,LIME_NODE_EXPRESSION16,256
     LIME_NODE_NUMBER_LITERAL,LIME_NODE_NUMBER_LITERAL17,282
     LIME_NODE_STRING_LITERAL,LIME_NODE_STRING_LITERAL18,312
