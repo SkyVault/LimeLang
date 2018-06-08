@@ -1,1 +1,63 @@
-(NONE line: 1,)
+(NONE line: 1, (
+  (PROC_DEFINITION line: 1, proc: Fib,  return_type: int (
+    (PARAMETER_LIST line: 1, (
+      (VARIABLE_DECLARATION line: 1, var: n,)))
+    (NONE line: 1, (
+      (IF_STATEMENT line: 1, (
+        (EXPRESSION line: 1, (
+          (OPERATOR line: 4, word: "==" (
+            (IDENTIFIER line: 4, word: "n")
+            (NUMBER_LITERAL line: 4, word: "0")))))
+        (NONE line: 1, (
+          (RETURN line: 1, (
+            (EXPRESSION line: 1, (
+              (IDENTIFIER line: 5, word: "n")))))))))
+      (IF_STATEMENT line: 1, (
+        (EXPRESSION line: 1, (
+          (OPERATOR line: 8, word: "==" (
+            (IDENTIFIER line: 8, word: "n")
+            (NUMBER_LITERAL line: 8, word: "1")))))
+        (NONE line: 1, (
+          (RETURN line: 1, (
+            (EXPRESSION line: 1, (
+              (IDENTIFIER line: 9, word: "n")))))))))
+      (RETURN line: 1, (
+        (EXPRESSION line: 1, (
+          (OPERATOR line: 12, word: "+" (
+            (PROC_CALL line: 1, proc: Fib, (
+              (ARGUMENT_LIST line: 1, (
+                (EXPRESSION line: 1, (
+                  (OPERATOR line: 12, word: "-" (
+                    (IDENTIFIER line: 12, word: "n")
+                    (NUMBER_LITERAL line: 12, word: "2")))))))))
+            (PROC_CALL line: 1, proc: Fib, (
+              (ARGUMENT_LIST line: 1, (
+                (EXPRESSION line: 1, (
+                  (OPERATOR line: 12, word: "-" (
+                    (IDENTIFIER line: 12, word: "n")
+                    (NUMBER_LITERAL line: 12, word: "1")))))))))))))))))))
+  (VARIABlE_ASSIGNMENT line: 1, var: count, (
+    (EXPRESSION line: 1, (
+      (NUMBER_LITERAL line: 15, word: "0")))))
+  (WHILE_LOOP line: 1, (
+    (EXPRESSION line: 1, (
+      (OPERATOR line: 16, word: "<=" (
+        (IDENTIFIER line: 16, word: "count")
+        (NUMBER_LITERAL line: 16, word: "42")))))
+    (NONE line: 1, (
+      (PROC_CALL line: 1, proc: printf, (
+        (ARGUMENT_LIST line: 1, (
+          (EXPRESSION line: 1, (
+            (LIME_NODE_STRING_LITERAL line: 18, word: ""count: %d = %d\n"")))
+          (EXPRESSION line: 1, (
+            (IDENTIFIER line: 18, word: "count")))
+          (EXPRESSION line: 1, (
+            (PROC_CALL line: 1, proc: Fib, (
+              (ARGUMENT_LIST line: 1, (
+                (EXPRESSION line: 1, (
+                  (IDENTIFIER line: 18, word: "count")))))))))))))
+      (VARIABlE_ASSIGNMENT line: 1, var: count, (
+        (EXPRESSION line: 1, (
+          (OPERATOR line: 20, word: "+" (
+            (IDENTIFIER line: 20, word: "count")
+            (NUMBER_LITERAL line: 20, word: "1")))))))))))))

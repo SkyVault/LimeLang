@@ -131,6 +131,12 @@ Node* TokenToNode(Token& token) {
         case LIME_NUMBER:
             result->type = LIME_NODE_NUMBER_LITERAL;
             break;
+        case LIME_STRING:
+            result->type = LIME_NODE_STRING_LITERAL;
+            break;
+        case LIME_CHARACTER:
+            result->type = LIME_NODE_CHARACTER_LITERAL;
+            break;
         case LIME_IDENTIFIER:
             result->type = LIME_NODE_IDENTIFIER;
             break;
@@ -231,7 +237,10 @@ Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterat
                     node->children.push_back(TokenToNode(*i)); 
                 }
                 break;
+                
             case LIME_NUMBER: 
+            case LIME_STRING:
+            case LIME_CHARACTER:
             case LIME_OPERATOR:
                 node->children.push_back(TokenToNode(*i)); 
                 break;
@@ -319,7 +328,7 @@ Node* parameters_to_node(std::vector<Token>& tokens) {
                 auto n = it + 1;
                 while (n->isWhiteSpace) n++;
 
-                if (n != tokens.end() && n->type != LIME_COMMA && n->type != LIME_CLOSE_PAREN)
+                if (n != tokens.end() && n->word != "" && n->type != LIME_COMMA && n->type != LIME_CLOSE_PAREN)
                     Error("Expected a comma or a closing paren but got: " + n->word, n->line_number);
 
                 next_not_comma = false;
@@ -579,6 +588,8 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 it = end-1;
 
                 ast->children.push_back(else_node);
+
+                break;
             }
 
             // Handle function calls
@@ -920,7 +931,7 @@ Node* create_ast_from_tokens(std::vector<Token>& tokens) {
 
     //TODO: Remove this hack, this is just a hack so that it wont give us an
     // error when we call the print function
-    Lens->functions.insert(std::make_pair("print", new Node()));
+    Lens->functions.insert(std::make_pair("printf", new Node()));
     Lens->functions.insert(std::make_pair("getchar", new Node()));
 
     AstPass(ast);

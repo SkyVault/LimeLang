@@ -76,8 +76,8 @@ static const std::map<LimeTokenTypes, const std::string> LimeTokenTypesNames = {
 	{LIME_PROC, "LIME_PROC"},
     {LIME_RETURN, "LIME_RETURN"},
 
-    {LIME_STRING,"LIME_STRING"}
-    {LIME_CHARACTER,"LIME_CHARACTER"}
+    {LIME_STRING,"LIME_STRING"},
+    {LIME_CHARACTER,"LIME_CHARACTER"},
 
     {LIME_WHILE, "LIME_WHILE"},
     {LIME_FOR, "LIME_FOR"},

@@ -256,6 +256,9 @@ vector<Token> WordsToTokens(const vector<string>& words) {
         else if (isType(word)) {
             NToken(word, LIME_TYPE_IDENTIFIER);
         }
+        else if (word.size() >= 2 && word[0] == '\"' && word[word.size()-1] == '\"') {
+            NToken(word, LIME_STRING);
+        }
 		else 
 			NToken(word, LIME_IDENTIFIER);
 	}

@@ -17,7 +17,12 @@ std::string LimeCGen::compile_expression(Node* node) {
         case LIME_NODE_NUMBER_LITERAL:
             ss << e->token.word;
             break;
-
+        case LIME_NODE_STRING_LITERAL:
+            ss << e->token.word;
+            break;
+        case LIME_NODE_CHARACTER_LITERAL:
+            ss << e->token.word;
+            break;
         case LIME_NODE_PROC_CALL: {
 
             ss << e->identifier->word << "(";

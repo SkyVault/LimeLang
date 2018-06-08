@@ -17,7 +17,24 @@ typedef double          f64;
 typedef unsigned int    uint;
 typedef float           real;
 
+int Fib(int n);
+int Fib(int n){
+    if ((n == 0)) {
+        return (n);
+    }
+    if ((n == 1)) {
+        return (n);
+    }
+    return (Fib((n - 2)) + Fib((n - 1)));
+}
+int count;
 int main(int num_arg_pkDHTx, char** args_pkDHTx) {
+    count = (0);
+    while ((count <= 42)) {
+        printf(("count: %d = %d\n"), (count), (Fib((count))));
+    count = (count + 1);
+
+    }
     return 0;
 }
 
