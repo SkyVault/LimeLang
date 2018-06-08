@@ -18,10 +18,6 @@ typedef unsigned int    uint;
 typedef float           real;
 
 int main(int num_arg_pkDHTx, char** args_pkDHTx) {
-    if ((3 == 3)) {
-        printf(("Yo\n"));
-
-    }
     return 0;
 }
 

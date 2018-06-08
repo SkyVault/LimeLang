@@ -1,1 +1,3 @@
-if 3 == 3 { printf("Yo\n") }
+
+
+myArray int

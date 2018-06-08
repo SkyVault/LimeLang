@@ -1,11 +1,1 @@
-(NONE line: 1, (
-  (IF_STATEMENT line: 1, (
-    (EXPRESSION line: 1, (
-      (OPERATOR line: 1, word: "==" (
-        (NUMBER_LITERAL line: 1, word: "3")
-        (NUMBER_LITERAL line: 1, word: "3")))))
-    (NONE line: 1, (
-      (PROC_CALL line: 1, proc: printf, (
-        (ARGUMENT_LIST line: 1, (
-          (EXPRESSION line: 1, (
-            (LIME_NODE_STRING_LITERAL line: 1, word: ""Yo\n"")))))))))))))
+(NONE line: 1,)
