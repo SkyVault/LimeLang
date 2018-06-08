@@ -30,17 +30,20 @@ std::string Node::ToString(std::string indent = "") const {
         result += " word: \"" + token.word + "\"";
 
     if (type == LIME_NODE_PROC_DEFINITION || type == LIME_NODE_PROC_DECLARATION) {
+        assert(identifier != nullptr);
         auto type_name = variable_type == nullptr ?  "none" : variable_type->word;
         result += " proc: " + identifier->word + ", ";
         result += " return_type: " + type_name;
     }
 
-    if (type == LIME_NODE_VARIABlE_ASSIGNMENT || type == LIME_NODE_VARIABLE_DECLARATION) {
+    if (type == LIME_NODE_VARIABLE_ASSIGNMENT || type == LIME_NODE_VARIABLE_DECLARATION) {
+        assert(identifier != nullptr);
         result += " var: " + identifier->word + ",";
         //result += " type: " + cp + ",";
     }
 
     if (type == LIME_NODE_PROC_CALL) {
+        assert(identifier != nullptr);
         result += " proc: " + identifier->word + ",";
     }
 
@@ -469,7 +472,6 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
             }
 
             // HERE FOR NEW TOKEN
-            
             case LIME_METATAG: {
                 auto next = Next();
                 if (next->type == LIME_IDENTIFIER) {
@@ -606,17 +608,6 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 break;
             }
 
-            // Handle function calls
-            case LIME_IDENTIFIER: {
-
-                if (Peek()->type == LIME_OPEN_PAREN) {
-                    // This is probably a function call
-                    ast->children.push_back(handle_function_call(it, tokens.end())); 
-                }
-
-                break;
-            }
-
             // Handle procedures
             case LIME_PROC: {
                 
@@ -711,53 +702,105 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 break;
             }
 
-            case LIME_OPERATOR: {
-                switch((*it).op) {
-                    case LIME_ASSIGNMENT_OPERATOR: {
-                            
-                        // Get the identifier
-                        auto [prev, res] = getPrev();
-                        assert(res); 
+            case LIME_IDENTIFIER: {
 
-                        auto node = new Node();
+                auto next = Peek();
+                if (next->type == LIME_TYPE_IDENTIFIER || next->type == LIME_MUTABLE) {
+                    // Handle LIME_NODE_VARIABLE_DECLARATION
 
-                        if ((*prev).type == LIME_TYPE_IDENTIFIER) {
-                            node->variable_type = new Token(*prev);
-                            prev--;
-                            while((*prev).isWhiteSpace)
-                                prev--;
-
-                            if ((*prev).type == LIME_MUTABLE) {
-                                node->canMutate = true;
-            
-                                prev--;
-                                while((*prev).isWhiteSpace)
-                                    prev--;
-                            }
-                        } 
-
-                        assert((*prev).type == LIME_IDENTIFIER);
-
-                        ++it;
-                        auto expression         = GetExpressionTokens(it, tokens.end());
-                        auto expression_node    = PackExpression(expression.begin(), expression.end());
-
-                        node->type = LIME_NODE_VARIABlE_ASSIGNMENT;
-                        node->children.push_back(expression_node);
-                        node->identifier = new Token(*prev); // This might cause issues if the tokens go out of scope...
-
-                        ast->children.push_back(node);
-
-                        break;
+                    next = Next();
+                    auto node = new Node();
+                    node->type = LIME_NODE_VARIABLE_DECLARATION;
+                    node->identifier = new Token(*it);
+                    
+                    //node->
+                    //Token* identifier{nullptr}; 
+                    //Token* variable_type{nullptr};
+                    //bool canMutate{false};
+                    //bool external{false};
+                    
+                    if (next->type == LIME_MUTABLE) {
+                        next = Next();
+                        node->canMutate = true;
                     }
 
-                    default: {
-                        //assert(false);
-                        break;
+                    if (next->type != LIME_TYPE_IDENTIFIER) {
+                        Error("Type expected but got: " + next->word, next->line_number);
                     }
+
+                    // NOTE: This seems fishy
+                    node->variable_type = new Token(*next);
+                    next = Next();
+                    
+                    if (next->type == LIME_MUTABLE) 
+                        Error("Mutable keyword should be before the type", next->line_number);
+
+                    if (next->type == LIME_OPERATOR && next->op == LIME_ASSIGNMENT_OPERATOR) {
+                        // Handle expressions
+                        node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
+                        
+
+                    } else {
+                        it = next - 1;
+                    }
+
+                    ast->children.push_back(node);
+                    
+                } else if (next->type == LIME_OPERATOR) {
+                    // Handle LIME_NODE_VARIABLE_ASSIGNMENT
+
+                    if (next->op == LIME_ASSIGNMENT_OPERATOR) {
+
+                         
+                        assert(0);
+
+                    } else {
+                        Error("Identifier has a unsupported operator after it.", next->line_number);
+                    }
+
+                } else if (next->type == LIME_OPEN_PAREN) {
+                    // This is probably a function call
+                    ast->children.push_back(handle_function_call(it, tokens.end())); 
+                } else {
+                    Error("Random identifier", it->line_number);
                 }
 
+                if (Peek()->type == LIME_OPEN_PAREN) {
+                }
+                    
                 break;
+                // Get the identifier
+                //auto [prev, res] = getPrev();
+                //assert(res); 
+
+                //auto node = new Node();
+
+                //if ((*prev).type == LIME_TYPE_IDENTIFIER) {
+                //    node->variable_type = new Token(*prev);
+                //    prev--;
+                //    while((*prev).isWhiteSpace)
+                //        prev--;
+
+                //    if ((*prev).type == LIME_MUTABLE) {
+                //        node->canMutate = true;
+    
+                //        prev--;
+                //        while((*prev).isWhiteSpace)
+                //            prev--;
+                //    }
+                //} 
+
+                //assert((*prev).type == LIME_IDENTIFIER);
+
+                //++it;
+                //auto expression         = GetExpressionTokens(it, tokens.end());
+                //auto expression_node    = PackExpression(expression.begin(), expression.end());
+
+                //node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
+                //node->children.push_back(expression_node);
+                //node->identifier = new Token(*prev); // This might cause issues if the tokens go out of scope...
+
+                //ast->children.push_back(node);
             }
 
             default: {
@@ -886,7 +929,7 @@ bool AstPass(Node* ast) {
                 break;
             }
 
-            case LIME_NODE_VARIABlE_ASSIGNMENT: {
+            case LIME_NODE_VARIABLE_ASSIGNMENT: {
 
                 if (node->variable_type != nullptr) {
                     // It is a declaration

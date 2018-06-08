@@ -188,7 +188,7 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                 break;
             }
 
-            case LIME_NODE_VARIABlE_ASSIGNMENT: {
+            case LIME_NODE_VARIABLE_ASSIGNMENT: {
                 if (n->variable_type != nullptr) {
 
                     if (scope == 1) {

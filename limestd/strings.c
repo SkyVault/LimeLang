@@ -7,6 +7,17 @@ typedef struct string {
     long hash;
 } string;
 
+long str_hash(char* key) {
+    long hash_val = 0;
+    while(*key != '\0') {
+        hash_val = (hash_val << 4) + *(key++);
+        long g = hash_val & 0xF0000000L;
+        if (g != 0) hash_val ^= g >>> 24;
+        hash_val &= ~g;
+    }
+    return hash_val;
+}
+
 string make_empty_string() {
     string str = (string) {
         .data = malloc(1),

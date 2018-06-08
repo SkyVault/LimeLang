@@ -1,3 +1,1 @@
-
-
-myArray int
+myArray mut int 
