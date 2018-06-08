@@ -13,13 +13,11 @@
 #include "lime_tests.h"
 
 const auto code = std::string{R"LEAF(
-
 Add proc(a int, b int) int {
     ret a + b
 }
 
 printf("Add(5, 4) == %d\n", Add(5, 4));
-
 )LEAF"};
 
 //#define RUN_TESTS
@@ -33,8 +31,8 @@ int main() {
     std::cout << "\n";
 #endif
 
-	//const auto content = LoadFileToString("test.lime");
-	auto tokens = TokenizeString(code);
+	const auto content = LoadFileToString("examples/factorial.lime");
+	auto tokens = TokenizeString(content);
 
 #ifdef LOG_TO_FILES
     auto tfile = std::ofstream("tokens_out.txt");

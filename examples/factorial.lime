@@ -1,0 +1,13 @@
+factorial proc(n int) int {
+    if n == 0 { ret 1 }
+    else {
+        ret n * factorial(n - 1)
+    }
+}
+
+count int = 10
+while count >= 1 {
+    printf("!%d = %d\n", count, factorial(count));
+
+    count = count - 1
+}

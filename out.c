@@ -17,12 +17,24 @@ typedef double          f64;
 typedef unsigned int    uint;
 typedef float           real;
 
-int Add(int a, int b_);
-int Add(int a, int b_){
-    return (a + b_);
+int factorial(int n);
+int factorial(int n){
+    if ((n == 0)) {
+        return (1);
+    }
+    else {
+        return (n * factorial((n - 1)));
+    }
+
 }
+int count;
 int main(int num_arg_pkDHTx, char** args_pkDHTx) {
-    printf(("Add(5, 4) == %d\n"), (Add((5), (4))));
+    count = (10);
+    while ((count >= 1)) {
+        printf(("!%d = %d\n"), (count), (factorial((count))));
+    count = (count - 1);
+
+    }
     return 0;
 }
 
