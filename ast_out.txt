@@ -1,51 +1,11 @@
 (NONE line: 1, (
-  (PROC_DEFINITION line: 1, proc: factorial,  return_type: int (
-    (PARAMETER_LIST line: 1, (
-      (VARIABLE_DECLARATION line: 1, var: n,)))
-    (NONE line: 1, (
-      (IF_STATEMENT line: 1, (
-        (EXPRESSION line: 1, (
-          (OPERATOR line: 4, word: "==" (
-            (IDENTIFIER line: 4, word: "n")
-            (NUMBER_LITERAL line: 4, word: "0")))))
-        (NONE line: 1, (
-          (RETURN line: 1, (
-            (EXPRESSION line: 1, (
-              (NUMBER_LITERAL line: 4, word: "1")))))))))
-      (ELSE_STATEMENT line: 1, (
-        (NONE line: 1, (
-          (RETURN line: 1, (
-            (EXPRESSION line: 1, (
-              (OPERATOR line: 6, word: "*" (
-                (IDENTIFIER line: 6, word: "n")
-                (PROC_CALL line: 1, proc: factorial, (
-                  (ARGUMENT_LIST line: 1, (
-                    (EXPRESSION line: 1, (
-                      (OPERATOR line: 6, word: "-" (
-                        (IDENTIFIER line: 6, word: "n")
-                        (NUMBER_LITERAL line: 6, word: "1")))))))))))))))))))))))
-  (VARIABlE_ASSIGNMENT line: 1, var: count, (
+  (IF_STATEMENT line: 1, (
     (EXPRESSION line: 1, (
-      (NUMBER_LITERAL line: 10, word: "10")))))
-  (WHILE_LOOP line: 1, (
-    (EXPRESSION line: 1, (
-      (OPERATOR line: 11, word: ">=" (
-        (IDENTIFIER line: 11, word: "count")
-        (NUMBER_LITERAL line: 11, word: "1")))))
+      (OPERATOR line: 1, word: "==" (
+        (NUMBER_LITERAL line: 1, word: "3")
+        (NUMBER_LITERAL line: 1, word: "3")))))
     (NONE line: 1, (
       (PROC_CALL line: 1, proc: printf, (
         (ARGUMENT_LIST line: 1, (
           (EXPRESSION line: 1, (
-            (LIME_NODE_STRING_LITERAL line: 12, word: ""!%d = %d\n"")))
-          (EXPRESSION line: 1, (
-            (IDENTIFIER line: 12, word: "count")))
-          (EXPRESSION line: 1, (
-            (PROC_CALL line: 1, proc: factorial, (
-              (ARGUMENT_LIST line: 1, (
-                (EXPRESSION line: 1, (
-                  (IDENTIFIER line: 12, word: "count")))))))))))))
-      (VARIABlE_ASSIGNMENT line: 1, var: count, (
-        (EXPRESSION line: 1, (
-          (OPERATOR line: 14, word: "-" (
-            (IDENTIFIER line: 14, word: "count")
-            (NUMBER_LITERAL line: 14, word: "1")))))))))))))
+            (LIME_NODE_STRING_LITERAL line: 1, word: ""Yo\n"")))))))))))))

@@ -17,22 +17,9 @@ typedef double          f64;
 typedef unsigned int    uint;
 typedef float           real;
 
-int factorial(int n);
-int factorial(int n){
-    if ((n == 0)) {
-        return (1);
-    }
-    else {
-        return (n * factorial((n - 1)));
-    }
-
-}
-int count;
 int main(int num_arg_pkDHTx, char** args_pkDHTx) {
-    count = (10);
-    while ((count >= 1)) {
-        printf(("!%d = %d\n"), (count), (factorial((count))));
-    count = (count - 1);
+    if ((3 == 3)) {
+        printf(("Yo\n"));
 
     }
     return 0;

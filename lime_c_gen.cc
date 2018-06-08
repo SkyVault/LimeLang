@@ -162,6 +162,32 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                 break;
             }
 
+            case LIME_NODE_PROC_DECLARATION: {
+
+                std::stringstream prot;
+                prot << (n->variable_type == nullptr ? "void" : n->variable_type->word);
+                prot << " " << n->identifier->word << "(";
+                std::string block = "";
+                for (auto child : n->children) {
+                    if (child->type == 0) {
+                        block = compile_code_block(child, "    ");
+                    }
+                    else if (child->type == LIME_NODE_PARAMETER_LIST) {
+                        int i = 0;
+                        for (const auto& param : child->children) {
+                            prot << param->variable_type->word << " " << param->identifier->word;
+                            if (i < (int)(child->children.size() - 1))
+                                prot << ", ";
+                            ++i;
+                        }
+                    }
+                }
+                prot << ")";
+                gfprot << prot.str() << ";\n";
+
+                break;
+            }
+
             case LIME_NODE_VARIABlE_ASSIGNMENT: {
                 if (n->variable_type != nullptr) {
 

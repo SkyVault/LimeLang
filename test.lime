@@ -1,6 +1,1 @@
-# This is a comment var = 123
-myVar mut int = 1 + (1234 / 2) + 2 # They can be inline
-
-PI float = 3.1415926
-
-myint int = 100
+if (2 == 2) { printf("Yas\n") }

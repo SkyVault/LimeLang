@@ -273,6 +273,8 @@ Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterat
                 break;
             default:
                 //assert(0);
+                if (i->isWhiteSpace) break;
+                Error("Un expected token in expression: " + i->word, i->line_number);
                 break;
         }
         
@@ -810,6 +812,7 @@ bool AstPass(Node* ast) {
     bool result{false};
     //assert(ast->type == 0);
 
+    Node* prev = nullptr;
     for (const auto& node : ast->children) {
         switch(node->type) {
 
@@ -830,6 +833,11 @@ bool AstPass(Node* ast) {
                 break;
             }
 
+            case LIME_NODE_EXPRESSION: {
+                AstPass(node);
+                break;
+            }
+
             case LIME_NODE_IF_STATEMENT:
             case LIME_NODE_ELSEIF_STATEMENT:
             case LIME_NODE_WHILE_LOOP: {
@@ -840,12 +848,13 @@ bool AstPass(Node* ast) {
                 Lens->push();
                 AstPass(node->children[1]);
                 Lens->pop();
-
-                auto p_type = ((node - 1)->type);
-                if (node->type == LIME_NODE_ELSEIF_STATEMENT)
-                    if (p_type != LIME_NODE_IF_STATEMENT || p_type != LIME_NODE_ELSEIF_STATEMENT) {
-                        Error("Randomly placed \'elif\' statement, should this just be an \'if\'?", node->token.line_number);
-                    }
+                
+                if (node->type == LIME_NODE_ELSEIF_STATEMENT) {
+                    if (prev == nullptr || prev->type == LIME_NODE_ELSEIF_STATEMENT)
+                        if (prev->type != LIME_NODE_IF_STATEMENT || prev->type != LIME_NODE_ELSEIF_STATEMENT) {
+                            Error("Randomly placed \'elif\' statement, should this just be an \'if\'?", node->token.line_number);
+                        }
+                }
 
 
                 auto name = (std::string{
@@ -948,6 +957,7 @@ bool AstPass(Node* ast) {
             default:
                 break;
         }
+        prev = node;
     }
 
     return result;
@@ -963,7 +973,7 @@ Node* create_ast_from_tokens(std::vector<Token>& tokens) {
     //TODO: Remove this hack, this is just a hack so that it wont give us an
     // error when we call the print function
     Lens->functions.insert(std::make_pair("printf", new Node()));
-    Lens->functions.insert(std::make_pair("getchar", new Node()));
+    //Lens->functions.insert(std::make_pair("getchar", new Node()));
 
     Lens->push();
     AstPass(ast);
