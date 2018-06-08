@@ -33,15 +33,15 @@ enum LimeErrorLevel{ LimeErrorLevel7,71
 
 main.cc,116
 const auto code = std::string{R"LEAF(code15,214
-#define LOG_TO_FILESLOG_TO_FILES22,305
-int main() {main24,327
+#define LOG_TO_FILESLOG_TO_FILES26,372
+int main() {main28,394
 
 lime_c_gen.cc,288
 std::string LimeCGen::compile_expression(Node* node) {compile_expression5,67
-std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {compile_code_block59,1461
-void LimeCGen::compile_ast_to_c(Node* node, const std::string& out_file) {compile_ast_to_c194,6423
+std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {compile_code_block64,1645
+void LimeCGen::compile_ast_to_c(Node* node, const std::string& out_file) {compile_ast_to_c199,6607
 
-out.c,560
+out.c,594
 #define none none3,42
 typedef unsigned char   u8;u84,60
 typedef unsigned short  u16;u165,88
@@ -55,7 +55,8 @@ typedef float           f32;f3214,292
 typedef double          f64;f6415,321
 typedef unsigned int    uint;uint17,381
 typedef float           real;real18,411
-int main(int num_arg_pkDHTx, char** args_pkDHTx) {main20,442
+int Add(int a, int b){Add21,465
+int main(int num_arg_pkDHTx, char** args_pkDHTx) {main24,510
 
 lexer.cc,644
 Token::Token()Token6,81
@@ -86,17 +87,17 @@ void SortExpression(Node* node){SortExpression155,4337
 Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterator end) {PackExpression215,6171
 void get_all_within_tokens(std::vector<Token>::iterator& it, std::vector<Token>::iterator end, std::string tstart = "{", std::string tend = "}") {get_all_within_tokens288,8363
 Node* parameters_to_node(std::vector<Token>& tokens) {parameters_to_node302,8749
-Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>::iterator last) {handle_function_call358,10540
-void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {code_block_to_ast404,11990
-CodeLens* GetCodeLens() { return Lens; }GetCodeLens754,23323
-bool CodeLens::varExists(const std::string& name) {varExists756,23365
-void CodeLens::addVar(Node* node) {addVar764,23597
-bool CodeLens::procExists(const std::string& name) {procExists770,23818
-void CodeLens::addProc(Node* node) {addProc776,23963
-void CodeLens::push() {push782,24153
-void CodeLens::pop() {pop786,24242
-bool AstPass(Node* ast) {AstPass791,24344
-Node* create_ast_from_tokens(std::vector<Token>& tokens) {create_ast_from_tokens925,29044
+Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>::iterator last) {handle_function_call364,10769
+void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {code_block_to_ast410,12219
+CodeLens* GetCodeLens() { return Lens; }GetCodeLens766,23679
+bool CodeLens::varExists(const std::string& name) {varExists768,23721
+void CodeLens::addVar(Node* node) {addVar776,23953
+bool CodeLens::procExists(const std::string& name) {procExists782,24174
+void CodeLens::addProc(Node* node) {addProc788,24319
+void CodeLens::push() {push794,24509
+void CodeLens::pop() {pop798,24598
+bool AstPass(Node* ast) {AstPass803,24700
+Node* create_ast_from_tokens(std::vector<Token>& tokens) {create_ast_from_tokens937,29400
 
 lexer.h,1874
 enum LimeTokenTypes {LimeTokenTypes13,173

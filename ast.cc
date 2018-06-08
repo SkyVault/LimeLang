@@ -300,6 +300,13 @@ void get_all_within_tokens(std::vector<Token>::iterator& it, std::vector<Token>:
 }
 
 Node* parameters_to_node(std::vector<Token>& tokens) {
+    /*
+     * TODO: 
+     * When working on these parameters we should start from the identifier
+     * and then check the the next values are what we expect, instead
+     * of starting with a type identifier
+     */
+
     auto result = new Node();
     auto it = tokens.begin();
 
@@ -309,13 +316,17 @@ Node* parameters_to_node(std::vector<Token>& tokens) {
     while (it != tokens.end()) {
 
         switch(it->type) {
-
             case LIME_TYPE_IDENTIFIER:{ 
                 auto p = it - 1;
-                while (p->isWhiteSpace) p--;
+                if (it == tokens.begin()) {
+                    Error("Type is missing identifier: " + p->word, p->line_number);
+                    return result;
+                }
+
+                while (p->isWhiteSpace && p != tokens.begin()) p--;
 
                 if (p->type != LIME_IDENTIFIER) {
-                    Error("Identifier expected but got: " + LimeTokenTypesNames.find(p->type)->second, p->line_number);
+                    Error("Identifier expected but got: " + p->word, p->line_number);
                 }
 
                 auto node = new Node();
@@ -618,11 +629,22 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
 
                 auto node = new Node();
                 node->identifier = new Token(*prev);
+                
+                auto expect_proc_tokens = [](const Token& it) {
+                    if (it.type != LIME_TYPE_IDENTIFIER &&
+                        it.type != LIME_OPEN_PAREN      &&
+                        it.type != LIME_OPEN_CURLY_BRACKET) {
+
+                        Error("Missplaced identifier for proc return type: " + it.word, it.line_number);
+                    }
+                };
+
+                expect_proc_tokens(*it);
 
                 if (it->type == LIME_TYPE_IDENTIFIER) {
                     node->variable_type = new Token(*it);  
                     Next();
-                }
+                } 
 
                 if (it->type == LIME_OPEN_CURLY_BRACKET) {
                     // We know that there are no parameters
@@ -639,15 +661,6 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                             break;
                         }
 
-                        //TODO: Move this?
-                        if (end->type != LIME_IDENTIFIER &&
-                            end->type != LIME_COMMA &&
-                            end->type != LIME_TYPE_IDENTIFIER &&
-                            end->isWhiteSpace == false) {
-                            std::cout << "FREAKOUT:: "<< end->ToString() << std::endl;
-                            assert(0);
-                        }
-
                         assert(end != back);
 
                         end++;
@@ -656,11 +669,15 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                     auto parameters = std::vector((it + 1), end);
                     //TODO: Handle parameters
                    
+                    // Check the correctness of the parameters
+
                     auto parameters_node = parameters_to_node(parameters);
                     node->children.push_back(parameters_node);
 
                     it = end;
                     Next();
+
+                    expect_proc_tokens(*it);
 
                     if (it->type == LIME_TYPE_IDENTIFIER) {
                         node->variable_type = new Token(*it);
@@ -793,7 +810,6 @@ bool AstPass(Node* ast) {
     bool result{false};
     //assert(ast->type == 0);
 
-    Lens->push();
     for (const auto& node : ast->children) {
         switch(node->type) {
 
@@ -820,7 +836,10 @@ bool AstPass(Node* ast) {
                 assert(node->children.size() == 2);
 
                 AstPass(node->children[0]);
+
+                Lens->push();
                 AstPass(node->children[1]);
+                Lens->pop();
 
                 auto p_type = ((node - 1)->type);
                 if (node->type == LIME_NODE_ELSEIF_STATEMENT)
@@ -846,7 +865,9 @@ bool AstPass(Node* ast) {
             }
 
             case LIME_NODE_ELSE_STATEMENT: {
+                Lens->push();
                 AstPass(node->children[0]);
+                Lens->pop();
                 break;
             }
 
@@ -900,6 +921,16 @@ bool AstPass(Node* ast) {
                 }
 
                 Lens->addProc(node);
+
+                Lens->push();
+                for (auto v: node->children[0]->children) {
+                    if (v->type == LIME_NODE_VARIABLE_DECLARATION) {
+                        Lens->addVar(v);
+                    }
+                }
+                AstPass(node->children[1]);
+                Lens->push();
+
                 break;
             }
 
@@ -918,7 +949,6 @@ bool AstPass(Node* ast) {
                 break;
         }
     }
-    Lens->pop();
 
     return result;
 }
@@ -935,7 +965,9 @@ Node* create_ast_from_tokens(std::vector<Token>& tokens) {
     Lens->functions.insert(std::make_pair("printf", new Node()));
     Lens->functions.insert(std::make_pair("getchar", new Node()));
 
+    Lens->push();
     AstPass(ast);
+    Lens->pop();
 
     return ast;
 }

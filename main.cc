@@ -14,25 +14,11 @@
 
 const auto code = std::string{R"LEAF(
 
-Fib proc(n int) int {
-    if n == 0 {
-        ret n
-    }
-
-    if n == 1 {
-        ret n
-    }
-    
-    ret Fib(n - 2) + Fib(n - 1)
+Add proc(a int, b int) int {
+    ret a + b
 }
 
-count int = 0
-while count <= 42 {
-
-    printf("count: %d = %d\n", count, Fib(count))
-
-    count = count + 1
-}
+printf("Add(5, 4) == %d\n", Add(5, 4));
 
 )LEAF"};
 

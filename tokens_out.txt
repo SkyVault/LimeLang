@@ -1,10 +1,15 @@
 Token {  word: \n  type: LIME_NEWLINE}
 Token {  word: \n  type: LIME_NEWLINE}
-Token {  word: Fib  type: LIME_IDENTIFIER}
+Token {  word: Add  type: LIME_IDENTIFIER}
 Token {  word:    type: LIME_WHITESPACE}
 Token {  word: proc  type: LIME_PROC}
 Token {  word: (  type: LIME_OPEN_PAREN}
-Token {  word: n  type: LIME_IDENTIFIER}
+Token {  word: a  type: LIME_IDENTIFIER}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: int  type: LIME_TYPE_IDENTIFIER}
+Token {  word: ,  type: LIME_COMMA}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: b_  type: LIME_IDENTIFIER}
 Token {  word:    type: LIME_WHITESPACE}
 Token {  word: int  type: LIME_TYPE_IDENTIFIER}
 Token {  word: )  type: LIME_CLOSE_PAREN}
@@ -17,153 +22,30 @@ Token {  word:    type: LIME_WHITESPACE}
 Token {  word:    type: LIME_WHITESPACE}
 Token {  word:    type: LIME_WHITESPACE}
 Token {  word:    type: LIME_WHITESPACE}
-Token {  word: if  type: LIME_IF}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: n  type: LIME_IDENTIFIER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: ==  type: LIME_OPERATOR}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: 0  type: LIME_NUMBER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: {  type: }
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
 Token {  word: ret  type: LIME_RETURN}
 Token {  word:    type: LIME_WHITESPACE}
-Token {  word: n  type: LIME_IDENTIFIER}
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: }  type: }
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: if  type: LIME_IF}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: n  type: LIME_IDENTIFIER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: ==  type: LIME_OPERATOR}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: 1  type: LIME_NUMBER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: {  type: }
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: ret  type: LIME_RETURN}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: n  type: LIME_IDENTIFIER}
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: }  type: }
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: ret  type: LIME_RETURN}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: Fib  type: LIME_IDENTIFIER}
-Token {  word: (  type: LIME_OPEN_PAREN}
-Token {  word: n  type: LIME_IDENTIFIER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: -  type: LIME_OPERATOR}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: 2  type: LIME_NUMBER}
-Token {  word: )  type: LIME_CLOSE_PAREN}
+Token {  word: a  type: LIME_IDENTIFIER}
 Token {  word:    type: LIME_WHITESPACE}
 Token {  word: +  type: LIME_OPERATOR}
 Token {  word:    type: LIME_WHITESPACE}
-Token {  word: Fib  type: LIME_IDENTIFIER}
-Token {  word: (  type: LIME_OPEN_PAREN}
-Token {  word: n  type: LIME_IDENTIFIER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: -  type: LIME_OPERATOR}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: 1  type: LIME_NUMBER}
-Token {  word: )  type: LIME_CLOSE_PAREN}
+Token {  word: b_  type: LIME_IDENTIFIER}
 Token {  word: \n  type: LIME_NEWLINE}
 Token {  word: }  type: }
 Token {  word: \n  type: LIME_NEWLINE}
 Token {  word: \n  type: LIME_NEWLINE}
-Token {  word: count  type: LIME_IDENTIFIER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: int  type: LIME_TYPE_IDENTIFIER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: =  type: LIME_OPERATOR}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: 0  type: LIME_NUMBER}
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word: while  type: LIME_WHILE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: count  type: LIME_IDENTIFIER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: <=  type: LIME_OPERATOR}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: 42  type: LIME_NUMBER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: {  type: }
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
 Token {  word: printf  type: LIME_IDENTIFIER}
 Token {  word: (  type: LIME_OPEN_PAREN}
-Token {  word: "count: %d = %d\n"  type: LIME_STRING}
+Token {  word: "Add(5, 4) == %d\n"  type: LIME_STRING}
 Token {  word: ,  type: LIME_COMMA}
 Token {  word:    type: LIME_WHITESPACE}
-Token {  word: count  type: LIME_IDENTIFIER}
-Token {  word: ,  type: LIME_COMMA}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: Fib  type: LIME_IDENTIFIER}
+Token {  word: Add  type: LIME_IDENTIFIER}
 Token {  word: (  type: LIME_OPEN_PAREN}
-Token {  word: count  type: LIME_IDENTIFIER}
+Token {  word: 5  type: LIME_NUMBER}
+Token {  word: ,  type: LIME_COMMA}
+Token {  word:    type: LIME_WHITESPACE}
+Token {  word: 4  type: LIME_NUMBER}
 Token {  word: )  type: LIME_CLOSE_PAREN}
 Token {  word: )  type: LIME_CLOSE_PAREN}
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: count  type: LIME_IDENTIFIER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: =  type: LIME_OPERATOR}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: count  type: LIME_IDENTIFIER}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: +  type: LIME_OPERATOR}
-Token {  word:    type: LIME_WHITESPACE}
-Token {  word: 1  type: LIME_NUMBER}
-Token {  word: \n  type: LIME_NEWLINE}
-Token {  word: }  type: }
+Token {  word: ;  type: LIME_IDENTIFIER}
 Token {  word: \n  type: LIME_NEWLINE}
 Token {  word: \n  type: LIME_NEWLINE}
