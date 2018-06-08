@@ -752,11 +752,19 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                     
                 } else if (next->type == LIME_OPERATOR) {
                     // Handle LIME_NODE_VARIABLE_ASSIGNMENT
-
                     if (next->op == LIME_ASSIGNMENT_OPERATOR) {
+                        auto node = new Node();
+                        node->identifier = new Token(*it);
+                        node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
 
-                         
-                        assert(0);
+                        it = Next();
+                        ++it;
+                        auto expression         = GetExpressionTokens(it, tokens.end());
+                        auto expression_node    = PackExpression(expression.begin(), expression.end());
+
+                        node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
+                        node->children.push_back(expression_node);
+                        ast->children.push_back(node);
 
                     } else {
                         Error("Identifier has a unsupported operator after it.", next->line_number);

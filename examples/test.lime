@@ -1,1 +1,3 @@
 myVariable mut int = 3
+
+myVariable = 32

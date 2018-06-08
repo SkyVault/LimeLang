@@ -20,6 +20,7 @@ typedef float           real;
 int myVariable;
 int main(int num_arg_pkDHTx, char** args_pkDHTx) {
     myVariable = (3);
+    myVariable = (32);
     return 0;
 }
 
