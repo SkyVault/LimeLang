@@ -708,10 +708,11 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 if (next->type == LIME_TYPE_IDENTIFIER || next->type == LIME_MUTABLE) {
                     // Handle LIME_NODE_VARIABLE_DECLARATION
 
-                    next = Next();
                     auto node = new Node();
                     node->type = LIME_NODE_VARIABLE_DECLARATION;
                     node->identifier = new Token(*it);
+
+                    next = Next();
                     
                     //node->
                     //Token* identifier{nullptr}; 

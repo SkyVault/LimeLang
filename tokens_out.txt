@@ -1,4 +1,4 @@
-Token {  word: myArray  type: LIME_IDENTIFIER}
+Token {  word: myVariable  type: LIME_IDENTIFIER}
 Token {  word:    type: LIME_WHITESPACE}
 Token {  word: mut  type: LIME_MUTABLE}
 Token {  word:    type: LIME_WHITESPACE}

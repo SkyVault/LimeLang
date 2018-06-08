@@ -17,6 +17,7 @@ typedef double          f64;
 typedef unsigned int    uint;
 typedef float           real;
 
+int myVariable;
 int main(int num_arg_pkDHTx, char** args_pkDHTx) {
     return 0;
 }

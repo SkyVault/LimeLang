@@ -1,2 +1,2 @@
 (NONE line: 1, (
-  (VARIABLE_DECLARATION line: 1, var: mut,)))
+  (VARIABLE_DECLARATION line: 1, var: myVariable,)))

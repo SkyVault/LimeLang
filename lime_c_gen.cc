@@ -188,6 +188,21 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                 break;
             }
 
+            case LIME_NODE_VARIABLE_DECLARATION: {
+                assert(n->variable_type != nullptr);
+
+                if (scope == 1) {
+                    // Handle the global declaration
+                    gvd << n->variable_type->word << " " << n->identifier->word << ";\n";
+                } else {
+                    // Handle local declaration
+                    ss << n->variable_type->word << " " << n->identifier->word << ";\n";
+                }
+
+
+                break;
+            }
+
             case LIME_NODE_VARIABLE_ASSIGNMENT: {
                 if (n->variable_type != nullptr) {
 
