@@ -341,6 +341,7 @@ Node* parameters_to_node(std::vector<Token>& tokens) {
                 next_not_comma = true;
                 break; 
             }
+
             case LIME_IDENTIFIER:   /* Do nothing */ { next_not_comma = false; break; }
 
             default:
