@@ -13,22 +13,8 @@
 #include "lime_tests.h"
 
 const auto code = std::string{R"LEAF(
-#[ While Test ] 
 
-# TODO: Make return values work
-Add proc(a int, b int) int {
-    ret a + b
-}
-
-Test proc {
-
-}
-
-myVar int = Add(10, 2)
-
-if myVar == 12 {
-    $emit{printf("Yes\n");}
-}
+"Hello World"
 
 )LEAF"};
 
@@ -57,14 +43,14 @@ int main() {
     // Ast
     auto ast = create_ast_from_tokens(tokens);
 
-    LimeCGen cgen;
-    cgen.compile_ast_to_c(ast, "out.c");
-
 #ifdef LOG_TO_FILES
     auto afile = std::ofstream("ast_out.txt");
     afile << *ast << std::endl;
     afile.close();
 #endif
+
+    LimeCGen cgen;
+    cgen.compile_ast_to_c(ast, "out.c");
 
     std::cout << " ==== out ==== " << std::endl;
     system("gcc out.c -o out.out && ./out.out");

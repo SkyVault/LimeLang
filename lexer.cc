@@ -242,6 +242,8 @@ vector<Token> WordsToTokens(const vector<string>& words) {
         else if (word == "if") NToken(word, LIME_IF);
         else if (word == "ret") NToken(word, LIME_RETURN);
         else if (word == "$") NToken(word, LIME_METATAG);
+        else if (word == "else") NToken(word, LIME_ELSE);
+        else if (word == "elif") NToken(word, LIME_ELIF);
 		else if (IsOperator(word)){
             auto token = Token(word, LIME_OPERATOR);
             token.op = GetOperator(word);

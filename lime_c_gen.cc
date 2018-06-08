@@ -6,8 +6,8 @@ std::string LimeCGen::compile_expression(Node* node) {
     std::stringstream ss;
 
     Node* e = node;
-    if (node->type == LIME_NODE_EXPRESSION)
-        e = node->children[0];
+    while (e->type == LIME_NODE_EXPRESSION)
+        e = e->children[0];
 
     switch(e->type) {
         case LIME_NODE_IDENTIFIER: {
@@ -66,13 +66,55 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                 break;
             }
 
-            case LIME_NODE_IF_STATEMENT: {
+            case LIME_NODE_IF_STATEMENT: 
+            case LIME_NODE_ELSEIF_STATEMENT: {
                 auto expression = n->children[0];
                 auto block = n->children[1];
 
-                ss << indent << "if (" << compile_expression(expression) << ") {\n";
+                ss << indent << (n->type == LIME_NODE_IF_STATEMENT ? "if" : "else if");
+                ss << " (" << compile_expression(expression) << ") {\n";
                 ss << indent << compile_code_block(block, "    ") << "\n";
                 ss << indent << "}\n";
+
+                break;
+            }
+
+            case LIME_NODE_ELSE_STATEMENT: {
+                ss << indent << "else {\n";
+                ss << indent << compile_code_block(n->children[0], "    ") << "\n";
+                ss << indent << "}\n";
+                break;
+            }
+
+            case LIME_NODE_WHILE_LOOP: {
+                // TODO: Stop using C's while loop and move to goto statements
+                // This is less efficient because of optimizations that cant
+                // happen, but this will force us to not rely on c
+
+                auto expression = n->children[0];
+                auto block = n->children[1];
+
+                ss << indent << "while (" << compile_expression(expression) << ") {\n";
+                ss << indent << compile_code_block(block, "    ") << "\n";
+                ss << indent << "}\n";
+
+                break;
+            }
+
+            case LIME_NODE_PROC_CALL: {
+
+                ss << indent;
+                ss << n->identifier->word << "(";
+                if (n->children.size() > 0 && n->children[0]->type == LIME_NODE_ARGUMENT_LIST) {
+                    int i{0};
+                    for (const auto& a : n->children[0]->children) {
+                        ss << compile_expression(a);
+                        if (i < (int)(n->children[0]->children.size() - 1))
+                            ss << ", ";
+                        ++i;
+                    }
+                }
+                ss << ");\n";
 
                 break;
             }
@@ -116,7 +158,7 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
             }
 
             case LIME_NODE_VARIABlE_ASSIGNMENT: {
-                if (n->identifier != nullptr) {
+                if (n->variable_type != nullptr) {
 
                     if (scope == 1) {
                         // Handle the global declaration
@@ -131,6 +173,10 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                         ss << n->variable_type->word << " " << n->identifier->word << " = ";
                         ss << compile_expression(n->children[0]) << ";\n";
                     }
+                } else {
+                    ss << indent;
+                    ss << n->identifier->word << " = ";
+                    ss << compile_expression(n->children[0]) << ";\n";
                 }
 
                 break;

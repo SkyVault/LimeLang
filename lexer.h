@@ -19,6 +19,9 @@ enum LimeTokenTypes {
 	LIME_OPERATOR,
     LIME_COMMA,
 
+    LIME_STRING,
+    LIME_CHARACTER,
+
     LIME_PROC,
     LIME_RETURN,
 
@@ -36,6 +39,9 @@ enum LimeTokenTypes {
     LIME_FOR,
 
     LIME_IF,
+    LIME_ELSE,
+    LIME_ELIF,
+
     LIME_METATAG, // $
 
 	LIME_NUM_TOKENS
@@ -70,8 +76,15 @@ static const std::map<LimeTokenTypes, const std::string> LimeTokenTypesNames = {
 	{LIME_PROC, "LIME_PROC"},
     {LIME_RETURN, "LIME_RETURN"},
 
+    {LIME_STRING,"LIME_STRING"}
+    {LIME_CHARACTER,"LIME_CHARACTER"}
+
     {LIME_WHILE, "LIME_WHILE"},
     {LIME_FOR, "LIME_FOR"},
+
+    {LIME_IF,"LIME_IF"},
+    {LIME_ELSE,"LIME_ELSE"},
+    {LIME_ELIF,"LIME_ELIF"},
 
 	{LIME_OPEN_PAREN, "LIME_OPEN_PAREN"},
 	{LIME_CLOSE_PAREN, "LIME_CLOSE_PAREN"},

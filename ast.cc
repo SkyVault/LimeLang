@@ -437,6 +437,8 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
             continue;
         }
 
+        auto it_type = it->type;
+
         // Handle operators
         switch((*it).type) {
             case LIME_NEWLINE: {
@@ -527,7 +529,8 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
             }
             
             // Handle if statements
-            case LIME_IF: {
+            case LIME_IF: 
+            case LIME_ELIF: {
 
                 ++it;
                 auto beg = it;
@@ -538,7 +541,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 auto expression_node = PackExpression(expression.begin(), expression.end());
 
                 auto while_node = new Node();
-                while_node->type = LIME_NODE_IF_STATEMENT;
+                while_node->type = (it_type == LIME_IF ? LIME_NODE_IF_STATEMENT : LIME_NODE_ELSEIF_STATEMENT);
                 while_node->children.push_back(expression_node);
 
                 auto end = it + 1;
@@ -555,6 +558,27 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 ast->children.push_back(while_node);
 
                 break;
+            }
+
+            case LIME_ELSE: {
+                auto now = it;
+                auto else_node = new Node();
+                else_node->type = LIME_NODE_ELSE_STATEMENT;
+
+                auto end = it + 1;
+                if (Peek()->type != LIME_OPEN_CURLY_BRACKET) 
+                    Error("Else statement requires a code block", now->line_number);
+                get_all_within_tokens(end, tokens.end());
+                auto block = std::vector<Token>(it + 1, end - 1);
+               
+                // HERE
+                auto block_node = new Node();
+
+                code_block_to_ast(block_node, block);
+                else_node->children.push_back(block_node);
+                it = end-1;
+
+                ast->children.push_back(else_node);
             }
 
             // Handle function calls
@@ -779,18 +803,38 @@ bool AstPass(Node* ast) {
             }
 
             case LIME_NODE_IF_STATEMENT:
+            case LIME_NODE_ELSEIF_STATEMENT:
             case LIME_NODE_WHILE_LOOP: {
                 assert(node->children.size() == 2);
 
                 AstPass(node->children[0]);
                 AstPass(node->children[1]);
+
+                auto p_type = ((node - 1)->type);
+                if (node->type == LIME_NODE_ELSEIF_STATEMENT)
+                    if (p_type != LIME_NODE_IF_STATEMENT || p_type != LIME_NODE_ELSEIF_STATEMENT) {
+                        Error("Randomly placed \'elif\' statement, should this just be an \'if\'?", node->token.line_number);
+                    }
+
+
+                auto name = (std::string{
+                        (node->type == LIME_NODE_IF_STATEMENT ? "If statement" : 
+                         (node->type == LIME_NODE_WHILE_LOOP ? "While loop" : "Elif"))});
                     
                 if (node->children[0]->children.size() == 0) {
-                    Error(  std::string{(node->type == LIME_NODE_IF_STATEMENT ? "If statement" : "While looop")} + 
-                            " is missing an expression", 
-                            node->token.line_number);
+                    Error(name + " is missing an expression", node->token.line_number);
                 }
 
+                if (node->children[0]->children[0]->type == LIME_NODE_EXPRESSION)
+                    if (node->children[0]->children[0]->children.size() == 0) {
+                        Error(name + " has an empty expression", node->token.line_number);
+                    }
+
+                break;
+            }
+
+            case LIME_NODE_ELSE_STATEMENT: {
+                AstPass(node->children[0]);
                 break;
             }
 
@@ -877,6 +921,7 @@ Node* create_ast_from_tokens(std::vector<Token>& tokens) {
     //TODO: Remove this hack, this is just a hack so that it wont give us an
     // error when we call the print function
     Lens->functions.insert(std::make_pair("print", new Node()));
+    Lens->functions.insert(std::make_pair("getchar", new Node()));
 
     AstPass(ast);
 
