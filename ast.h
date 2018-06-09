@@ -34,6 +34,7 @@ enum NodeType {
 
     LIME_NODE_RETURN,
     LIME_NODE_EMIT,
+    LIME_NODE_C_INCLUDE,
 };
 
 static const std::map<NodeType, const std::string> LimeNodeTypesNames = {
@@ -58,6 +59,7 @@ static const std::map<NodeType, const std::string> LimeNodeTypesNames = {
     {LIME_NODE_ELSE_STATEMENT, "ELSE_STATEMENT"},
     {LIME_NODE_RETURN,"RETURN"},
     {LIME_NODE_EMIT, "EMIT"},
+    {LIME_NODE_C_INCLUDE,"LIME_NODE_C_INCLUDE"},
     {LIME_NODE_RANDOM_IDENTIFIER, "LIME_NODE_RANDOM_IDENTIFIER"}, // Identifier that doesnt have any purpose
 };
 

@@ -71,6 +71,11 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                 break;
             }
 
+            case LIME_NODE_C_INCLUDE: {
+                header << "#include <" << n->token.word << ">\n";
+                break;
+            }
+
             case LIME_NODE_IF_STATEMENT: 
             case LIME_NODE_ELSEIF_STATEMENT: {
                 auto expression = n->children[0];

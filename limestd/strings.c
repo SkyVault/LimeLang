@@ -12,7 +12,7 @@ long str_hash(char* key) {
     while(*key != '\0') {
         hash_val = (hash_val << 4) + *(key++);
         long g = hash_val & 0xF0000000L;
-        if (g != 0) hash_val ^= g >>> 24;
+        if (g != 0) hash_val ^= g >> 24;
         hash_val &= ~g;
     }
     return hash_val;

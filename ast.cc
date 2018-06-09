@@ -505,6 +505,18 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                         ast->children.push_back(node);
 
                         it = end-1;
+                    } else if (next->word == "include") {
+                        next = Next();                        
+
+                        if (next->type != LIME_STRING) {
+                            Error("Include statment expects a string literal with the name of the c file", next->line_number);
+                        }
+                        
+                        auto node = new Node();
+                        node->type = LIME_NODE_C_INCLUDE;
+                        node->token.word = next->word.substr(1, next->word.size() - 2);
+
+                        ast->children.push_back(node);
 
                     } else {
                         Error("Unknown metatag: " + next->word, next->line_number);
