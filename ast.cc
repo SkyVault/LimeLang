@@ -132,7 +132,6 @@ std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::ve
     }
     
     auto result = std::vector(begin, it);
-    VDUMP(result)
     --it;
     return result;
 };
@@ -206,7 +205,6 @@ void SortExpression(Node* node){
         auto op = node->children[index];
 
         if (index == 0) {
-            std::cout << *node << std::endl;
             Error("Unary operator is not yet supported: " + op->token.ToString(), op->token.line_number);
             return;
         }
@@ -808,6 +806,16 @@ void CodeLens::addVar(Node* node) {
     variable_scope[variable_scope.size() - 1].insert(std::make_pair(copy, node));
 }
 
+Node* CodeLens::getVar(const std::string& name) {
+    for (int i = variable_scope.size() - 1; i >= 0; i--) {
+        auto res = variable_scope[i].find(name);
+        if (res != variable_scope[i].end())
+            return res->second;
+    }
+    return nullptr;
+}
+
+
 bool CodeLens::procExists(const std::string& name) {
     if (functions.find(name) != functions.end()) 
         return true;
@@ -921,6 +929,11 @@ bool AstPass(Node* ast) {
                     if (!Lens->varExists(node->identifier->word)) {
                         Error("Undefined identifier: " + node->identifier->word + ".", node->token.line_number);
                     }
+                }
+
+                auto var = Lens->getVar(node->identifier->word);
+                if (var->canMutate == false) {
+                    Error("Attepted to modify an immutable variable: " + node->identifier->word, node->token.line_number);
                 }
 
                 // Check the expression

@@ -23,7 +23,8 @@ int Add(int a, int b){
 }
 int myVariable;
 int main(int num_arg_pkDHTx, char** args_pkDHTx) {
-    myVariable = (Add((10), (20)));
+    myVariable = (100);
+    myVariable = (23);
     printf(("10 + 20 = %d\n"), (myVariable));
     return 0;
 }

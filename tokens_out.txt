@@ -39,13 +39,14 @@ Token {  word: 'int'  type: LIME_TYPE_IDENTIFIER}
 Token {  word: ' '  type: LIME_WHITESPACE}
 Token {  word: '='  type: LIME_OPERATOR}
 Token {  word: ' '  type: LIME_WHITESPACE}
-Token {  word: 'Add'  type: LIME_IDENTIFIER}
-Token {  word: '('  type: LIME_OPEN_PAREN}
-Token {  word: '10'  type: LIME_NUMBER}
-Token {  word: ','  type: LIME_COMMA}
+Token {  word: '100'  type: LIME_NUMBER}
+Token {  word: '\n'  type: LIME_NEWLINE}
+Token {  word: 'myVariable'  type: LIME_IDENTIFIER}
 Token {  word: ' '  type: LIME_WHITESPACE}
-Token {  word: '20'  type: LIME_NUMBER}
-Token {  word: ')'  type: LIME_CLOSE_PAREN}
+Token {  word: '='  type: LIME_OPERATOR}
+Token {  word: ' '  type: LIME_WHITESPACE}
+Token {  word: '23'  type: LIME_NUMBER}
+Token {  word: '\n'  type: LIME_NEWLINE}
 Token {  word: '\n'  type: LIME_NEWLINE}
 Token {  word: 'printf'  type: LIME_IDENTIFIER}
 Token {  word: '('  type: LIME_OPEN_PAREN}

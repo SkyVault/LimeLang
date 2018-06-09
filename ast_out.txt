@@ -11,15 +11,13 @@
             (IDENTIFIER line: 2, word: "b")))))))))))
   (VARIABLE_ASSIGNMENT line: 1, var: myVariable, (
     (EXPRESSION line: 1, (
-      (PROC_CALL line: 1, proc: Add, (
-        (ARGUMENT_LIST line: 1, (
-          (EXPRESSION line: 1, (
-            (NUMBER_LITERAL line: 5, word: "10")))
-          (EXPRESSION line: 1, (
-            (NUMBER_LITERAL line: 5, word: "20")))))))))))
+      (NUMBER_LITERAL line: 5, word: "100")))))
+  (VARIABLE_ASSIGNMENT line: 1, var: myVariable, (
+    (EXPRESSION line: 1, (
+      (NUMBER_LITERAL line: 6, word: "23")))))
   (PROC_CALL line: 1, proc: printf, (
     (ARGUMENT_LIST line: 1, (
       (EXPRESSION line: 1, (
-        (LIME_NODE_STRING_LITERAL line: 6, word: ""10 + 20 = %d\n"")))
+        (LIME_NODE_STRING_LITERAL line: 8, word: ""10 + 20 = %d\n"")))
       (EXPRESSION line: 1, (
-        (IDENTIFIER line: 6, word: "myVariable")))))))))
+        (IDENTIFIER line: 8, word: "myVariable")))))))))

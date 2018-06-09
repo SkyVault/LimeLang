@@ -2,5 +2,7 @@ Add proc(a int, b int) int {
     ret a + b
 }
 
-myVariable mut int = Add(10, 20)
+myVariable mut int = 100
+myVariable = 23
+
 printf("10 + 20 = %d\n", myVariable);

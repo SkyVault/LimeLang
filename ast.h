@@ -144,6 +144,7 @@ struct CodeLens {
 
     bool varExists(const std::string& name);
     void addVar(Node* node);
+    Node* getVar(const std::string& name);
 
     bool procExists(const std::string& name);
     void addProc(Node* node);
