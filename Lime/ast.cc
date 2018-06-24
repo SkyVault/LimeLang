@@ -19,6 +19,13 @@ Node::Node(Token& token) {
 
 Node::Node(){}
 
+Node::~Node(){
+    if (identifier != nullptr)
+        delete identifier;
+    if (variable_type != nullptr)
+        delete variable_type;
+}
+
 Node* Node::add(Node* node) {
     children.push_back(node);
     return node;
@@ -653,6 +660,10 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                     
                     if (next->type == LIME_MUTABLE) 
                         Error("Mutable keyword should be before the type", next->line_number);
+
+					//if (next->type == LIME_)
+					// HERE
+                    //if (next->type == LIME_OPEN_)
 
                     if (next->type == LIME_OPERATOR && next->op == LIME_ASSIGNMENT_OPERATOR) {
                         // Handle expressions

@@ -23,7 +23,7 @@ int main(const int num_args, const char** args) {
     std::cout << "\n";
 #endif
 
-	const auto content = LoadFileToString("examples/test.lime");
+	const auto content = LoadFileToString("test.lime");
 	auto tokens = TokenizeString(content);
 
 #ifdef LOG_TO_FILES
@@ -47,6 +47,7 @@ int main(const int num_args, const char** args) {
     cgen.compile_ast_to_c(ast, "out.c");
 
     std::cout << " ==== out ==== " << std::endl;
-    system("gcc out.c -o out.out && ./out.out");
+    system("gcc out.c -o out.exe && out.exe");
+	std::cin.get();
 
 }

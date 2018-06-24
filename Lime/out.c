@@ -17,15 +17,9 @@ typedef double          f64;
 typedef unsigned int    uint;
 typedef float           real;
 
-int Add(int a, int b);
-int Add(int a, int b){
-    return (a + b);
-}
-int myVariable;
-int main(int num_arg_pkDHTx, char** args_pkDHTx) {
-    myVariable = (100);
-    myVariable = (23);
-    printf(("10 + 20 = %d\n"), (myVariable));
+int myVar;
+int main(int num_arg_p1KaLm, char** args_p1KaLm) {
+    myVar = (10);
     return 0;
 }
 

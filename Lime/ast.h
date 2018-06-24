@@ -105,9 +105,15 @@ static const std::map<std::string, OrderOfPrecedence> OrderOfPrecedenceTable = {
     {"*",      Mult }
 };
 
+// struct FunctionPrototype {
+    
+// };
+
 struct Node {
     Node(Token& token);
     Node();
+
+    ~Node();
 
     Token token;
 //    int line_number {1};
@@ -119,10 +125,10 @@ struct Node {
 
     union {
         struct { 
-            Token* identifier{nullptr}; 
-            Token* variable_type{nullptr};
-            bool canMutate{false};
-            bool external{false};
+            Token* identifier; 
+            Token* variable_type;
+            bool canMutate;
+            bool external;
         };
     };
 

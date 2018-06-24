@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\lime">
+      <UniqueIdentifier>{f7118ff1-9e30-4661-83dc-e4368641a4e7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ast.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lexer.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lime.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lime_c_gen.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lime_types.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lime_utils.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ast.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lexer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lime.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lime_c_gen.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lime_tests.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lime_types.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lime_utils.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ast_out.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="reference.lime">
+      <Filter>Source Files\lime</Filter>
+    </None>
+    <None Include="test.lime">
+      <Filter>Source Files\lime</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -45,6 +45,10 @@ const std::string LoadFileToString(const std::string& path){
 	std::string result{""};
 
 	auto file = std::ifstream(path);
+    if (!file) {
+        std::cout << "Cannot find file: " << path << std::endl;
+        return "";
+    }
 
 	while(std::getline(file, line))
 		result += line + "\n";
@@ -235,6 +239,8 @@ vector<Token> WordsToTokens(const vector<string>& words) {
 		else if (word == ")") NToken( word, LIME_CLOSE_PAREN );
 		else if (word == "{") NToken( word, LIME_OPEN_CURLY_BRACKET);
 		else if (word == "}") NToken( word, LIME_CLOSE_CURLY_BRACKET);
+		else if (word == "[") NToken( word, LIME_OPEN_SQUARE_BRACKET);
+		else if (word == "]") NToken( word, LIME_CLOSE_SQUARE_BRACKET);
 		else if (word == "proc") NToken( word, LIME_PROC );
 		else if (word == "mut") NToken( word, LIME_MUTABLE );
         else if (word == ",") NToken(word, LIME_COMMA);
