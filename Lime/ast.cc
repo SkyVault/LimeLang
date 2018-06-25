@@ -668,13 +668,12 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
 					//if (next->type == LIME_)
 					// BEER
                     if (next->type == LIME_OPEN_SQUARE_BRACKET){
-                        ++it;
-                        auto begin = it;
+                        auto begin = Next();
                         get_all_within_tokens(it, tokens.end(), "[", "]");
 
                         node->isArray = true;
 
-                        auto expression = std::vector<Token>(begin + 1, it - 1);
+                        auto expression = std::vector<Token>(begin, it - 1);
                         for(const auto e : expression){
                             if (!e.isWhiteSpace)
                                 Error("We do not support fixed size arrays", e.line_number);
