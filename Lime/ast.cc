@@ -86,7 +86,7 @@ std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::ve
     auto Peek = [&]() -> auto {
         auto begin = it;
         begin++;
-        while((*begin).isWhiteSpace)
+        while(begin->isWhiteSpace)
             ++begin;
         return begin;
     };
@@ -450,8 +450,10 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
 
     auto Next = [&]() -> auto {
         ++it;
-        while((*it).isWhiteSpace){
+		if (it == tokens.end()) return it;
+        while(it->isWhiteSpace){
             ++it;
+			if (it == tokens.end()) return it;
         }
         return it;
     };
@@ -661,39 +663,43 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                     // NOTE: This seems fishy
                     node->variable_type = new Token(*next);
                     next = Next();
-                    
-                    if (next->type == LIME_MUTABLE) 
-                        Error("Mutable keyword should be before the type", next->line_number);
 
-					//if (next->type == LIME_)
-					// BEER
-                    if (next->type == LIME_OPEN_SQUARE_BRACKET){
-                        auto begin = Next();
-                        get_all_within_tokens(it, tokens.end(), "[", "]");
+					if (next != tokens.end()) {
+						if (next->type == LIME_MUTABLE)
+							Error("Mutable keyword should be before the type", next->line_number);
 
-                        node->isArray = true;
+						//if (next->type == LIME_)
+						// BEER
+						if (next->type == LIME_OPEN_SQUARE_BRACKET) {
+							auto begin = Next();
+							get_all_within_tokens(it, tokens.end(), "[", "]");
 
-                        auto expression = std::vector<Token>(begin, it - 1);
-                        for(const auto e : expression){
-                            if (!e.isWhiteSpace)
-                                Error("We do not support fixed size arrays", e.line_number);
-                        }
-                    }
+							node->isArray = true;
 
-                    if (next->type == LIME_OPERATOR && next->op == LIME_ASSIGNMENT_OPERATOR) {
-                        // Handle expressions
-                        node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
-                        
-                        ++it;
-                        auto expression         = GetExpressionTokens(it, tokens.end());
-                        auto expression_node    = PackExpression(expression.begin(), expression.end());
+							auto expression = std::vector<Token>(begin, it - 1);
+							for (const auto e : expression) {
+								if (!e.isWhiteSpace)
+									Error("We do not support fixed size arrays", e.line_number);
+							}
+							--it;
+						}
 
-                        node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
-                        node->children.push_back(expression_node);
+						if (next->type == LIME_OPERATOR && next->op == LIME_ASSIGNMENT_OPERATOR) {
+							// Handle expressions
+							node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
 
-                    } else {
-                        it = next - 1;
-                    }
+							++it;
+							auto expression = GetExpressionTokens(it, tokens.end());
+							auto expression_node = PackExpression(expression.begin(), expression.end());
+
+							node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
+							node->children.push_back(expression_node);
+
+						}
+						else {
+							if (!node->isArray) it = next - 1;
+						}
+					}
 
                     assert(node->identifier);
                     assert(node->variable_type);
@@ -705,7 +711,6 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                     if (next->op == LIME_ASSIGNMENT_OPERATOR) {
                         auto node = new Node();
                         node->identifier = new Token(*it);
-                        node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
 
                         // ! This seems not correct, why the ++it?
 
@@ -715,6 +720,21 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                         auto expression_node    = PackExpression(expression.begin(), expression.end());
 
                         node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
+                        node->children.push_back(expression_node);
+                        ast->children.push_back(node);
+
+                    } else if (next->op == LIME_LEFT_ARROW_OPERATOR) {
+                        // * Handle array insertion
+                        auto node = new Node();
+                        node->identifier = new Token(*it);
+
+                        // ! This seems not correct, why the ++it?
+                        it = Next();
+                        ++it;
+                        auto expression         = GetExpressionTokens(it, tokens.end());
+                        auto expression_node    = PackExpression(expression.begin(), expression.end());
+
+                        node->type = LIME_NODE_ARRAY_INSERTION;
                         node->children.push_back(expression_node);
                         ast->children.push_back(node);
 
@@ -769,7 +789,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                             end++;
                         }
 
-                        auto parameters = std::vector((it + 1), end);
+                        auto parameters = std::vector<Token>((it + 1), end);
                         //TODO: Handle parameters
                        
                         // Check the correctness of the parameters
@@ -820,11 +840,13 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
             }
 
             default: {
-
+				assert(0);
                 break;
             }
         }
-        ++it;
+
+		if (it != tokens.end())
+			++it;
     }
 }
 
@@ -955,8 +977,44 @@ bool AstPass(Node* ast) {
                 break;
             }
 
-            case LIME_NODE_VARIABLE_ASSIGNMENT: {
+            case LIME_NODE_ARRAY_INSERTION: {
+                if (!Lens->varExists(node->identifier->word)) {
+                    Error("Undefined identifier: " + node->identifier->word + ".", node->token.line_number);
+                } 
 
+                auto var = Lens->getVar(node->identifier->word);
+                if (var->isArray == false) {
+                    Error("Attempted to insert into a non array variable", var->token.line_number);
+                }
+
+                if (var->canMutate == false) {
+                    Error("Attempted to modify an immutable variable: " + node->identifier->word, node->token.line_number);
+                }
+
+                // Check the expression
+                if (node->children.size() > 0 && node->children[0]->type == LIME_NODE_EXPRESSION) {
+                    AstPass(node->children[0]);
+                } else {
+                    Error("Array insertion requires a value", node->token.line_number);
+                }
+
+                break;
+            }
+
+            case LIME_NODE_VARIABLE_DECLARATION: {
+                if (node->variable_type == nullptr) {
+                    Error("Variable declaration is missing a type identifier", node->token.line_number);
+                }
+
+                if (Lens->varExists(node->identifier->word)) {
+                    Error("Redefinition of identifier: " + node->identifier->word + ".", node->token.line_number);
+                }
+
+                Lens->addVar(node);
+                break;
+            }
+
+            case LIME_NODE_VARIABLE_ASSIGNMENT: {
                 if (node->variable_type != nullptr) {
                     // It is a declaration
 
@@ -973,7 +1031,7 @@ bool AstPass(Node* ast) {
 
                 auto var = Lens->getVar(node->identifier->word);
                 if (var->canMutate == false) {
-                    Error("Attepted to modify an immutable variable: " + node->identifier->word, node->token.line_number);
+                    Error("Attempted to modify an immutable variable: " + node->identifier->word, node->token.line_number);
                 }
 
                 // Check the expression

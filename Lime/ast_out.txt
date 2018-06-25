@@ -1,2 +1,5 @@
 (NONE line: 1, (
-  (VARIABLE_DECLARATION line: 1, var: myVar,)))
+  (VARIABLE_DECLARATION line: 1, var: a,)
+  (ARRAY_INSERTION line: 1, (
+    (EXPRESSION line: 1, (
+      (NUMBER_LITERAL line: 3, word: "10")))))))

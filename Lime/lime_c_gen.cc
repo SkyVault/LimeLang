@@ -193,6 +193,18 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                 break;
             }
 
+            case LIME_NODE_ARRAY_INSERTION: {
+
+                    // ss << indent;
+                    // ss << n->identifier->word << " = ";
+                    // ss << compile_expression(n->children[0]) << ";\n";
+
+                ss << indent; 
+                ss << "ARRAY_ADD(" << n->identifier->word << ", " << compile_expression(n->children[0]) << ");\n";
+                
+                break;
+            }
+
             case LIME_NODE_VARIABLE_DECLARATION: {
                 assert(n->variable_type != nullptr);
 
@@ -206,6 +218,8 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                     ss << n->variable_type->word << " " << n->identifier->word << ";\n";
                 }
 
+                // * Array declarations should always initialize
+                ss << indent << "ARRAY_INIT(" << n->identifier->word << ");\n";
 
                 break;
             }
@@ -248,7 +262,8 @@ void LimeCGen::compile_ast_to_c(Node* node, const std::string& out_file) {
     scope = 0;
 
     header << "// Lime Version: " << std::string{LIME_VERSION} << "\n";
-    header << "#include <stdio.h>";
+    header << "#include <stdio.h>\n";
+    header << "#include \"arrays.c\"";
     header << TypeDefs << "\n";
 
     const auto uuid = gen_uuid();

@@ -1,7 +1,4 @@
-# myVar mut int[] = [10, 20, 30, 40]
+a mut int[]
 
-myVar mut int[]
-#
-#myVar <- 10
-#myVar <- 10 + 10
-#myVar <- 10 + 2 + 18
+i int = 10
+a <- i

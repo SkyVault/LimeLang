@@ -1,5 +1,6 @@
 // Lime Version: 0.0.0
 #include <stdio.h>
+#include "arrays.c"
 #define none NULL
 typedef unsigned char   u8;
 typedef unsigned short  u16;
@@ -17,8 +18,10 @@ typedef double          f64;
 typedef unsigned int    uint;
 typedef float           real;
 
-int myVar;
+int a;
 int main(int num_arg_p1KaLm, char** args_p1KaLm) {
+    ARRAY_INIT(a);
+    ARRAY_ADD(a, (10));
     return 0;
 }
 

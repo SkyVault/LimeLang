@@ -28,6 +28,8 @@ enum NodeType {
     LIME_NODE_WHILE_LOOP,
     LIME_NODE_RANDOM_IDENTIFIER, // Identifier that doesnt have any purpose
 
+    LIME_NODE_ARRAY_INSERTION,
+
     LIME_NODE_IF_STATEMENT,
     LIME_NODE_ELSEIF_STATEMENT,
     LIME_NODE_ELSE_STATEMENT,
@@ -59,8 +61,9 @@ static const std::map<NodeType, const std::string> LimeNodeTypesNames = {
     {LIME_NODE_ELSE_STATEMENT, "ELSE_STATEMENT"},
     {LIME_NODE_RETURN,"RETURN"},
     {LIME_NODE_EMIT, "EMIT"},
-    {LIME_NODE_C_INCLUDE,"LIME_NODE_C_INCLUDE"},
-    {LIME_NODE_RANDOM_IDENTIFIER, "LIME_NODE_RANDOM_IDENTIFIER"}, // Identifier that doesnt have any purpose
+    {LIME_NODE_C_INCLUDE,"C_INCLUDE"},
+    {LIME_NODE_RANDOM_IDENTIFIER, "RANDOM_IDENTIFIER"}, // Identifier that doesnt have any purpose
+    {LIME_NODE_ARRAY_INSERTION, "ARRAY_INSERTION"},
 };
 
 enum OrderOfPrecedence {

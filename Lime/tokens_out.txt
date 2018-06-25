@@ -1,15 +1,23 @@
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: 'myVar'  type: IDENTIFIER}
+Token {  word: 'a'  type: IDENTIFIER}
 Token {  word: ' '  type: WHITESPACE}
 Token {  word: 'mut'  type: MUTABLE}
 Token {  word: ' '  type: WHITESPACE}
 Token {  word: 'int'  type: TYPE_IDENTIFIER}
 Token {  word: '['  type: OPEN_SQUARE_BRACKET}
-Token {  word: ' '  type: WHITESPACE}
 Token {  word: ']'  type: CLOSE_SQUARE_BRACKET}
 Token {  word: '\n'  type: NEWLINE}
 Token {  word: '\n'  type: NEWLINE}
+Token {  word: 'i'  type: IDENTIFIER}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: 'int'  type: TYPE_IDENTIFIER}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: '='  type: OPERATOR}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: '10'  type: NUMBER}
 Token {  word: '\n'  type: NEWLINE}
-Token {  word: '\n'  type: NEWLINE}
+Token {  word: 'a'  type: IDENTIFIER}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: '<-'  type: OPERATOR}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: 'i'  type: IDENTIFIER}
 Token {  word: '\n'  type: NEWLINE}

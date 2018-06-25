@@ -143,8 +143,9 @@ vector<string> SplitTokensToWordsAndSymbols(const string& code){
             case '!':
             case '>':
             case '<': {
+                const auto next = *(it + 1);
 
-                if (*(it + 1) == '=') {
+                if (next == '=' || next == '-' || next == '>') {
                     if (word.size() > 0){
                         result.push_back(word);
                         word.clear();
@@ -200,6 +201,9 @@ vector<Token> WordsToTokens(const vector<string>& words) {
 		if (word == ">") return LIME_GREATER;
         if (word == "<") return LIME_LESS;
 
+		if (word == "<-") return LIME_LEFT_ARROW_OPERATOR;
+        if (word == "->") return LIME_RIGHT_ARROW_OPERATOR;
+
 		cout << "Unhandled operator: " << word << endl;
 		return LIME_NONE_OPERATOR;
 	};
@@ -215,6 +219,9 @@ vector<Token> WordsToTokens(const vector<string>& words) {
 		if (word == "!=") return true;
 		if (word == ">=") return true;
         if (word == "<=") return true;
+
+        if (word == "<-") return true;
+        if (word == "->") return true;
         
 		if (word == ">") return true;
         if (word == "<") return true;

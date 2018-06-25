@@ -36,6 +36,7 @@ int main(const int num_args, const char** args) {
 
     // Ast
     auto ast = create_ast_from_tokens(tokens);
+    std::cout << *ast << std::endl;
 
 #ifdef LOG_TO_FILES
     auto afile = std::ofstream("ast_out.txt");
