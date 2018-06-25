@@ -7,7 +7,7 @@
 
 Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>::iterator last); 
 
-Node::Node(Token& token) {
+Node::Node(Token& token): Node() {
     this->token = token;
 
     if (this->token.type == LIME_NUMBER)
@@ -17,7 +17,11 @@ Node::Node(Token& token) {
         this->type = LIME_NODE_OPERATOR;
 }
 
-Node::Node(){}
+Node::Node(){
+    // Initialize to nullptrs
+    variable_type = nullptr;
+    identifier = nullptr;
+}
 
 Node::~Node(){
     if (identifier != nullptr)
@@ -664,12 +668,17 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
 					//if (next->type == LIME_)
 					// BEER
                     if (next->type == LIME_OPEN_SQUARE_BRACKET){
+                        ++it;
                         auto begin = it;
                         get_all_within_tokens(it, tokens.end(), "[", "]");
 
-                        // auto expression = std::vector<Token>(begin + 1, it - 1);
-                        // for (auto t : expression)
-                        //     std::cout << t << std::endl;
+                        node->isArray = true;
+
+                        auto expression = std::vector<Token>(begin + 1, it - 1);
+                        for(const auto e : expression){
+                            if (!e.isWhiteSpace)
+                                Error("We do not support fixed size arrays", e.line_number);
+                        }
                     }
 
                     if (next->type == LIME_OPERATOR && next->op == LIME_ASSIGNMENT_OPERATOR) {
@@ -698,6 +707,8 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                         auto node = new Node();
                         node->identifier = new Token(*it);
                         node->type = LIME_NODE_VARIABLE_ASSIGNMENT;
+
+                        // ! This seems not correct, why the ++it?
 
                         it = Next();
                         ++it;

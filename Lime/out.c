@@ -19,6 +19,7 @@ typedef float           real;
 
 int myVar;
 int main(int num_arg_p1KaLm, char** args_p1KaLm) {
+    myVar = (10);
     return 0;
 }
 

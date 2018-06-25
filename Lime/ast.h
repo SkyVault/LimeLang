@@ -118,6 +118,7 @@ struct Node {
     Token token;
 //    int line_number {1};
     int precedence  {0};
+    bool isArray{false};
 
     NodeType type{LIME_NODE_NONE};
 

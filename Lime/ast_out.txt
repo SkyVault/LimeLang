@@ -1,2 +1,4 @@
 (NONE line: 1, (
-  (VARIABLE_DECLARATION line: 1, var: myVar,)))
+  (VARIABLE_ASSIGNMENT line: 1, var: myVar, (
+    (EXPRESSION line: 1, (
+      (NUMBER_LITERAL line: 9, word: "10")))))))

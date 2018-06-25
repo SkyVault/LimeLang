@@ -197,6 +197,8 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                 assert(n->variable_type != nullptr);
 
                 if (scope == 1) {
+					assert(n->variable_type != nullptr);
+					assert(n->identifier != nullptr);
                     // Handle the global declaration
                     gvd << n->variable_type->word << " " << n->identifier->word << ";\n";
                 } else {
