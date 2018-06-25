@@ -1,2 +1,2 @@
 # myVar mut int[] = [10, 20, 30, 40]
-myVar mut int[]
+myVar mut int[100]

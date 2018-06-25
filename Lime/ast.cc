@@ -138,7 +138,7 @@ std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::ve
         }
     }
     
-    auto result = std::vector(begin, it);
+    auto result = std::vector<Token>(begin, it);
     --it;
     return result;
 };
@@ -662,8 +662,15 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                         Error("Mutable keyword should be before the type", next->line_number);
 
 					//if (next->type == LIME_)
-					// HERE
-                    //if (next->type == LIME_OPEN_)
+					// BEER
+                    if (next->type == LIME_OPEN_SQUARE_BRACKET){
+                        auto begin = it;
+                        get_all_within_tokens(it, tokens.end(), "[", "]");
+
+                        // auto expression = std::vector<Token>(begin + 1, it - 1);
+                        // for (auto t : expression)
+                        //     std::cout << t << std::endl;
+                    }
 
                     if (next->type == LIME_OPERATOR && next->op == LIME_ASSIGNMENT_OPERATOR) {
                         // Handle expressions

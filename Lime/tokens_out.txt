@@ -1,10 +1,10 @@
-Token {  word: 'myVar'  type: LIME_IDENTIFIER}
-Token {  word: ' '  type: LIME_WHITESPACE}
-Token {  word: 'mut'  type: LIME_MUTABLE}
-Token {  word: ' '  type: LIME_WHITESPACE}
-Token {  word: 'int'  type: LIME_TYPE_IDENTIFIER}
-Token {  word: ' '  type: LIME_WHITESPACE}
-Token {  word: '='  type: LIME_OPERATOR}
-Token {  word: ' '  type: LIME_WHITESPACE}
-Token {  word: '10'  type: LIME_NUMBER}
-Token {  word: '\n'  type: LIME_NEWLINE}
+Token {  word: '\n'  type: NEWLINE}
+Token {  word: 'myVar'  type: IDENTIFIER}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: 'mut'  type: MUTABLE}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: 'int'  type: TYPE_IDENTIFIER}
+Token {  word: '['  type: OPEN_SQUARE_BRACKET}
+Token {  word: '100'  type: NUMBER}
+Token {  word: ']'  type: CLOSE_SQUARE_BRACKET}
+Token {  word: '\n'  type: NEWLINE}
