@@ -18,23 +18,10 @@ typedef double          f64;
 typedef unsigned int    uint;
 typedef float           real;
 
-int Fact(int n);
-int Fact(int n){
-    if ((n == 0)) {
-        return (1);
-    }
-    else {
-        return (n * Fact((n - 1)) + 0);
-    }
-
-}
-int variable;
-int mutableVar;
-int expression;
+int myVar;
 int main(int num_arg_p1KaLm, char** args_p1KaLm) {
-    variable = (123);
-    mutableVar = (32);
-    expression = (123 + (32 / 2.0) * 2);
+    myVar = (1);
+    myVar += (1);
     return 0;
 }
 

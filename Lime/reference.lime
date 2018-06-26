@@ -5,6 +5,11 @@ mutableVar mut int = 32
 
 expression int = 123 + (32 / 2.0) * 2
 
+myArray mut int[]
+myArray <- 100      # Inserts into the array
+myArray <- 200
+myArray <- 300
+
 Fact proc(n int) int {
     if n == 0 {
         ret 1
@@ -13,8 +18,7 @@ Fact proc(n int) int {
     }
 }
 
-#count int = 0
-#while count <= 42 {
-#    printf("count: %d = %d\n", count, Fib(count))
-#    count = count + 1
-#}
+count int = 0
+while count <= 42 {
+    count = count + 1
+}

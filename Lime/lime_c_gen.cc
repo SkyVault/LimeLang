@@ -227,14 +227,15 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
             }
 
             case LIME_NODE_VARIABLE_ASSIGNMENT: {
-                if (n->variable_type != nullptr) {
 
+                std::string op = "=";
+                if (n->variable_type != nullptr) {
                     if (scope == 1) {
                         // Handle the global declaration
                         gvd << n->variable_type->word << " " << n->identifier->word << ";\n";
 
                         if (n->children.size() > 0) {
-                            ss << indent << n->identifier->word << " = ";
+                            ss << indent << n->identifier->word << " " << op << " ";
                             ss << compile_expression(n->children[0]) << ";\n";
                         }
                     } else {
@@ -243,8 +244,18 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                         ss << compile_expression(n->children[0]) << ";\n";
                     }
                 } else {
+                    switch (n->token.op){
+                        case LIME_PLUS_EQUALS_OPERATOR:
+                        case LIME_MINUS_EQUALS_OPERATOR:
+                        case LIME_MULTIPLICATION_EQUALS_OPERATOR:
+                        case LIME_DIVISION_EQUALS_OPERATOR:
+                            op = n->token.word;
+                            break;
+                        default: break;
+                    }
+
                     ss << indent;
-                    ss << n->identifier->word << " = ";
+                    ss << n->identifier->word << " " << op << " ";
                     ss << compile_expression(n->children[0]) << ";\n";
                 }
 

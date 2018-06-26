@@ -1,7 +1,4 @@
-g int[]
-b int = 1
-g <- b
-b = b + 1
-g <- b
 
-$emit{printf("%d\n", ARRAY_GET(g, int, 1));}
+myVar mut int = 1
+
+myVar += 1

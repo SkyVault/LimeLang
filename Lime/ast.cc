@@ -723,8 +723,15 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                     
                 } else if (next->type == LIME_OPERATOR) {
                     // Handle LIME_NODE_VARIABLE_ASSIGNMENT
-                    if (next->op == LIME_ASSIGNMENT_OPERATOR) {
+                    if (
+                        next->op == LIME_ASSIGNMENT_OPERATOR            ||
+                        next->op == LIME_PLUS_EQUALS_OPERATOR           ||
+                        next->op == LIME_MINUS_EQUALS_OPERATOR          ||
+                        next->op == LIME_MULTIPLICATION_EQUALS_OPERATOR ||
+                        next->op == LIME_DIVISION_EQUALS_OPERATOR
+                        ) {
                         auto node = new Node();
+                        node->token = *next;
                         node->identifier = new Token(*it);
 
                         // ! This seems not correct, why the ++it?

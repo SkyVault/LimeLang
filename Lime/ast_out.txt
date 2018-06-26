@@ -1,44 +1,7 @@
 (NONE line: 1, (
-  (VARIABLE_ASSIGNMENT line: 1, var: variable, (
+  (VARIABLE_ASSIGNMENT line: 1, var: myVar, (
     (EXPRESSION line: 1, (
-      (NUMBER_LITERAL line: 3, word: "123")))))
-  (VARIABLE_ASSIGNMENT line: 1, var: mutableVar, (
+      (NUMBER_LITERAL line: 2, word: "1")))))
+  (VARIABLE_ASSIGNMENT line: 4, word: "+=" var: myVar, (
     (EXPRESSION line: 1, (
-      (NUMBER_LITERAL line: 4, word: "32")))))
-  (VARIABLE_ASSIGNMENT line: 1, var: expression, (
-    (EXPRESSION line: 1, (
-      (OPERATOR line: 6, word: "+" (
-        (NUMBER_LITERAL line: 6, word: "123")
-        (OPERATOR line: 6, word: "*" (
-          (EXPRESSION line: 1, (
-            (OPERATOR line: 6, word: "/" (
-              (NUMBER_LITERAL line: 6, word: "32")
-              (NUMBER_LITERAL line: 6, word: "2.0")))))
-          (NUMBER_LITERAL line: 6, word: "2")))))))))
-  (PROC_DEFINITION line: 1, proc: Fact,  return_type: int (
-    (PARAMETER_LIST line: 1, (
-      (VARIABLE_DECLARATION line: 1, var: n,)))
-    (NONE line: 1, (
-      (IF_STATEMENT line: 1, (
-        (EXPRESSION line: 1, (
-          (OPERATOR line: 9, word: "==" (
-            (IDENTIFIER line: 9, word: "n")
-            (NUMBER_LITERAL line: 9, word: "0")))))
-        (NONE line: 1, (
-          (RETURN line: 1, (
-            (EXPRESSION line: 1, (
-              (NUMBER_LITERAL line: 10, word: "1")))))))))
-      (ELSE_STATEMENT line: 1, (
-        (NONE line: 1, (
-          (RETURN line: 1, (
-            (EXPRESSION line: 1, (
-              (OPERATOR line: 12, word: "+" (
-                (OPERATOR line: 12, word: "*" (
-                  (IDENTIFIER line: 12, word: "n")
-                  (PROC_CALL line: 1, proc: Fact, (
-                    (ARGUMENT_LIST line: 1, (
-                      (EXPRESSION line: 1, (
-                        (OPERATOR line: 12, word: "-" (
-                          (IDENTIFIER line: 12, word: "n")
-                          (NUMBER_LITERAL line: 12, word: "1")))))))))))
-                (NUMBER_LITERAL line: 12, word: "0")))))))))))))))))
+      (NUMBER_LITERAL line: 4, word: "1")))))))

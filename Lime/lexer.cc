@@ -193,6 +193,11 @@ vector<Token> WordsToTokens(const vector<string>& words) {
 		if (word == "*") return LIME_MULTIPLICATION_OPERATOR;
 		if (word == "/") return LIME_DIVISION_OPERATOR;
 
+		if (word == "+=") return LIME_PLUS_EQUALS_OPERATOR;
+		if (word == "-=") return LIME_MINUS_EQUALS_OPERATOR;
+		if (word == "*=") return LIME_MULTIPLICATION_EQUALS_OPERATOR;
+		if (word == "/=") return LIME_DIVISION_EQUALS_OPERATOR;
+
 		if (word == "==") return LIME_COMPAIRISON_OPERATOR;
 		if (word == "!=") return LIME_NOT_EQUAL_OPERATOR;
 		if (word == ">=") return LIME_GREATER_EQUAL_OPERATOR;
@@ -214,6 +219,11 @@ vector<Token> WordsToTokens(const vector<string>& words) {
 		if (word == "-") return true;
 		if (word == "*") return true;
 		if (word == "/") return true;
+
+		if (word == "+=") return true;
+		if (word == "-=") return true;
+		if (word == "*=") return true;
+		if (word == "/=") return true;
 
 		if (word == "==") return true;
 		if (word == "!=") return true;

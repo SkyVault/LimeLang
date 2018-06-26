@@ -1,14 +1,5 @@
 Token {  word: '\n'  type: NEWLINE}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: 'variable'  type: IDENTIFIER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'int'  type: TYPE_IDENTIFIER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '='  type: OPERATOR}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '123'  type: NUMBER}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: 'mutableVar'  type: IDENTIFIER}
+Token {  word: 'myVar'  type: IDENTIFIER}
 Token {  word: ' '  type: WHITESPACE}
 Token {  word: 'mut'  type: MUTABLE}
 Token {  word: ' '  type: WHITESPACE}
@@ -16,119 +7,12 @@ Token {  word: 'int'  type: TYPE_IDENTIFIER}
 Token {  word: ' '  type: WHITESPACE}
 Token {  word: '='  type: OPERATOR}
 Token {  word: ' '  type: WHITESPACE}
-Token {  word: '32'  type: NUMBER}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: 'expression'  type: IDENTIFIER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'int'  type: TYPE_IDENTIFIER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '='  type: OPERATOR}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '123'  type: NUMBER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '+'  type: OPERATOR}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '('  type: OPEN_PAREN}
-Token {  word: '32'  type: NUMBER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '/'  type: OPERATOR}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '2.0'  type: NUMBER}
-Token {  word: ')'  type: CLOSE_PAREN}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '*'  type: OPERATOR}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '2'  type: NUMBER}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: 'Fact'  type: IDENTIFIER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'proc'  type: PROC}
-Token {  word: '('  type: OPEN_PAREN}
-Token {  word: 'n'  type: IDENTIFIER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'int'  type: TYPE_IDENTIFIER}
-Token {  word: ')'  type: CLOSE_PAREN}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'int'  type: TYPE_IDENTIFIER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '{'  type: OPEN_CURLY_BRACKET}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'if'  type: IF}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'n'  type: IDENTIFIER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '=='  type: OPERATOR}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '0'  type: NUMBER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '{'  type: OPEN_CURLY_BRACKET}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'ret'  type: RETURN}
-Token {  word: ' '  type: WHITESPACE}
 Token {  word: '1'  type: NUMBER}
 Token {  word: '\n'  type: NEWLINE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '}'  type: CLOSE_CURLY_BRACKET}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'else'  type: ELSE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '{'  type: OPEN_CURLY_BRACKET}
 Token {  word: '\n'  type: NEWLINE}
+Token {  word: 'myVar'  type: IDENTIFIER}
 Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'ret'  type: RETURN}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'n'  type: IDENTIFIER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '*'  type: OPERATOR}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'Fact'  type: IDENTIFIER}
-Token {  word: '('  type: OPEN_PAREN}
-Token {  word: 'n'  type: IDENTIFIER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '-'  type: OPERATOR}
+Token {  word: '+='  type: OPERATOR}
 Token {  word: ' '  type: WHITESPACE}
 Token {  word: '1'  type: NUMBER}
-Token {  word: ')'  type: CLOSE_PAREN}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '+'  type: OPERATOR}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '0'  type: NUMBER}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: '}'  type: CLOSE_CURLY_BRACKET}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: '}'  type: CLOSE_CURLY_BRACKET}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: '\n'  type: NEWLINE}
 Token {  word: '\n'  type: NEWLINE}
