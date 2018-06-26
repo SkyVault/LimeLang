@@ -23,7 +23,7 @@ int main(const int num_args, const char** args) {
     std::cout << "\n";
 #endif
 
-	const auto content = LoadFileToString("test.lime");
+	const auto content = LoadFileToString("reference.lime");
 	auto tokens = TokenizeString(content);
 
 #ifdef LOG_TO_FILES

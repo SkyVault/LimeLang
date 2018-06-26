@@ -18,14 +18,23 @@ typedef double          f64;
 typedef unsigned int    uint;
 typedef float           real;
 
-int g;
-int b;
+int Fact(int n);
+int Fact(int n){
+    if ((n == 0)) {
+        return (1);
+    }
+    else {
+        return (n * Fact((n - 1)) + 0);
+    }
+
+}
+int variable;
+int mutableVar;
+int expression;
 int main(int num_arg_p1KaLm, char** args_p1KaLm) {
-    ARRAY_INIT(g);
-    b = (1);
-    ARRAY_ADD(g, (b));
-    b = (b + 1);
-    ARRAY_ADD(g, (b));
-    printf("%d\n", ARRAY_GET(g, int, 1));    return 0;
+    variable = (123);
+    mutableVar = (32);
+    expression = (123 + (32 / 2.0) * 2);
+    return 0;
 }
 

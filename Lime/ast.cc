@@ -102,11 +102,15 @@ std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::ve
         switch((*it).type) {
             case LIME_WHITESPACE:
             case LIME_NUMBER:
-            case LIME_OPEN_PAREN:
             case LIME_CLOSE_PAREN:
             case LIME_COMMA:
                 ++it;
                 break;
+
+            case LIME_OPEN_PAREN:
+                last_was_operator = true;
+				++it;
+				break;
 
             case LIME_OPERATOR:
                 last_was_operator = true;
@@ -376,7 +380,7 @@ Node* parameters_to_node(std::vector<Token>& tokens) {
 
                 // Make sure the next token is either a paren or comma
                 auto n = it + 1;
-                while (n->isWhiteSpace) n++;
+                while (n != tokens.end() && n->isWhiteSpace) n++;
 
                 if (n != tokens.end() && n->word != "" && n->type != LIME_COMMA && n->type != LIME_CLOSE_PAREN)
                     Error("Expected a comma or a closing paren but got: " + n->word, n->line_number);
@@ -851,7 +855,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
             }
 
             default: {
-				assert(0);
+				//assert(0);
                 break;
             }
         }
