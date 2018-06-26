@@ -60,6 +60,18 @@ std::string LimeCGen::compile_expression(Node* node) {
 }
 
 std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
+    auto get_type_name_as_string = [](TypeDesc* t, std::string default_return = "none") -> std::string {
+        std::string result{"none"}; 
+        if (t != nullptr){
+            if (t->isCustomType){
+                result = static_cast<LimeCustomTypeDesc*>(t)->name;
+            } else {
+                result = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(t)->type)->second;
+            }
+        }
+        return result;
+    };
+
     scope++;
     std::stringstream ss;
     for (const auto n : node->children) {
@@ -141,16 +153,7 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
 
                 std::stringstream prot;
 
-                std::string return_type_name{"void"}; // ! Maybe none?
-
-                if (id->type_desc != nullptr){
-                    if (id->type_desc->isCustomType){
-                        return_type_name = static_cast<LimeCustomTypeDesc*>(id->type_desc)->name;
-                    } else {
-                        return_type_name = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(id->type_desc)->type)->second;
-                    }
-                }
-
+                std::string return_type_name{get_type_name_as_string(id->type_desc, "void")}; // ! Maybe none?
                 prot << return_type_name;
 
                 prot << " " << id->identifier->word << "(";
@@ -164,15 +167,7 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                         for (const auto& param : child->children) {
                             auto id_param = static_cast<IdentifierNode*>(param);
 
-                            std::string param_type_name{"none"};
-                            if (id_param->type_desc != nullptr){
-                                if (id_param->type_desc->isCustomType){
-                                    param_type_name = static_cast<LimeCustomTypeDesc*>(id_param->type_desc)->name;
-                                } else {
-                                    param_type_name = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(id_param->type_desc)->type)->second;
-                                }
-                            }
-
+                            std::string param_type_name{get_type_name_as_string(id_param->type_desc)};
                             prot << param_type_name << " " << id_param->identifier->word;
 
                             if (i < (int)(child->children.size() - 1))
@@ -198,16 +193,7 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
 
                 std::stringstream prot;
 
-                std::string return_type_name{"void"}; // ! Maybe none?
-
-                if (id->type_desc != nullptr){
-                    if (id->type_desc->isCustomType){
-                        return_type_name = static_cast<LimeCustomTypeDesc*>(id->type_desc)->name;
-                    } else {
-                        return_type_name = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(id->type_desc)->type)->second;
-                    }
-                }
-
+                std::string return_type_name{get_type_name_as_string(id->type_desc, "void")}; // ! Maybe none?
                 prot << return_type_name;
 
                 prot << " " << id->identifier->word << "(";
@@ -221,15 +207,7 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                         for (const auto& param : child->children) {
                             auto id_param = static_cast<IdentifierNode*>(param);
 
-                            std::string param_type_name{"none"};
-                            if (id_param->type_desc != nullptr){
-                                if (id_param->type_desc->isCustomType){
-                                    param_type_name = static_cast<LimeCustomTypeDesc*>(id_param->type_desc)->name;
-                                } else {
-                                    param_type_name = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(id_param->type_desc)->type)->second;
-                                }
-                            }
-
+                            std::string param_type_name{get_type_name_as_string(id_param->type_desc)};
                             prot << param_type_name << " " << id_param->identifier->word;
 
                             if (i < (int)(child->children.size() - 1))
@@ -261,14 +239,7 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                 auto id = static_cast<IdentifierNode*>(n);
                 assert(id->type_desc != nullptr);
 
-                std::string type_name{"none"}; 
-                if (id->type_desc != nullptr){
-                    if (id->type_desc->isCustomType){
-                        type_name = static_cast<LimeCustomTypeDesc*>(id->type_desc)->name;
-                    } else {
-                        type_name = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(id->type_desc)->type)->second;
-                    }
-                }
+                std::string type_name{get_type_name_as_string(id->type_desc)};
 
                 if (scope == 1) {
 					assert(id->identifier != nullptr);
@@ -293,15 +264,7 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                 std::string op = "=";
                 if (id->type_desc != nullptr) {
 
-                    std::string type_name{"none"}; 
-                    if (id->type_desc != nullptr){
-                        if (id->type_desc->isCustomType){
-                            type_name = static_cast<LimeCustomTypeDesc*>(id->type_desc)->name;
-                        } else {
-                            type_name = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(id->type_desc)->type)->second;
-                        }
-                    }
-
+                    std::string type_name{get_type_name_as_string(id->type_desc)}; 
                     if (scope == 1) {
                         // Handle the global declaration
 

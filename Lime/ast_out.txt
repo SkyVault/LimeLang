@@ -1,56 +1,64 @@
 (NONE line: 1, (
+  (VARIABLE_ASSIGNMENT line: 1, var: variable, (
+    (EXPRESSION line: 1, (
+      (NUMBER_LITERAL line: 3, word: "123")))))
+  (VARIABLE_ASSIGNMENT line: 1, var: mutableVar, (
+    (EXPRESSION line: 1, (
+      (NUMBER_LITERAL line: 4, word: "32")))))
+  (VARIABLE_ASSIGNMENT line: 1, var: expression, (
+    (EXPRESSION line: 1, (
+      (OPERATOR line: 6, word: "+" (
+        (NUMBER_LITERAL line: 6, word: "123")
+        (OPERATOR line: 6, word: "*" (
+          (EXPRESSION line: 1, (
+            (OPERATOR line: 6, word: "/" (
+              (NUMBER_LITERAL line: 6, word: "32")
+              (NUMBER_LITERAL line: 6, word: "2.0")))))
+          (NUMBER_LITERAL line: 6, word: "2")))))))))
+  (VARIABLE_DECLARATION line: 1, var: myArray,)
+  (ARRAY_INSERTION line: 1, (
+    (EXPRESSION line: 1, (
+      (NUMBER_LITERAL line: 9, word: "100")))))
+  (ARRAY_INSERTION line: 1, (
+    (EXPRESSION line: 1, (
+      (NUMBER_LITERAL line: 10, word: "200")))))
+  (ARRAY_INSERTION line: 1, (
+    (EXPRESSION line: 1, (
+      (NUMBER_LITERAL line: 11, word: "300")))))
   (PROC_DEFINITION line: 1, proc: Fact,  return_type: i64 (
     (PARAMETER_LIST line: 1, (
       (VARIABLE_DECLARATION line: 1, var: n,)))
     (NONE line: 1, (
       (IF_STATEMENT line: 1, (
         (EXPRESSION line: 1, (
-          (OPERATOR line: 2, word: "==" (
-            (IDENTIFIER line: 2, word: "n")
-            (NUMBER_LITERAL line: 2, word: "0")))))
+          (OPERATOR line: 14, word: "==" (
+            (IDENTIFIER line: 14, word: "n")
+            (NUMBER_LITERAL line: 14, word: "0")))))
         (NONE line: 1, (
           (RETURN line: 1, (
             (EXPRESSION line: 1, (
-              (NUMBER_LITERAL line: 3, word: "1")))))))))
+              (NUMBER_LITERAL line: 15, word: "1")))))))))
       (ELSE_STATEMENT line: 1, (
         (NONE line: 1, (
           (RETURN line: 1, (
             (EXPRESSION line: 1, (
-              (OPERATOR line: 5, word: "*" (
-                (IDENTIFIER line: 5, word: "n")
+              (OPERATOR line: 17, word: "*" (
+                (IDENTIFIER line: 17, word: "n")
                 (PROC_CALL line: 1, proc: Fact, (
                   (ARGUMENT_LIST line: 1, (
                     (EXPRESSION line: 1, (
-                      (OPERATOR line: 5, word: "-" (
-                        (IDENTIFIER line: 5, word: "n")
-                        (NUMBER_LITERAL line: 5, word: "1")))))))))))))))))))))))
-  (PROC_DEFINITION line: 1, proc: Add,  return_type: i64 (
-    (PARAMETER_LIST line: 1, (
-      (VARIABLE_DECLARATION line: 1, var: a,)
-      (VARIABLE_DECLARATION line: 1, var: b,)))
+                      (OPERATOR line: 17, word: "-" (
+                        (IDENTIFIER line: 17, word: "n")
+                        (NUMBER_LITERAL line: 17, word: "1")))))))))))))))))))))))
+  (VARIABLE_ASSIGNMENT line: 1, var: count, (
+    (EXPRESSION line: 1, (
+      (NUMBER_LITERAL line: 21, word: "0")))))
+  (WHILE_LOOP line: 1, (
+    (EXPRESSION line: 1, (
+      (OPERATOR line: 22, word: "<=" (
+        (IDENTIFIER line: 22, word: "count")
+        (NUMBER_LITERAL line: 22, word: "42")))))
     (NONE line: 1, (
-      (RETURN line: 1, (
+      (VARIABLE_ASSIGNMENT line: 23, word: "+=" var: count, (
         (EXPRESSION line: 1, (
-          (OPERATOR line: 10, word: "+" (
-            (IDENTIFIER line: 10, word: "a")
-            (IDENTIFIER line: 10, word: "b")))))))))))
-  (VARIABLE_ASSIGNMENT line: 1, var: myVar, (
-    (EXPRESSION line: 1, (
-      (PROC_CALL line: 1, proc: Add, (
-        (ARGUMENT_LIST line: 1, (
-          (EXPRESSION line: 1, (
-            (NUMBER_LITERAL line: 13, word: "10")))
-          (EXPRESSION line: 1, (
-            (NUMBER_LITERAL line: 13, word: "20")))))))))))
-  (VARIABLE_ASSIGNMENT line: 1, var: test, (
-    (EXPRESSION line: 1, (
-      (PROC_CALL line: 1, proc: Fact, (
-        (ARGUMENT_LIST line: 1, (
-          (EXPRESSION line: 1, (
-            (NUMBER_LITERAL line: 14, word: "5")))))))))))
-  (PROC_CALL line: 1, proc: Fact, (
-    (ARGUMENT_LIST line: 1, (
-      (EXPRESSION line: 1, (
-        (NUMBER_LITERAL line: 16, word: "4")))
-      (EXPRESSION line: 1, (
-        (NUMBER_LITERAL line: 16, word: "5")))))))))
+          (NUMBER_LITERAL line: 23, word: "1")))))))))))

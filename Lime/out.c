@@ -19,7 +19,6 @@ typedef unsigned int    uint;
 typedef float           real;
 
 i64 Fact(i64 n);
-i64 Add(i64 a, i64 b);
 i64 Fact(i64 n){
     if ((n == 0)) {
         return (1);
@@ -29,15 +28,24 @@ i64 Fact(i64 n){
     }
 
 }
-i64 Add(i64 a, i64 b){
-    return (a + b);
-}
-i32 myVar;
-i16 test;
+i64 variable;
+i64 mutableVar;
+i64 expression;
+i64 myArray;
+i64 count;
 int main(int num_arg_p1KaLm, char** args_p1KaLm) {
-    myVar = (Add((10), (20)));
-    test = (Fact((5)));
-    Fact((4), (5));
+    variable = (123);
+    mutableVar = (32);
+    expression = (123 + (32 / 2.0) * 2);
+    ARRAY_INIT(myArray);
+    ARRAY_ADD(myArray, (100));
+    ARRAY_ADD(myArray, (200));
+    ARRAY_ADD(myArray, (300));
+    count = (0);
+    while ((count <= 42)) {
+        count += (1);
+
+    }
     return 0;
 }
 
