@@ -224,8 +224,8 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                 }
 
                 // * Array declarations should always initialize
-
-                if (n->isArray)
+                // * NOTES: I dont know if this needs to be declared at the top of the scope or not, but for not its not
+                if (id->isArray)
                     ss << indent << "ARRAY_INIT(" << id->identifier->word << ");\n";
 
                 break;

@@ -124,7 +124,6 @@ struct Node {
     Token token;
 //    int line_number {1};
     int precedence  {0};
-    bool isArray{false};
 
     NodeType type{LIME_NODE_NONE};
 
@@ -141,11 +140,12 @@ struct Node {
 struct IdentifierNode: public Node {
     IdentifierNode(Token& token);
     IdentifierNode();
-
     ~IdentifierNode();
+
     Token* identifier; 
     Token* variable_type;
     bool canMutate;
+    bool isArray{false};
     bool external;
 };
 
