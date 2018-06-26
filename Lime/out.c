@@ -18,9 +18,9 @@ typedef double          f64;
 typedef unsigned int    uint;
 typedef float           real;
 
-int Fact(int n);
-int Add(int a, int b);
-int Fact(int n){
+i64 Fact(i64 n);
+i64 Add(i64 a, i64 b);
+i64 Fact(i64 n){
     if ((n == 0)) {
         return (1);
     }
@@ -29,12 +29,14 @@ int Fact(int n){
     }
 
 }
-int Add(int a, int b){
+i64 Add(i64 a, i64 b){
     return (a + b);
 }
+i32 myVar;
+i16 test;
 int main(int num_arg_p1KaLm, char** args_p1KaLm) {
-    Add((10), (20));
-    Fact((5));
+    myVar = (Add((10), (20)));
+    test = (Fact((5)));
     Fact((4), (5));
     return 0;
 }

@@ -1,5 +1,5 @@
 (NONE line: 1, (
-  (PROC_DEFINITION line: 1, proc: Fact,  return_type: int (
+  (PROC_DEFINITION line: 1, proc: Fact,  return_type: i64 (
     (PARAMETER_LIST line: 1, (
       (VARIABLE_DECLARATION line: 1, var: n,)))
     (NONE line: 1, (
@@ -24,7 +24,7 @@
                       (OPERATOR line: 5, word: "-" (
                         (IDENTIFIER line: 5, word: "n")
                         (NUMBER_LITERAL line: 5, word: "1")))))))))))))))))))))))
-  (PROC_DEFINITION line: 1, proc: Add,  return_type: int (
+  (PROC_DEFINITION line: 1, proc: Add,  return_type: i64 (
     (PARAMETER_LIST line: 1, (
       (VARIABLE_DECLARATION line: 1, var: a,)
       (VARIABLE_DECLARATION line: 1, var: b,)))
@@ -34,16 +34,20 @@
           (OPERATOR line: 10, word: "+" (
             (IDENTIFIER line: 10, word: "a")
             (IDENTIFIER line: 10, word: "b")))))))))))
-  (PROC_CALL line: 1, proc: Add, (
-    (ARGUMENT_LIST line: 1, (
-      (EXPRESSION line: 1, (
-        (NUMBER_LITERAL line: 13, word: "10")))
-      (EXPRESSION line: 1, (
-        (NUMBER_LITERAL line: 13, word: "20")))))))
-  (PROC_CALL line: 1, proc: Fact, (
-    (ARGUMENT_LIST line: 1, (
-      (EXPRESSION line: 1, (
-        (NUMBER_LITERAL line: 14, word: "5")))))))
+  (VARIABLE_ASSIGNMENT line: 1, var: myVar, (
+    (EXPRESSION line: 1, (
+      (PROC_CALL line: 1, proc: Add, (
+        (ARGUMENT_LIST line: 1, (
+          (EXPRESSION line: 1, (
+            (NUMBER_LITERAL line: 13, word: "10")))
+          (EXPRESSION line: 1, (
+            (NUMBER_LITERAL line: 13, word: "20")))))))))))
+  (VARIABLE_ASSIGNMENT line: 1, var: test, (
+    (EXPRESSION line: 1, (
+      (PROC_CALL line: 1, proc: Fact, (
+        (ARGUMENT_LIST line: 1, (
+          (EXPRESSION line: 1, (
+            (NUMBER_LITERAL line: 14, word: "5")))))))))))
   (PROC_CALL line: 1, proc: Fact, (
     (ARGUMENT_LIST line: 1, (
       (EXPRESSION line: 1, (

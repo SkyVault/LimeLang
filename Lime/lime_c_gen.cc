@@ -140,7 +140,19 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                 auto id = static_cast<IdentifierNode*>(n);
 
                 std::stringstream prot;
-                prot << (id->variable_type == nullptr ? "void" : id->variable_type->word);
+
+                std::string return_type_name{"void"}; // ! Maybe none?
+
+                if (id->type_desc != nullptr){
+                    if (id->type_desc->isCustomType){
+                        return_type_name = static_cast<LimeCustomTypeDesc*>(id->type_desc)->name;
+                    } else {
+                        return_type_name = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(id->type_desc)->type)->second;
+                    }
+                }
+
+                prot << return_type_name;
+
                 prot << " " << id->identifier->word << "(";
                 std::string block = "";
                 for (auto child : n->children) {
@@ -151,7 +163,18 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                         int i = 0;
                         for (const auto& param : child->children) {
                             auto id_param = static_cast<IdentifierNode*>(param);
-                            prot << id_param->variable_type->word << " " << id_param->identifier->word;
+
+                            std::string param_type_name{"none"};
+                            if (id_param->type_desc != nullptr){
+                                if (id_param->type_desc->isCustomType){
+                                    param_type_name = static_cast<LimeCustomTypeDesc*>(id_param->type_desc)->name;
+                                } else {
+                                    param_type_name = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(id_param->type_desc)->type)->second;
+                                }
+                            }
+
+                            prot << param_type_name << " " << id_param->identifier->word;
+
                             if (i < (int)(child->children.size() - 1))
                                 prot << ", ";
                             ++i;
@@ -169,10 +192,24 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
             }
 
             case LIME_NODE_PROC_DECLARATION: {
+                // * NOTES: Why is this not being handled the same way as the definition? We totally could 
+
                 auto id = static_cast<IdentifierNode*>(n);
 
                 std::stringstream prot;
-                prot << (id->variable_type == nullptr ? "void" : id->variable_type->word);
+
+                std::string return_type_name{"void"}; // ! Maybe none?
+
+                if (id->type_desc != nullptr){
+                    if (id->type_desc->isCustomType){
+                        return_type_name = static_cast<LimeCustomTypeDesc*>(id->type_desc)->name;
+                    } else {
+                        return_type_name = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(id->type_desc)->type)->second;
+                    }
+                }
+
+                prot << return_type_name;
+
                 prot << " " << id->identifier->word << "(";
                 std::string block = "";
                 for (auto child : n->children) {
@@ -183,7 +220,18 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                         int i = 0;
                         for (const auto& param : child->children) {
                             auto id_param = static_cast<IdentifierNode*>(param);
-                            prot << id_param->variable_type->word << " " << id_param->identifier->word;
+
+                            std::string param_type_name{"none"};
+                            if (id_param->type_desc != nullptr){
+                                if (id_param->type_desc->isCustomType){
+                                    param_type_name = static_cast<LimeCustomTypeDesc*>(id_param->type_desc)->name;
+                                } else {
+                                    param_type_name = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(id_param->type_desc)->type)->second;
+                                }
+                            }
+
+                            prot << param_type_name << " " << id_param->identifier->word;
+
                             if (i < (int)(child->children.size() - 1))
                                 prot << ", ";
                             ++i;
@@ -211,16 +259,24 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
 
             case LIME_NODE_VARIABLE_DECLARATION: {
                 auto id = static_cast<IdentifierNode*>(n);
-                assert(id->variable_type != nullptr);
+                assert(id->type_desc != nullptr);
+
+                std::string type_name{"none"}; 
+                if (id->type_desc != nullptr){
+                    if (id->type_desc->isCustomType){
+                        type_name = static_cast<LimeCustomTypeDesc*>(id->type_desc)->name;
+                    } else {
+                        type_name = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(id->type_desc)->type)->second;
+                    }
+                }
 
                 if (scope == 1) {
-					assert(id->variable_type != nullptr);
 					assert(id->identifier != nullptr);
                     // Handle the global declaration
-                    gvd << id->variable_type->word << " " << id->identifier->word << ";\n";
+                    gvd << type_name << " " << id->identifier->word << ";\n";
                 } else {
                     // Handle local declaration
-                    ss << id->variable_type->word << " " << id->identifier->word << ";\n";
+                    ss << type_name << " " << id->identifier->word << ";\n";
                 }
 
                 // * Array declarations should always initialize
@@ -235,10 +291,21 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                 auto id = static_cast<IdentifierNode*>(n);
 
                 std::string op = "=";
-                if (id->variable_type != nullptr) {
+                if (id->type_desc != nullptr) {
+
+                    std::string type_name{"none"}; 
+                    if (id->type_desc != nullptr){
+                        if (id->type_desc->isCustomType){
+                            type_name = static_cast<LimeCustomTypeDesc*>(id->type_desc)->name;
+                        } else {
+                            type_name = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(id->type_desc)->type)->second;
+                        }
+                    }
+
                     if (scope == 1) {
                         // Handle the global declaration
-                        gvd << id->variable_type->word << " " << id->identifier->word << ";\n";
+
+                        gvd << type_name << " " << id->identifier->word << ";\n";
 
                         if (n->children.size() > 0) {
                             ss << indent << id->identifier->word << " " << op << " ";
@@ -246,7 +313,7 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                         }
                     } else {
                         // Handle local declaration
-                        ss << id->variable_type->word << " " << id->identifier->word << " = ";
+                        ss << type_name << " " << id->identifier->word << " = ";
                         ss << compile_expression(n->children[0]) << ";\n";
                     }
                 } else {

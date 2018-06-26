@@ -24,15 +24,15 @@ IdentifierNode::IdentifierNode(Token& token): Node(token) {}
 
 IdentifierNode::IdentifierNode(){
     // Initialize to nullptrs
-    variable_type = nullptr;
+    type_desc = nullptr;
     identifier = nullptr;
 }
 
 IdentifierNode::~IdentifierNode(){
     if (identifier != nullptr)
         delete identifier;
-    if (variable_type != nullptr)
-        delete variable_type;
+    if (type_desc != nullptr)
+        delete type_desc;
 }
 
 bool ProcPrototypeNode::matches(ProcCallNode* proccall) {
@@ -77,7 +77,17 @@ std::string ToString(Node* node, std::string indent = "") {
     if (type == LIME_NODE_PROC_DEFINITION || type == LIME_NODE_PROC_DECLARATION) {
         auto n = static_cast<IdentifierNode*>(node);
         assert(n->identifier != nullptr);
-        auto type_name = n->variable_type == nullptr ?  "none" : n->variable_type->word;
+
+        std::string type_name{"none"};
+
+        if (n->type_desc != nullptr){
+            if (n->type_desc->isCustomType){
+                type_name = static_cast<LimeCustomTypeDesc*>(n->type_desc)->name;
+            } else {
+                type_name = LimeStringTypeMap.find(static_cast<LimeTypeDesc*>(n->type_desc)->type)->second;
+            }
+        }
+
         result += " proc: " + n->identifier->word + ", ";
         result += " return_type: " + type_name;
     }
@@ -410,7 +420,14 @@ Node* parameters_to_node(std::vector<Token>& tokens) {
                 auto node = new IdentifierNode();
                 node->type = LIME_NODE_VARIABLE_DECLARATION;
                 node->identifier = new Token(*p);
-                node->variable_type = new Token(*it);
+
+                if (isType(it->word)){
+                    node->type_desc = new LimeTypeDesc{ LimeTypeStringMap[it->word] };
+                } else {
+                    // ! We need to support custom struct types
+                    Error("We dont yet support custom types...", -1);
+                }
+
                 result->children.push_back(node);
 
                 // Make sure the next token is either a paren or comma
@@ -714,7 +731,12 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                     }
 
                     // NOTE: This seems fishy
-                    node->variable_type = new Token(*next);
+                    if (isType(next->word)){
+                        node->type_desc = new LimeTypeDesc{ LimeTypeStringMap[next->word] };
+                    } else {
+                        Error("We dont yet support custom types..", -1);
+                    }
+
                     next = Next();
 	
 					if (next != tokens.end()) {
@@ -755,7 +777,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
 					}
 
                     assert(node->identifier);
-                    assert(node->variable_type);
+                    assert(node->type_desc);
 
                     ast->children.push_back(node);
                     
@@ -829,7 +851,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                     expect_proc_tokens(*it);
 
                     if (it->type == LIME_TYPE_IDENTIFIER) {
-                        node->variable_type = new Token(*it);  
+                        node->type_desc = new LimeTypeDesc{ LimeTypeStringMap[it->word] };
                         Next();
                     } 
 
@@ -863,9 +885,11 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                         for (auto _param : parameters_node->children){
                             auto param = static_cast<IdentifierNode*>(_param);
 
+                            assert(param->type_desc);
+
                             node->parameters.push_back({
                                 param->token.word,
-                                LimeTypeStringMap[param->variable_type->word]
+                                static_cast<LimeTypeDesc*>(param->type_desc)->type
                             });
                         }
 
@@ -877,7 +901,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                         expect_proc_tokens(*it);
 
                         if (it->type == LIME_TYPE_IDENTIFIER) {
-                            node->variable_type = new Token(*it);
+                            node->type_desc = new LimeTypeDesc{ LimeTypeStringMap[it->word] };
                             Next();
                         }
 
@@ -1083,7 +1107,7 @@ bool AstPass(Node* ast) {
 
             case LIME_NODE_VARIABLE_DECLARATION: {
                 auto id = static_cast<IdentifierNode*>(node);
-                if (id->variable_type == nullptr) {
+                if (id->type_desc == nullptr) {
                     Error("Variable declaration is missing a type identifier", node->token.line_number);
                 }
 
@@ -1097,7 +1121,7 @@ bool AstPass(Node* ast) {
 
             case LIME_NODE_VARIABLE_ASSIGNMENT: {
                 auto id = static_cast<IdentifierNode*>(node);
-                if (id->variable_type != nullptr) {
+                if (id->type_desc != nullptr) {
                     // It is a declaration
 
                     if (Lens->varExists(id->identifier->word)) {

@@ -112,6 +112,12 @@ Token {  word: '\n'  type: NEWLINE}
 Token {  word: '}'  type: CLOSE_CURLY_BRACKET}
 Token {  word: '\n'  type: NEWLINE}
 Token {  word: '\n'  type: NEWLINE}
+Token {  word: 'myVar'  type: IDENTIFIER}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: 'i32'  type: TYPE_IDENTIFIER}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: '='  type: OPERATOR}
+Token {  word: ' '  type: WHITESPACE}
 Token {  word: 'Add'  type: IDENTIFIER}
 Token {  word: '('  type: OPEN_PAREN}
 Token {  word: '10'  type: NUMBER}
@@ -120,6 +126,12 @@ Token {  word: ' '  type: WHITESPACE}
 Token {  word: '20'  type: NUMBER}
 Token {  word: ')'  type: CLOSE_PAREN}
 Token {  word: '\n'  type: NEWLINE}
+Token {  word: 'test'  type: IDENTIFIER}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: 'i16'  type: TYPE_IDENTIFIER}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: '='  type: OPERATOR}
+Token {  word: ' '  type: WHITESPACE}
 Token {  word: 'Fact'  type: IDENTIFIER}
 Token {  word: '('  type: OPEN_PAREN}
 Token {  word: '5'  type: NUMBER}

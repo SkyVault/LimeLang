@@ -140,7 +140,7 @@ struct IdentifierNode: public Node {
     ~IdentifierNode();
 
     Token* identifier; 
-    Token* variable_type;
+    TypeDesc* type_desc;
     bool canMutate;
     bool isArray{false};
     bool external;
