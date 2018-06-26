@@ -24,8 +24,9 @@ std::string LimeCGen::compile_expression(Node* node) {
             ss << e->token.word;
             break;
         case LIME_NODE_PROC_CALL: {
+            auto id = static_cast<IdentifierNode*>(e);
 
-            ss << e->identifier->word << "(";
+            ss << id->identifier->word << "(";
             if (e->children.size() > 0 && e->children[0]->type == LIME_NODE_ARGUMENT_LIST) {
                 int i{0};
                 for (const auto& a : e->children[0]->children) {
@@ -109,9 +110,10 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
             }
 
             case LIME_NODE_PROC_CALL: {
+                auto id = static_cast<IdentifierNode*>(n);
 
                 ss << indent;
-                ss << n->identifier->word << "(";
+                ss << id->identifier->word << "(";
                 if (n->children.size() > 0 && n->children[0]->type == LIME_NODE_ARGUMENT_LIST) {
                     int i{0};
                     for (const auto& a : n->children[0]->children) {
@@ -135,10 +137,11 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
             }
 
             case LIME_NODE_PROC_DEFINITION: {
+                auto id = static_cast<IdentifierNode*>(n);
 
                 std::stringstream prot;
-                prot << (n->variable_type == nullptr ? "void" : n->variable_type->word);
-                prot << " " << n->identifier->word << "(";
+                prot << (id->variable_type == nullptr ? "void" : id->variable_type->word);
+                prot << " " << id->identifier->word << "(";
                 std::string block = "";
                 for (auto child : n->children) {
                     if (child->type == 0) {
@@ -147,7 +150,8 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                     else if (child->type == LIME_NODE_PARAMETER_LIST) {
                         int i = 0;
                         for (const auto& param : child->children) {
-                            prot << param->variable_type->word << " " << param->identifier->word;
+                            auto id_param = static_cast<IdentifierNode*>(param);
+                            prot << id_param->variable_type->word << " " << id_param->identifier->word;
                             if (i < (int)(child->children.size() - 1))
                                 prot << ", ";
                             ++i;
@@ -165,10 +169,11 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
             }
 
             case LIME_NODE_PROC_DECLARATION: {
+                auto id = static_cast<IdentifierNode*>(n);
 
                 std::stringstream prot;
-                prot << (n->variable_type == nullptr ? "void" : n->variable_type->word);
-                prot << " " << n->identifier->word << "(";
+                prot << (id->variable_type == nullptr ? "void" : id->variable_type->word);
+                prot << " " << id->identifier->word << "(";
                 std::string block = "";
                 for (auto child : n->children) {
                     if (child->type == 0) {
@@ -177,7 +182,8 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                     else if (child->type == LIME_NODE_PARAMETER_LIST) {
                         int i = 0;
                         for (const auto& param : child->children) {
-                            prot << param->variable_type->word << " " << param->identifier->word;
+                            auto id_param = static_cast<IdentifierNode*>(param);
+                            prot << id_param->variable_type->word << " " << id_param->identifier->word;
                             if (i < (int)(child->children.size() - 1))
                                 prot << ", ";
                             ++i;
@@ -195,49 +201,52 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                     // ss << indent;
                     // ss << n->identifier->word << " = ";
                     // ss << compile_expression(n->children[0]) << ";\n";
+                auto id = static_cast<IdentifierNode*>(n);
 
                 ss << indent; 
-                ss << "ARRAY_ADD(" << n->identifier->word << ", " << compile_expression(n->children[0]) << ");\n";
+                ss << "ARRAY_ADD(" << id->identifier->word << ", " << compile_expression(n->children[0]) << ");\n";
                 
                 break;
             }
 
             case LIME_NODE_VARIABLE_DECLARATION: {
-                assert(n->variable_type != nullptr);
+                auto id = static_cast<IdentifierNode*>(n);
+                assert(id->variable_type != nullptr);
 
                 if (scope == 1) {
-					assert(n->variable_type != nullptr);
-					assert(n->identifier != nullptr);
+					assert(id->variable_type != nullptr);
+					assert(id->identifier != nullptr);
                     // Handle the global declaration
-                    gvd << n->variable_type->word << " " << n->identifier->word << ";\n";
+                    gvd << id->variable_type->word << " " << id->identifier->word << ";\n";
                 } else {
                     // Handle local declaration
-                    ss << n->variable_type->word << " " << n->identifier->word << ";\n";
+                    ss << id->variable_type->word << " " << id->identifier->word << ";\n";
                 }
 
                 // * Array declarations should always initialize
 
                 if (n->isArray)
-                    ss << indent << "ARRAY_INIT(" << n->identifier->word << ");\n";
+                    ss << indent << "ARRAY_INIT(" << id->identifier->word << ");\n";
 
                 break;
             }
 
             case LIME_NODE_VARIABLE_ASSIGNMENT: {
+                auto id = static_cast<IdentifierNode*>(n);
 
                 std::string op = "=";
-                if (n->variable_type != nullptr) {
+                if (id->variable_type != nullptr) {
                     if (scope == 1) {
                         // Handle the global declaration
-                        gvd << n->variable_type->word << " " << n->identifier->word << ";\n";
+                        gvd << id->variable_type->word << " " << id->identifier->word << ";\n";
 
                         if (n->children.size() > 0) {
-                            ss << indent << n->identifier->word << " " << op << " ";
+                            ss << indent << id->identifier->word << " " << op << " ";
                             ss << compile_expression(n->children[0]) << ";\n";
                         }
                     } else {
                         // Handle local declaration
-                        ss << n->variable_type->word << " " << n->identifier->word << " = ";
+                        ss << id->variable_type->word << " " << id->identifier->word << " = ";
                         ss << compile_expression(n->children[0]) << ";\n";
                     }
                 } else {
@@ -252,7 +261,7 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                     }
 
                     ss << indent;
-                    ss << n->identifier->word << " " << op << " ";
+                    ss << id->identifier->word << " " << op << " ";
                     ss << compile_expression(n->children[0]) << ";\n";
                 }
 

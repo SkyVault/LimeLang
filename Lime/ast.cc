@@ -17,56 +17,68 @@ Node::Node(Token& token): Node() {
         this->type = LIME_NODE_OPERATOR;
 }
 
-Node::Node(){
+Node::Node(){}
+Node::~Node(){}
+
+IdentifierNode::IdentifierNode(Token& token): Node(token) {}
+
+IdentifierNode::IdentifierNode(){
     // Initialize to nullptrs
     variable_type = nullptr;
     identifier = nullptr;
 }
 
-Node::~Node(){
+IdentifierNode::~IdentifierNode(){
     if (identifier != nullptr)
         delete identifier;
     if (variable_type != nullptr)
         delete variable_type;
 }
 
+
 Node* Node::add(Node* node) {
     children.push_back(node);
     return node;
 }
 
-std::string Node::ToString(std::string indent = "") const {
+std::string ToString(Node* node, std::string indent = "") {
     std::string result{""};
 
-    result += indent + "(" + LimeNodeTypesNames.find(type)->second;
-    result += " line: " + std::to_string(token.line_number) + ",";
-    if (token.word.size() > 0)
-        result += " word: \"" + token.word + "\"";
+    const auto type = node->type;
+
+    result += indent + "(" + LimeNodeTypesNames.find(node->type)->second;
+    result += " line: " + std::to_string(node->token.line_number) + ",";
+    if (node->token.word.size() > 0)
+        result += " word: \"" + node->token.word + "\"";
 
     if (type == LIME_NODE_PROC_DEFINITION || type == LIME_NODE_PROC_DECLARATION) {
-        assert(identifier != nullptr);
-        auto type_name = variable_type == nullptr ?  "none" : variable_type->word;
-        result += " proc: " + identifier->word + ", ";
+        auto n = static_cast<IdentifierNode*>(node);
+        assert(n->identifier != nullptr);
+        auto type_name = n->variable_type == nullptr ?  "none" : n->variable_type->word;
+        result += " proc: " + n->identifier->word + ", ";
         result += " return_type: " + type_name;
     }
 
     if (type == LIME_NODE_VARIABLE_ASSIGNMENT || type == LIME_NODE_VARIABLE_DECLARATION) {
-        assert(identifier != nullptr);
-        result += " var: " + identifier->word + ",";
+        auto n = static_cast<IdentifierNode*>(node);
+        assert(n->identifier != nullptr);
+        result += " var: " + n->identifier->word + ",";
         //result += " type: " + cp + ",";
     }
 
     if (type == LIME_NODE_PROC_CALL) {
-        assert(identifier != nullptr);
-        result += " proc: " + identifier->word + ",";
+        // ! Fix this to use ProcCallNodeStruct
+        auto n = static_cast<IdentifierNode*>(node);
+        assert(n->identifier != nullptr);
+        result += " proc: " + n->identifier->word + ",";
     }
 
-    if (children.size() > 0) {
+    if (node->children.size() > 0) {
         result += " (\n";
         size_t i = 0;
-        for(auto c : children) {
-            result += c->ToString(indent + "  ");
-            if (i != children.size() - 1)
+        for(auto c : node->children) {
+            result += ToString(c, indent + "  ");
+            if (i != node->children.size() - 1)
                 result += "\n";
             i += 1;
         }
@@ -76,8 +88,8 @@ std::string Node::ToString(std::string indent = "") const {
     return result + ")";
 }
 
-ostream& operator<<(ostream& os, const Node& node) {
-    std::string str = node.ToString();
+ostream& operator<<(ostream& os, Node& node) {
+    std::string str = ToString(&node);
     os << str;
     return os;
 }
@@ -372,7 +384,7 @@ Node* parameters_to_node(std::vector<Token>& tokens) {
                     Error("Identifier expected but got: " + p->word, p->line_number);
                 }
 
-                auto node = new Node();
+                auto node = new IdentifierNode();
                 node->type = LIME_NODE_VARIABLE_DECLARATION;
                 node->identifier = new Token(*p);
                 node->variable_type = new Token(*it);
@@ -449,7 +461,8 @@ Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>:
         }
     }
 
-    auto proc_call_node = new Node();
+    // ! Fix this to use the ProcCallNode struct
+    auto proc_call_node = new IdentifierNode();
     proc_call_node->identifier = new Token(*ident);
     proc_call_node->type = LIME_NODE_PROC_CALL;
     proc_call_node->children.push_back(argument_node);
@@ -660,7 +673,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 if (next->type == LIME_TYPE_IDENTIFIER || next->type == LIME_MUTABLE) {
                     // Handle LIME_NODE_VARIABLE_DECLARATION
 
-                    auto node = new Node();
+                    auto node = new IdentifierNode();
                     node->type = LIME_NODE_VARIABLE_DECLARATION;
                     node->identifier = new Token(*it);
 
@@ -730,7 +743,9 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                         next->op == LIME_MULTIPLICATION_EQUALS_OPERATOR ||
                         next->op == LIME_DIVISION_EQUALS_OPERATOR
                         ) {
-                        auto node = new Node();
+                        
+                        // ! Fix use the AssignmentOperatorNode struct
+                        auto node = new IdentifierNode();
                         node->token = *next;
                         node->identifier = new Token(*it);
 
@@ -747,7 +762,8 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
 
                     } else if (next->op == LIME_LEFT_ARROW_OPERATOR) {
                         // * Handle array insertion
-                        auto node = new Node();
+                        // ! Fix use the AssignmentOperatorNode struct
+                        auto node = new IdentifierNode();
                         node->identifier = new Token(*it);
 
                         // ! This seems not correct, why the ++it?
@@ -766,7 +782,8 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                 } else if (next->type == LIME_PROC) {
                     // Handling procedures
                     
-                    auto node = new Node();
+                    //! Fix to use the ProcNode
+                    auto node = new IdentifierNode();
                     node->identifier = new Token(*it);
 
                     Next();
@@ -884,13 +901,13 @@ bool CodeLens::varExists(const std::string& name) {
     return false;
 }
 
-void CodeLens::addVar(Node* node) {
+void CodeLens::addVar(IdentifierNode* node) {
     std::string copy = std::string{node->identifier->word};
     assert(variable_scope.size() != 0);
     variable_scope[variable_scope.size() - 1].insert(std::make_pair(copy, node));
 }
 
-Node* CodeLens::getVar(const std::string& name) {
+IdentifierNode* CodeLens::getVar(const std::string& name) {
     for (int i = variable_scope.size() - 1; i >= 0; i--) {
         auto res = variable_scope[i].find(name);
         if (res != variable_scope[i].end())
@@ -906,14 +923,15 @@ bool CodeLens::procExists(const std::string& name) {
     return false;
 }
 
-void CodeLens::addProc(Node* node) {
+void CodeLens::addProc(IdentifierNode* node) {
+    //! Fix
     std::string copy = std::string{node->identifier->word};
     assert(variable_scope.size() != 0);
     functions.insert(std::make_pair(copy, node));
 }
 
 void CodeLens::push() {
-    variable_scope.push_back(std::map<std::string, Node*>());
+    variable_scope.push_back(std::map<std::string, IdentifierNode*>());
 }
 
 void CodeLens::pop() {
@@ -1000,21 +1018,22 @@ bool AstPass(Node* ast) {
             }
 
             case LIME_NODE_ARRAY_INSERTION: {
-                if (!Lens->varExists(node->identifier->word)) {
-                    Error("Undefined identifier: " + node->identifier->word + ".", node->token.line_number);
+                auto id = static_cast<IdentifierNode*>(node);
+                if (!Lens->varExists(id->identifier->word)) {
+                    Error("Undefined identifier: " + id->identifier->word + ".", node->token.line_number);
                 } 
 
-                auto var = Lens->getVar(node->identifier->word);
+                auto var = Lens->getVar(id->identifier->word);
                 if (var->isArray == false) {
                     Error("Attempted to insert into a non array variable", var->token.line_number);
                 }
 
                 if (var->canMutate == false) {
-                    Error("Attempted to modify an immutable variable: " + node->identifier->word, node->token.line_number);
+                    Error("Attempted to modify an immutable variable: " + id->identifier->word, id->token.line_number);
                 }
 
                 // Check the expression
-                if (node->children.size() > 0 && node->children[0]->type == LIME_NODE_EXPRESSION) {
+                if (id->children.size() > 0 && id->children[0]->type == LIME_NODE_EXPRESSION) {
                     AstPass(node->children[0]);
                 } else {
                     Error("Array insertion requires a value", node->token.line_number);
@@ -1024,71 +1043,75 @@ bool AstPass(Node* ast) {
             }
 
             case LIME_NODE_VARIABLE_DECLARATION: {
-                if (node->variable_type == nullptr) {
+                auto id = static_cast<IdentifierNode*>(node);
+                if (id->variable_type == nullptr) {
                     Error("Variable declaration is missing a type identifier", node->token.line_number);
                 }
 
-                if (Lens->varExists(node->identifier->word)) {
-                    Error("Redefinition of identifier: " + node->identifier->word + ".", node->token.line_number);
+                if (Lens->varExists(id->identifier->word)) {
+                    Error("Redefinition of identifier: " + id->identifier->word + ".", id->token.line_number);
                 }
 
-                Lens->addVar(node);
+                Lens->addVar(id);
                 break;
             }
 
             case LIME_NODE_VARIABLE_ASSIGNMENT: {
-                if (node->variable_type != nullptr) {
+                auto id = static_cast<IdentifierNode*>(node);
+                if (id->variable_type != nullptr) {
                     // It is a declaration
 
-                    if (Lens->varExists(node->identifier->word)) {
-                        Error("Redefinition of identifier: " + node->identifier->word + ".", node->token.line_number);
+                    if (Lens->varExists(id->identifier->word)) {
+                        Error("Redefinition of identifier: " +id->identifier->word + ".",id->token.line_number);
                     }
 
-                    Lens->addVar(node);
+                    Lens->addVar(id);
                 } else {
-                    if (!Lens->varExists(node->identifier->word)) {
-                        Error("Undefined identifier: " + node->identifier->word + ".", node->token.line_number);
+                    if (!Lens->varExists(id->identifier->word)) {
+                        Error("Undefined identifier: " +id->identifier->word + ".",id->token.line_number);
                     }
                 }
 
-                auto var = Lens->getVar(node->identifier->word);
+                auto var = Lens->getVar(id->identifier->word);
                 if (var->canMutate == false) {
-                    Error("Attempted to modify an immutable variable: " + node->identifier->word, node->token.line_number);
+                    Error("Attempted to modify an immutable variable: " +id->identifier->word,id->token.line_number);
                 }
 
                 // Check the expression
-                if (node->children.size() > 0 && node->children[0]->type == LIME_NODE_EXPRESSION) {
-                    AstPass(node->children[0]);
+                if (id->children.size() > 0 &&id->children[0]->type == LIME_NODE_EXPRESSION) {
+                    AstPass(id->children[0]);
                 }
 
                 break;
             }
 
             case LIME_NODE_PROC_DECLARATION: {
+                auto id = static_cast<IdentifierNode*>(node);
                 // Make sure the function is unique
-                if (Lens->procExists(node->identifier->word)) {
-                    Error("Redefinition of procedure: " + node->identifier->word, node->token.line_number);
+                if (Lens->procExists(id->identifier->word)) {
+                    Error("Redefinition of procedure: " +id->identifier->word,id->token.line_number);
                 }
 
-                Lens->addProc(node);
+                Lens->addProc(id);
 
                 break;
             }
 
             // TODO: Make sure the prototypes match
             case LIME_NODE_PROC_DEFINITION: {
+                auto id = static_cast<IdentifierNode*>(node);
                 // Make sure the function is unique
-                auto prev = Lens->functions.find(node->identifier->word);
+                auto prev = Lens->functions.find(id->identifier->word);
                 if (prev != Lens->functions.end() && prev->second->type == LIME_NODE_PROC_DEFINITION){
-                    Error("Redefinition of procedure: " + node->identifier->word, node->token.line_number);
+                    Error("Redefinition of procedure: " +id->identifier->word,id->token.line_number);
                 }
 
-                Lens->addProc(node);
+                Lens->addProc(id);
 
                 Lens->push();
-                for (auto v: node->children[0]->children) {
+                for (auto v:id->children[0]->children) {
                     if (v->type == LIME_NODE_VARIABLE_DECLARATION) {
-                        Lens->addVar(v);
+                        Lens->addVar(static_cast<IdentifierNode*>(v));
                     }
                 }
                 AstPass(node->children[1]);
@@ -1098,11 +1121,12 @@ bool AstPass(Node* ast) {
             }
 
             case LIME_NODE_PROC_CALL: {
-                assert(node->identifier); 
+                auto id = static_cast<IdentifierNode*>(node);
+                assert(id->identifier); 
                 
                 //TODO: Test that the arguments match the functions prototype
-                if (!Lens->procExists(node->identifier->word)){
-                    Error("Undefined procedure: " + node->identifier->word, node->identifier->line_number);
+                if (!Lens->procExists(id->identifier->word)){
+                    Error("Undefined procedure: " +id->identifier->word,id->identifier->line_number);
                 }
 
                 break;

@@ -37,17 +37,17 @@
   (PROC_CALL line: 1, proc: printf, (
     (ARGUMENT_LIST line: 1, (
       (EXPRESSION line: 1, (
-        (LIME_NODE_STRING_LITERAL line: 14, word: ""!4 = %d, !5 = %d, !4 + !5 = %d"")))
+        (LIME_NODE_STRING_LITERAL line: 13, word: ""!4 = %d, !5 = %d, !4 + !5 = %d"")))
       (EXPRESSION line: 1, (
         (PROC_CALL line: 1, proc: Fact, (
           (ARGUMENT_LIST line: 1, (
             (EXPRESSION line: 1, (
-              (NUMBER_LITERAL line: 15, word: "4")))))))))
+              (NUMBER_LITERAL line: 13, word: "4")))))))))
       (EXPRESSION line: 1, (
         (PROC_CALL line: 1, proc: Fact, (
           (ARGUMENT_LIST line: 1, (
             (EXPRESSION line: 1, (
-              (NUMBER_LITERAL line: 16, word: "5")))))))))
+              (NUMBER_LITERAL line: 13, word: "5")))))))))
       (EXPRESSION line: 1, (
         (PROC_CALL line: 1, proc: Add, (
           (ARGUMENT_LIST line: 1, (
@@ -55,9 +55,9 @@
               (PROC_CALL line: 1, proc: Fact, (
                 (ARGUMENT_LIST line: 1, (
                   (EXPRESSION line: 1, (
-                    (NUMBER_LITERAL line: 17, word: "4")))))))))
+                    (NUMBER_LITERAL line: 13, word: "4")))))))))
             (EXPRESSION line: 1, (
               (PROC_CALL line: 1, proc: Fact, (
                 (ARGUMENT_LIST line: 1, (
                   (EXPRESSION line: 1, (
-                    (NUMBER_LITERAL line: 17, word: "5")))))))))))))))))))))
+                    (NUMBER_LITERAL line: 13, word: "5")))))))))))))))))))))

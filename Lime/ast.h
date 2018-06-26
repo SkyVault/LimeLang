@@ -1,4 +1,5 @@
 #pragma once
+using namespace std;
 
 #include "lexer.h"
 #include "lime_types.h"
@@ -7,6 +8,8 @@
 #include <tuple>
 #include <cassert>
 #include <map>
+#include <fstream>
+#include <iostream>
 #include <algorithm>
 
 enum NodeType {
@@ -127,39 +130,41 @@ struct Node {
 
     std::vector<Node*> children;
 
-    union {
-        struct { 
-            Token* identifier; 
-            Token* variable_type;
-            bool canMutate;
-            bool external;
-        };
-    };
-
     Node* add(Node* node);
 
 	friend ostream& operator<<(ostream& os, const Node& node);
-
-    std::string ToString(std::string indent) const;
 
     friend Node create_ast_from_tokens(const std::vector<Token>& tokens);
     friend void code_block_to_ast(Node* ast, std::vector<Token>& tokens);
 };
 
-ostream& operator<<(ostream& os, const Node& node);
+struct IdentifierNode: public Node {
+    IdentifierNode(Token& token);
+    IdentifierNode();
+
+    ~IdentifierNode();
+    Token* identifier; 
+    Token* variable_type;
+    bool canMutate;
+    bool external;
+};
+
+std::string ToString(Node* node, std::string indent);
+
+ostream& operator<<(ostream& os, Node& node);
 
 typedef Node Ast;
 
 struct CodeLens {
-    std::vector<std::map<std::string, Node*>> variable_scope;
+    std::vector<std::map<std::string, IdentifierNode*>> variable_scope;
     std::map<std::string, Node*> functions;
 
     bool varExists(const std::string& name);
-    void addVar(Node* node);
-    Node* getVar(const std::string& name);
+    void addVar(IdentifierNode* node);
+    IdentifierNode* getVar(const std::string& name);
 
     bool procExists(const std::string& name);
-    void addProc(Node* node);
+    void addProc(IdentifierNode* node);
 
     void push();
     void pop();
