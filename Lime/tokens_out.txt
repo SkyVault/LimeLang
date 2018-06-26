@@ -112,35 +112,25 @@ Token {  word: '\n'  type: NEWLINE}
 Token {  word: '}'  type: CLOSE_CURLY_BRACKET}
 Token {  word: '\n'  type: NEWLINE}
 Token {  word: '\n'  type: NEWLINE}
-Token {  word: 'printf'  type: IDENTIFIER}
-Token {  word: '('  type: OPEN_PAREN}
-Token {  word: '"!4 = %d, !5 = %d, !4 + !5 = %d"'  type: STRING}
-Token {  word: ','  type: COMMA}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'Fact'  type: IDENTIFIER}
-Token {  word: '('  type: OPEN_PAREN}
-Token {  word: '4'  type: NUMBER}
-Token {  word: ')'  type: CLOSE_PAREN}
-Token {  word: ','  type: COMMA}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'Fact'  type: IDENTIFIER}
-Token {  word: '('  type: OPEN_PAREN}
-Token {  word: '5'  type: NUMBER}
-Token {  word: ')'  type: CLOSE_PAREN}
-Token {  word: ','  type: COMMA}
-Token {  word: ' '  type: WHITESPACE}
 Token {  word: 'Add'  type: IDENTIFIER}
 Token {  word: '('  type: OPEN_PAREN}
-Token {  word: 'Fact'  type: IDENTIFIER}
-Token {  word: '('  type: OPEN_PAREN}
-Token {  word: '4'  type: NUMBER}
-Token {  word: ')'  type: CLOSE_PAREN}
+Token {  word: '10'  type: NUMBER}
 Token {  word: ','  type: COMMA}
 Token {  word: ' '  type: WHITESPACE}
+Token {  word: '20'  type: NUMBER}
+Token {  word: ')'  type: CLOSE_PAREN}
+Token {  word: '\n'  type: NEWLINE}
 Token {  word: 'Fact'  type: IDENTIFIER}
 Token {  word: '('  type: OPEN_PAREN}
 Token {  word: '5'  type: NUMBER}
 Token {  word: ')'  type: CLOSE_PAREN}
-Token {  word: ')'  type: CLOSE_PAREN}
+Token {  word: '\n'  type: NEWLINE}
+Token {  word: '\n'  type: NEWLINE}
+Token {  word: 'Fact'  type: IDENTIFIER}
+Token {  word: '('  type: OPEN_PAREN}
+Token {  word: '4'  type: NUMBER}
+Token {  word: ','  type: COMMA}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: '5'  type: NUMBER}
 Token {  word: ')'  type: CLOSE_PAREN}
 Token {  word: '\n'  type: NEWLINE}

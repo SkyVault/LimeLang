@@ -34,30 +34,19 @@
           (OPERATOR line: 10, word: "+" (
             (IDENTIFIER line: 10, word: "a")
             (IDENTIFIER line: 10, word: "b")))))))))))
-  (PROC_CALL line: 1, proc: printf, (
+  (PROC_CALL line: 1, proc: Add, (
     (ARGUMENT_LIST line: 1, (
       (EXPRESSION line: 1, (
-        (LIME_NODE_STRING_LITERAL line: 13, word: ""!4 = %d, !5 = %d, !4 + !5 = %d"")))
+        (NUMBER_LITERAL line: 13, word: "10")))
       (EXPRESSION line: 1, (
-        (PROC_CALL line: 1, proc: Fact, (
-          (ARGUMENT_LIST line: 1, (
-            (EXPRESSION line: 1, (
-              (NUMBER_LITERAL line: 13, word: "4")))))))))
+        (NUMBER_LITERAL line: 13, word: "20")))))))
+  (PROC_CALL line: 1, proc: Fact, (
+    (ARGUMENT_LIST line: 1, (
       (EXPRESSION line: 1, (
-        (PROC_CALL line: 1, proc: Fact, (
-          (ARGUMENT_LIST line: 1, (
-            (EXPRESSION line: 1, (
-              (NUMBER_LITERAL line: 13, word: "5")))))))))
+        (NUMBER_LITERAL line: 14, word: "5")))))))
+  (PROC_CALL line: 1, proc: Fact, (
+    (ARGUMENT_LIST line: 1, (
       (EXPRESSION line: 1, (
-        (PROC_CALL line: 1, proc: Add, (
-          (ARGUMENT_LIST line: 1, (
-            (EXPRESSION line: 1, (
-              (PROC_CALL line: 1, proc: Fact, (
-                (ARGUMENT_LIST line: 1, (
-                  (EXPRESSION line: 1, (
-                    (NUMBER_LITERAL line: 13, word: "4")))))))))
-            (EXPRESSION line: 1, (
-              (PROC_CALL line: 1, proc: Fact, (
-                (ARGUMENT_LIST line: 1, (
-                  (EXPRESSION line: 1, (
-                    (NUMBER_LITERAL line: 13, word: "5")))))))))))))))))))))
+        (NUMBER_LITERAL line: 16, word: "4")))
+      (EXPRESSION line: 1, (
+        (NUMBER_LITERAL line: 16, word: "5")))))))))

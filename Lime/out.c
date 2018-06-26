@@ -33,7 +33,9 @@ int Add(int a, int b){
     return (a + b);
 }
 int main(int num_arg_p1KaLm, char** args_p1KaLm) {
-    printf(("!4 = %d, !5 = %d, !4 + !5 = %d"), (Fact((4))), (Fact((5))), (Add((Fact((4))), (Fact((5))))));
+    Add((10), (20));
+    Fact((5));
+    Fact((4), (5));
     return 0;
 }
 

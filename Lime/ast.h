@@ -118,21 +118,18 @@ static const std::map<std::string, OrderOfPrecedence> OrderOfPrecedenceTable = {
 struct Node {
     Node(Token& token);
     Node();
-
     ~Node();
 
     Token token;
-//    int line_number {1};
-    int precedence  {0};
 
     NodeType type{LIME_NODE_NONE};
 
     std::vector<Node*> children;
+    int precedence  {0};
 
     Node* add(Node* node);
 
 	friend ostream& operator<<(ostream& os, const Node& node);
-
     friend Node create_ast_from_tokens(const std::vector<Token>& tokens);
     friend void code_block_to_ast(Node* ast, std::vector<Token>& tokens);
 };
@@ -149,6 +146,21 @@ struct IdentifierNode: public Node {
     bool external;
 };
 
+struct ProcPrototypeNode;
+
+struct ProcCallNode: public IdentifierNode {
+    std::vector<std::tuple<std::string, LimeTypes>> parameters;
+    ProcPrototypeNode* proc{nullptr};
+};
+
+struct ProcPrototypeNode : public IdentifierNode {
+    std::string name{""};
+    LimeTypes return_type{LimeTypes::None};
+    std::vector<std::tuple<std::string, LimeTypes>> parameters;
+
+    bool matches(ProcCallNode* proccall);
+};
+
 std::string ToString(Node* node, std::string indent);
 
 ostream& operator<<(ostream& os, Node& node);
@@ -157,14 +169,15 @@ typedef Node Ast;
 
 struct CodeLens {
     std::vector<std::map<std::string, IdentifierNode*>> variable_scope;
-    std::map<std::string, Node*> functions;
+    std::map<std::string, ProcPrototypeNode*> functions;
 
     bool varExists(const std::string& name);
     void addVar(IdentifierNode* node);
     IdentifierNode* getVar(const std::string& name);
 
     bool procExists(const std::string& name);
-    void addProc(IdentifierNode* node);
+    void addProc(ProcPrototypeNode* node);
+    ProcPrototypeNode* getProc(const std::string& name);
 
     void push();
     void pop();

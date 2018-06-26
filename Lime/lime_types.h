@@ -48,4 +48,16 @@ static std::map<std::string, LimeTypes> LimeTypeStringMap = {
     {"real", Float},
 };
 
+struct TypeDesc { bool isCustomType{false}; };
+
+struct LimeTypeDesc: TypeDesc {
+    LimeTypeDesc(){isCustomType = false;}
+    LimeTypes type{None};
+};
+
+struct LimeCustomTypeDesc: TypeDesc {
+    LimeCustomTypeDesc(){isCustomType = true;}
+    std::string name{""};
+};
+
 bool isType(const std::string& str);

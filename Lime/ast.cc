@@ -35,6 +35,29 @@ IdentifierNode::~IdentifierNode(){
         delete variable_type;
 }
 
+bool ProcPrototypeNode::matches(ProcCallNode* proccall) {
+    // * This does not handle optional parameters and named paramters
+    // * This also does not support variadic parameters
+
+    if (parameters.size() != proccall->parameters.size()) {
+        Error("Wrong number of parameters for function call: " + 
+            proccall->identifier->word + 
+            ", got: " + 
+            std::to_string(proccall->parameters.size()) + " but expected: " + std::to_string(parameters.size()), 
+            proccall->identifier->line_number);
+
+        return false;
+    }
+
+    for (int i = 0; i < proccall->parameters.size(); i++){
+        if (std::get<1>(proccall->parameters[i]) != std::get<1>(parameters[i])){
+            Error("Wrong parameter type", proccall->identifier->line_number);
+            return false;
+        }
+    }
+
+    return true;
+}
 
 Node* Node::add(Node* node) {
     children.push_back(node);
@@ -462,7 +485,9 @@ Node* handle_function_call(std::vector<Token>::iterator& it, std::vector<Token>:
     }
 
     // ! Fix this to use the ProcCallNode struct
-    auto proc_call_node = new IdentifierNode();
+    // * NOTES: Okay so we cant add the arguments to the parameters list because we dont know the type
+    // * of each expression, so we probably need to do a pass on the ast after everything is packed together 
+    auto proc_call_node = new ProcCallNode();
     proc_call_node->identifier = new Token(*ident);
     proc_call_node->type = LIME_NODE_PROC_CALL;
     proc_call_node->children.push_back(argument_node);
@@ -783,7 +808,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                     // Handling procedures
                     
                     //! Fix to use the ProcNode
-                    auto node = new IdentifierNode();
+                    auto node = new ProcPrototypeNode();
                     node->identifier = new Token(*it);
 
                     Next();
@@ -834,6 +859,16 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                         // Check the correctness of the parameters
 
                         auto parameters_node = parameters_to_node(parameters);
+
+                        for (auto _param : parameters_node->children){
+                            auto param = static_cast<IdentifierNode*>(_param);
+
+                            node->parameters.push_back({
+                                param->token.word,
+                                LimeTypeStringMap[param->variable_type->word]
+                            });
+                        }
+
                         node->children.push_back(parameters_node);
 
                         it = end;
@@ -923,7 +958,11 @@ bool CodeLens::procExists(const std::string& name) {
     return false;
 }
 
-void CodeLens::addProc(IdentifierNode* node) {
+ProcPrototypeNode* CodeLens::getProc(const std::string& name) {
+    return functions[name];
+}
+
+void CodeLens::addProc(ProcPrototypeNode* node) {
     //! Fix
     std::string copy = std::string{node->identifier->word};
     assert(variable_scope.size() != 0);
@@ -1086,7 +1125,7 @@ bool AstPass(Node* ast) {
             }
 
             case LIME_NODE_PROC_DECLARATION: {
-                auto id = static_cast<IdentifierNode*>(node);
+                auto id = static_cast<ProcPrototypeNode*>(node);
                 // Make sure the function is unique
                 if (Lens->procExists(id->identifier->word)) {
                     Error("Redefinition of procedure: " +id->identifier->word,id->token.line_number);
@@ -1099,7 +1138,7 @@ bool AstPass(Node* ast) {
 
             // TODO: Make sure the prototypes match
             case LIME_NODE_PROC_DEFINITION: {
-                auto id = static_cast<IdentifierNode*>(node);
+                auto id = static_cast<ProcPrototypeNode*>(node);
                 // Make sure the function is unique
                 auto prev = Lens->functions.find(id->identifier->word);
                 if (prev != Lens->functions.end() && prev->second->type == LIME_NODE_PROC_DEFINITION){
@@ -1121,13 +1160,18 @@ bool AstPass(Node* ast) {
             }
 
             case LIME_NODE_PROC_CALL: {
-                auto id = static_cast<IdentifierNode*>(node);
+                auto id = static_cast<ProcCallNode*>(node);
                 assert(id->identifier); 
                 
                 //TODO: Test that the arguments match the functions prototype
                 if (!Lens->procExists(id->identifier->word)){
                     Error("Undefined procedure: " +id->identifier->word,id->identifier->line_number);
                 }
+
+                //auto proc = Lens->getProc(id->identifier->word);
+                //if (!proc->matches(id)){
+                //    Error("Arguments do not match the parameters for the function: " + id->identifier->word, id->identifier->line_number);
+                //}
 
                 break;
             }
@@ -1141,6 +1185,41 @@ bool AstPass(Node* ast) {
     return result;
 }
 
+void LinkProcCallsToPrototypes(Node* ast){
+    for (const auto& node : ast->children) {
+        switch(node->type){
+            case LIME_NODE_PROC_CALL:{
+                auto proc_call = static_cast<ProcCallNode*>(node);
+                auto proc = (ProcPrototypeNode*)Lens->getProc(proc_call->identifier->word);
+
+                // Get the types of each argument in the list.
+				auto arg_list = proc_call->children[0];
+				for (auto arg : arg_list->children) {
+					switch (arg->type) {
+					case LIME_NODE_EXPRESSION: {
+						// Get the type of the expression
+
+						break;
+					}
+					default: break;
+					}
+				}
+
+                proc_call->proc = proc;
+                break;
+            }
+            default:{
+                if (node->children.size() > 0){
+                    for(auto n : node->children){
+                        LinkProcCallsToPrototypes(n);
+                    }
+                }
+                break;
+            }
+        }
+    }
+}
+
 Node* create_ast_from_tokens(std::vector<Token>& tokens) {
     Lens = new CodeLens();
 
@@ -1150,12 +1229,14 @@ Node* create_ast_from_tokens(std::vector<Token>& tokens) {
 
     //TODO: Remove this hack, this is just a hack so that it wont give us an
     // error when we call the print function
-    Lens->functions.insert(std::make_pair("printf", new Node()));
+    //Lens->functions.insert(std::make_pair("printf", new ProcPrototypeNode()));
     //Lens->functions.insert(std::make_pair("getchar", new Node()));
 
     Lens->push();
     AstPass(ast);
     Lens->pop();
+
+    LinkProcCallsToPrototypes(ast);
 
     return ast;
 }

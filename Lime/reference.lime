@@ -22,3 +22,8 @@ count int = 0
 while count <= 42 {
     count += 1
 }
+
+## Future Syntax (Maybe)
+
+# (100 == 100)~return false
+# printf("Hello World")~if 10 * 2 == 20
