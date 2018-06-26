@@ -18,10 +18,22 @@ typedef double          f64;
 typedef unsigned int    uint;
 typedef float           real;
 
-int myVar;
+int Fact(int n);
+int Add(int a, int b);
+int Fact(int n){
+    if ((n == 0)) {
+        return (1);
+    }
+    else {
+        return (n * Fact((n - 1)));
+    }
+
+}
+int Add(int a, int b){
+    return (a + b);
+}
 int main(int num_arg_p1KaLm, char** args_p1KaLm) {
-    myVar = (1);
-    myVar += (1);
+    printf(("!4 = %d, !5 = %d, !4 + !5 = %d"), (Fact((4))), (Fact((5))), (Add((Fact((4))), (Fact((5))))));
     return 0;
 }
 

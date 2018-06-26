@@ -1,7 +1,63 @@
 (NONE line: 1, (
-  (VARIABLE_ASSIGNMENT line: 1, var: myVar, (
-    (EXPRESSION line: 1, (
-      (NUMBER_LITERAL line: 2, word: "1")))))
-  (VARIABLE_ASSIGNMENT line: 4, word: "+=" var: myVar, (
-    (EXPRESSION line: 1, (
-      (NUMBER_LITERAL line: 4, word: "1")))))))
+  (PROC_DEFINITION line: 1, proc: Fact,  return_type: int (
+    (PARAMETER_LIST line: 1, (
+      (VARIABLE_DECLARATION line: 1, var: n,)))
+    (NONE line: 1, (
+      (IF_STATEMENT line: 1, (
+        (EXPRESSION line: 1, (
+          (OPERATOR line: 2, word: "==" (
+            (IDENTIFIER line: 2, word: "n")
+            (NUMBER_LITERAL line: 2, word: "0")))))
+        (NONE line: 1, (
+          (RETURN line: 1, (
+            (EXPRESSION line: 1, (
+              (NUMBER_LITERAL line: 3, word: "1")))))))))
+      (ELSE_STATEMENT line: 1, (
+        (NONE line: 1, (
+          (RETURN line: 1, (
+            (EXPRESSION line: 1, (
+              (OPERATOR line: 5, word: "*" (
+                (IDENTIFIER line: 5, word: "n")
+                (PROC_CALL line: 1, proc: Fact, (
+                  (ARGUMENT_LIST line: 1, (
+                    (EXPRESSION line: 1, (
+                      (OPERATOR line: 5, word: "-" (
+                        (IDENTIFIER line: 5, word: "n")
+                        (NUMBER_LITERAL line: 5, word: "1")))))))))))))))))))))))
+  (PROC_DEFINITION line: 1, proc: Add,  return_type: int (
+    (PARAMETER_LIST line: 1, (
+      (VARIABLE_DECLARATION line: 1, var: a,)
+      (VARIABLE_DECLARATION line: 1, var: b,)))
+    (NONE line: 1, (
+      (RETURN line: 1, (
+        (EXPRESSION line: 1, (
+          (OPERATOR line: 10, word: "+" (
+            (IDENTIFIER line: 10, word: "a")
+            (IDENTIFIER line: 10, word: "b")))))))))))
+  (PROC_CALL line: 1, proc: printf, (
+    (ARGUMENT_LIST line: 1, (
+      (EXPRESSION line: 1, (
+        (LIME_NODE_STRING_LITERAL line: 14, word: ""!4 = %d, !5 = %d, !4 + !5 = %d"")))
+      (EXPRESSION line: 1, (
+        (PROC_CALL line: 1, proc: Fact, (
+          (ARGUMENT_LIST line: 1, (
+            (EXPRESSION line: 1, (
+              (NUMBER_LITERAL line: 15, word: "4")))))))))
+      (EXPRESSION line: 1, (
+        (PROC_CALL line: 1, proc: Fact, (
+          (ARGUMENT_LIST line: 1, (
+            (EXPRESSION line: 1, (
+              (NUMBER_LITERAL line: 16, word: "5")))))))))
+      (EXPRESSION line: 1, (
+        (PROC_CALL line: 1, proc: Add, (
+          (ARGUMENT_LIST line: 1, (
+            (EXPRESSION line: 1, (
+              (PROC_CALL line: 1, proc: Fact, (
+                (ARGUMENT_LIST line: 1, (
+                  (EXPRESSION line: 1, (
+                    (NUMBER_LITERAL line: 17, word: "4")))))))))
+            (EXPRESSION line: 1, (
+              (PROC_CALL line: 1, proc: Fact, (
+                (ARGUMENT_LIST line: 1, (
+                  (EXPRESSION line: 1, (
+                    (NUMBER_LITERAL line: 17, word: "5")))))))))))))))))))))

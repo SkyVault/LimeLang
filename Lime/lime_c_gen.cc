@@ -44,9 +44,6 @@ std::string LimeCGen::compile_expression(Node* node) {
 
             auto a = e->children[0];
             auto b = e->children[1];
-            std::cout << *a << std::endl;
-            std::cout << *b << std::endl;
-
             ss << compile_expression(a) << " " << e->token.word << " " << compile_expression(b);
 
             break;

@@ -1,4 +1,13 @@
+Fact proc(n int) int {
+    if n == 0 {
+        ret 1
+    } else {
+        ret n * Fact(n - 1)
+    }
+}
 
-myVar mut int = 1
+Add proc(a int, b int) int {
+    ret a + b
+}
 
-myVar += 1
+printf("!4 = %d, !5 = %d, !4 + !5 = %d", Fact(4), Fact(5), Add(Fact(4), Fact(5)))

@@ -20,5 +20,5 @@ Fact proc(n int) int {
 
 count int = 0
 while count <= 42 {
-    count = count + 1
+    count += 1
 }
