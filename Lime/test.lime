@@ -1,4 +1,7 @@
-a mut int[]
+g int[]
+b int = 1
+g <- b
+b = b + 1
+g <- b
 
-i int = 10
-a <- i
+$emit{printf("%d\n", ARRAY_GET(g, int, 1));}

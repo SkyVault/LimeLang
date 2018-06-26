@@ -1,5 +1,17 @@
 (NONE line: 1, (
-  (VARIABLE_DECLARATION line: 1, var: a,)
+  (VARIABLE_DECLARATION line: 1, var: g,)
+  (VARIABLE_ASSIGNMENT line: 1, var: b, (
+    (EXPRESSION line: 1, (
+      (NUMBER_LITERAL line: 2, word: "1")))))
   (ARRAY_INSERTION line: 1, (
     (EXPRESSION line: 1, (
-      (NUMBER_LITERAL line: 3, word: "10")))))))
+      (IDENTIFIER line: 3, word: "b")))))
+  (VARIABLE_ASSIGNMENT line: 1, var: b, (
+    (EXPRESSION line: 1, (
+      (OPERATOR line: 4, word: "+" (
+        (IDENTIFIER line: 4, word: "b")
+        (NUMBER_LITERAL line: 4, word: "1")))))))
+  (ARRAY_INSERTION line: 1, (
+    (EXPRESSION line: 1, (
+      (IDENTIFIER line: 5, word: "b")))))
+  (EMIT line: 1, word: "printf("%d\n", ARRAY_GET(g, int, 1));")))

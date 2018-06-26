@@ -219,7 +219,9 @@ std::string LimeCGen::compile_code_block(Node* node, const std::string indent) {
                 }
 
                 // * Array declarations should always initialize
-                ss << indent << "ARRAY_INIT(" << n->identifier->word << ");\n";
+
+                if (n->isArray)
+                    ss << indent << "ARRAY_INIT(" << n->identifier->word << ");\n";
 
                 break;
             }

@@ -86,7 +86,8 @@ std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::ve
     auto Peek = [&]() -> auto {
         auto begin = it;
         begin++;
-        while(begin->isWhiteSpace)
+		if (begin == end) return begin;
+        while(begin != end && begin->isWhiteSpace)
             ++begin;
         return begin;
     };
@@ -106,6 +107,7 @@ std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::ve
             case LIME_COMMA:
                 ++it;
                 break;
+
             case LIME_OPERATOR:
                 last_was_operator = true;
                 ++it;
@@ -122,6 +124,12 @@ std::vector<Token> GetExpressionTokens(std::vector<Token>::iterator& it, std::ve
                 // make sure the identifier isn't for a structure or procedure
                 if ((it + 1) != end) {
                     auto next = Peek();
+
+					if (next == end) {
+						running = false;
+						++it;
+						continue;
+					}
                     
                     //TODO: Handle structures and other things that come after an identifier
                     switch(next->type) {
@@ -248,7 +256,7 @@ Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterat
     auto Peek = [&]() -> auto {
         auto begin = i;
         begin++;
-        while(begin->isWhiteSpace)
+        while(begin != end && begin->isWhiteSpace)
             ++begin;
         return begin;
     };
@@ -256,15 +264,17 @@ Node* PackExpression(std::vector<Token>::iterator it, std::vector<Token>::iterat
     while (i != end) {
         // TODO: Handle all types
         switch ((*i).type) {
-            case LIME_IDENTIFIER:
-                if (Peek()->type == LIME_OPEN_PAREN) {
-                    // This is probably a function call
-                    node->children.push_back(handle_function_call(i, end)); 
-                } else {
-                    node->children.push_back(TokenToNode(*i)); 
-                }
-                break;
-                
+			case LIME_IDENTIFIER: {
+				auto t = Peek();
+				if (t != end && t->type == LIME_OPEN_PAREN) {
+					// This is probably a function call
+					node->children.push_back(handle_function_call(i, end));
+				}
+				else {
+					node->children.push_back(TokenToNode(*i));
+				}
+				break;
+			}
             case LIME_NUMBER: 
             case LIME_STRING:
             case LIME_CHARACTER:
@@ -461,7 +471,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
     auto Peek = [&]() -> auto {
         auto begin = it;
         begin++;
-        while(begin->isWhiteSpace)
+        while(begin != tokens.end() && begin->isWhiteSpace)
             ++begin;
         return begin;
     };
@@ -642,6 +652,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
 
             case LIME_IDENTIFIER: {
                 auto next = Peek();
+
                 if (next->type == LIME_TYPE_IDENTIFIER || next->type == LIME_MUTABLE) {
                     // Handle LIME_NODE_VARIABLE_DECLARATION
 
@@ -663,7 +674,7 @@ void code_block_to_ast(Node* ast, std::vector<Token>& tokens) {
                     // NOTE: This seems fishy
                     node->variable_type = new Token(*next);
                     next = Next();
-
+	
 					if (next != tokens.end()) {
 						if (next->type == LIME_MUTABLE)
 							Error("Mutable keyword should be before the type", next->line_number);

@@ -1,23 +1,59 @@
-Token {  word: 'a'  type: IDENTIFIER}
-Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'mut'  type: MUTABLE}
+Token {  word: 'g'  type: IDENTIFIER}
 Token {  word: ' '  type: WHITESPACE}
 Token {  word: 'int'  type: TYPE_IDENTIFIER}
 Token {  word: '['  type: OPEN_SQUARE_BRACKET}
 Token {  word: ']'  type: CLOSE_SQUARE_BRACKET}
 Token {  word: '\n'  type: NEWLINE}
-Token {  word: '\n'  type: NEWLINE}
-Token {  word: 'i'  type: IDENTIFIER}
+Token {  word: 'b'  type: IDENTIFIER}
 Token {  word: ' '  type: WHITESPACE}
 Token {  word: 'int'  type: TYPE_IDENTIFIER}
 Token {  word: ' '  type: WHITESPACE}
 Token {  word: '='  type: OPERATOR}
 Token {  word: ' '  type: WHITESPACE}
-Token {  word: '10'  type: NUMBER}
+Token {  word: '1'  type: NUMBER}
 Token {  word: '\n'  type: NEWLINE}
-Token {  word: 'a'  type: IDENTIFIER}
+Token {  word: 'g'  type: IDENTIFIER}
 Token {  word: ' '  type: WHITESPACE}
 Token {  word: '<-'  type: OPERATOR}
 Token {  word: ' '  type: WHITESPACE}
-Token {  word: 'i'  type: IDENTIFIER}
+Token {  word: 'b'  type: IDENTIFIER}
+Token {  word: '\n'  type: NEWLINE}
+Token {  word: 'b'  type: IDENTIFIER}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: '='  type: OPERATOR}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: 'b'  type: IDENTIFIER}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: '+'  type: OPERATOR}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: '1'  type: NUMBER}
+Token {  word: '\n'  type: NEWLINE}
+Token {  word: 'g'  type: IDENTIFIER}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: '<-'  type: OPERATOR}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: 'b'  type: IDENTIFIER}
+Token {  word: '\n'  type: NEWLINE}
+Token {  word: '\n'  type: NEWLINE}
+Token {  word: '$'  type: METATAG}
+Token {  word: 'emit'  type: IDENTIFIER}
+Token {  word: '{'  type: OPEN_CURLY_BRACKET}
+Token {  word: 'printf'  type: IDENTIFIER}
+Token {  word: '('  type: OPEN_PAREN}
+Token {  word: '"%d\n"'  type: STRING}
+Token {  word: ','  type: COMMA}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: 'ARRAY_GET'  type: IDENTIFIER}
+Token {  word: '('  type: OPEN_PAREN}
+Token {  word: 'g'  type: IDENTIFIER}
+Token {  word: ','  type: COMMA}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: 'int'  type: TYPE_IDENTIFIER}
+Token {  word: ','  type: COMMA}
+Token {  word: ' '  type: WHITESPACE}
+Token {  word: '1'  type: NUMBER}
+Token {  word: ')'  type: CLOSE_PAREN}
+Token {  word: ')'  type: CLOSE_PAREN}
+Token {  word: ';'  type: WHITESPACE}
+Token {  word: '}'  type: CLOSE_CURLY_BRACKET}
 Token {  word: '\n'  type: NEWLINE}
